@@ -16,7 +16,8 @@ from add_sine_signal import add_sine_signal
 from add_transit_signal import add_transit_signal
 from sim_lc_setup_args import sim_lc_setup_args
 
-def sim_lc(lc_type, lc_ofile, lc_length, lc_noise, visualize, lc_yoffset):
+def sim_lc(lc_type, lc_ofile, lc_length, lc_noise, visualize, lc_yoffset,
+           transit_depth, transit_period, transit_start, transit_width):
     """
     Create light curve of specified type as a FITS file.
 
@@ -38,6 +39,21 @@ def sim_lc(lc_type, lc_ofile, lc_length, lc_noise, visualize, lc_yoffset):
 
     :param lc_yoffset: Baseline flux level (unitless).
     :type lc_yoffset: float
+
+    :param transit_depth: Depth of transit, as a percent (e.g., 10.0 = 10%.)
+    :type transit_depth: float
+
+    :param transit_period: Period of transit (number of fluxes/bins between
+    the start of each event.)
+    :type transit_period: int
+
+    :param transit_start: Start index of transit (the index of the flux/bin to
+    use as the start of the first transit event.)
+    :type transit_start: int
+
+    :param transit_width: Width of transit (number of fluxes/bins between
+    the start and end of each event.)
+    :type transit_width: int
     """
 
     # Generate baseline light curve fluxes.
@@ -53,7 +69,8 @@ def sim_lc(lc_type, lc_ofile, lc_length, lc_noise, visualize, lc_yoffset):
     elif lc_type == "sine":
         fluxes = add_sine_signal(fluxes)
     elif lc_type == 'transit':
-        fluxes = add_transit_signal(fluxes)
+        fluxes = add_transit_signal(fluxes, transit_depth, transit_period,
+                                    transit_start, transit_width)
 
     # Add noise based on standard deviation.
     fluxes_with_noise = add_lc_noise(fluxes, lc_noise)
@@ -89,4 +106,6 @@ if __name__ == "__main__":
     INPUT_ARGS = sim_lc_setup_args().parse_args()
 
     sim_lc(INPUT_ARGS.lc_type, INPUT_ARGS.lc_ofile, INPUT_ARGS.lc_length,
-           INPUT_ARGS.lc_noise, INPUT_ARGS.visualize, INPUT_ARGS.lc_yoffset)
+           INPUT_ARGS.lc_noise, INPUT_ARGS.visualize, INPUT_ARGS.lc_yoffset,
+           INPUT_ARGS.transit_depth, INPUT_ARGS.transit_period,
+           INPUT_ARGS.transit_start, INPUT_ARGS.transit_width)
