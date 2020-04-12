@@ -5,6 +5,8 @@
 .. moduleauthor:: Scott W. Fleming <fleming@stsci.edu>
 """
 
+import numpy as np
+
 def add_transit_signal(fluxes, transit_depth, transit_period, transit_start,
                        transit_width):
     """
@@ -28,5 +30,24 @@ def add_transit_signal(fluxes, transit_depth, transit_period, transit_start,
 
     :returns: numpy.ndarray -- The fluxes with the transit signal added.
     """
+
+    # Get length of the flux array.
+    n_fluxes = fluxes.size
+
+    # Determine the indexes that should be at full transit depth.
+    transit_indexes = np.zeros(n_fluxes)
+
+    # Get the set of start indexes.
+    start_indexes = np.arange(transit_start, n_fluxes+1, transit_period)
+
+    # Set transit indexes to 1.
+    for st_ind in start_indexes:
+        if st_ind + transit_width < fluxes.size:
+            transit_indexes[st_ind:st_ind+transit_width+1] = 1
+        else:
+            transit_indexes[st_ind:] = 1
+
+    # Set the flux values of the transit indexes to the transit depth.
+    fluxes[np.where(transit_indexes == 1)] *= (1.-(transit_depth/100.))
 
     return fluxes

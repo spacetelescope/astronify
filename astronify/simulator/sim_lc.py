@@ -14,6 +14,7 @@ from add_flare_signal import add_flare_signal
 from add_lc_noise import add_lc_noise
 from add_sine_signal import add_sine_signal
 from add_transit_signal import add_transit_signal
+from check_transit_params import check_transit_params
 from sim_lc_setup_args import sim_lc_setup_args
 
 def sim_lc(lc_type, lc_ofile, lc_length, lc_noise, visualize, lc_yoffset,
@@ -60,7 +61,7 @@ def sim_lc(lc_type, lc_ofile, lc_length, lc_noise, visualize, lc_yoffset,
     fluxes = np.full(lc_length, lc_yoffset)
 
     # We don't need real times for the simulation, it's just an array of indexes.
-    times = np.arange(len(fluxes))
+    times = np.arange(fluxes.size)
 
     # TO-DO: Enable these functions.
     # Apply signal of choice if needed.
@@ -69,6 +70,8 @@ def sim_lc(lc_type, lc_ofile, lc_length, lc_noise, visualize, lc_yoffset,
     elif lc_type == "sine":
         fluxes = add_sine_signal(fluxes)
     elif lc_type == 'transit':
+        check_transit_params(fluxes.size, transit_period, transit_start,
+                             transit_width)
         fluxes = add_transit_signal(fluxes, transit_depth, transit_period,
                                     transit_start, transit_width)
 

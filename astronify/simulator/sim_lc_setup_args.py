@@ -43,7 +43,7 @@ def sim_lc_setup_args():
                         " that is generated will be plot on the screen. Default"
                         " = %(default)s.")
 
-    parser.add_argument("-y", action="store", type=float, default=100,
+    parser.add_argument("-y", action="store", type=float, default=100.,
                         dest="lc_yoffset", help="Baseline (unitless) flux height"
                         " of the light curve. Used to test sonification of"
                         " sources with different total brightness. Default ="
