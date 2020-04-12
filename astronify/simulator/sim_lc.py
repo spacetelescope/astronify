@@ -18,7 +18,8 @@ from check_transit_params import check_transit_params
 from sim_lc_setup_args import sim_lc_setup_args
 
 def sim_lc(lc_type, lc_ofile, lc_length, lc_noise, visualize, lc_yoffset,
-           transit_depth, transit_period, transit_start, transit_width):
+           transit_depth, transit_period, transit_start, transit_width,
+           sine_amp, sine_period):
     """
     Create light curve of specified type as a FITS file.
 
@@ -55,6 +56,12 @@ def sim_lc(lc_type, lc_ofile, lc_length, lc_noise, visualize, lc_yoffset,
     :param transit_width: Width of transit (number of fluxes/bins between
     the start and end of each event.)
     :type transit_width: int
+
+    :param sine_amp: Amplitude of the sinusoidal signal to add.
+    :type sine_anp: float
+
+    :param sine_period: Period of the sinusoidal signal to add.
+    :type sine_period: float
     """
 
     # Generate baseline light curve fluxes.
@@ -63,12 +70,12 @@ def sim_lc(lc_type, lc_ofile, lc_length, lc_noise, visualize, lc_yoffset,
     # We don't need real times for the simulation, it's just an array of indexes.
     times = np.arange(fluxes.size)
 
-    # TO-DO: Enable these functions.
     # Apply signal of choice if needed.
     if lc_type == "flare":
+        # TO-DO: Enable this function, doesn't add anything yet.
         fluxes = add_flare_signal(fluxes)
     elif lc_type == "sine":
-        fluxes = add_sine_signal(fluxes)
+        fluxes = add_sine_signal(times, fluxes, sine_amp, sine_period)
     elif lc_type == 'transit':
         check_transit_params(fluxes.size, transit_period, transit_start,
                              transit_width)
@@ -111,4 +118,5 @@ if __name__ == "__main__":
     sim_lc(INPUT_ARGS.lc_type, INPUT_ARGS.lc_ofile, INPUT_ARGS.lc_length,
            INPUT_ARGS.lc_noise, INPUT_ARGS.visualize, INPUT_ARGS.lc_yoffset,
            INPUT_ARGS.transit_depth, INPUT_ARGS.transit_period,
-           INPUT_ARGS.transit_start, INPUT_ARGS.transit_width)
+           INPUT_ARGS.transit_start, INPUT_ARGS.transit_width,
+           INPUT_ARGS.sine_amp, INPUT_ARGS.sine_period)

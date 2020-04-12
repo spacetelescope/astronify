@@ -73,4 +73,16 @@ def sim_lc_setup_args():
                                " fluxes (bins) between the start and end of each"
                                " event. Default = %(default)s.")
 
+    # Sinusoidal-related parameters here.
+    sine_group = parser.add_argument_group("sinusoidal", "Parameters for"
+                                           " sinusoidal signals.")
+    sine_group.add_argument("--sine_amp", type=float, default=10.,
+                            dest="sine_amp", help="Amplitude of the"
+                            " sinusoidal signal to add. Default ="
+                            " %(default)s.")
+    sine_group.add_argument("--sine_period", type=float, default=50.,
+                            dest="sine_period", help="Period of the"
+                            " sinusoidal signal, specified in the (unitless)"
+                            " time axis (flux bins). Default = %(default)s.")
+
     return parser
