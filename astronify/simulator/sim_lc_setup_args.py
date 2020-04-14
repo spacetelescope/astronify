@@ -43,11 +43,46 @@ def sim_lc_setup_args():
                         " that is generated will be plot on the screen. Default"
                         " = %(default)s.")
 
-    parser.add_argument("-y", action="store", type=float, default=100,
+    parser.add_argument("-y", action="store", type=float, default=100.,
                         dest="lc_yoffset", help="Baseline (unitless) flux height"
                         " of the light curve. Used to test sonification of"
                         " sources with different total brightness. Default ="
                         " %(default)s.")
 
+    # Transit-related parameters here.
+    transit_group = parser.add_argument_group("transit", "Parameters for transit"
+                                              " signals.")
+    transit_group.add_argument("--transit_depth", type=float, default=10.,
+                               dest="transit_depth", help="Depth of the transit"
+                               " signal specified as a percent, e.g., set to"
+                               " 10.0 for a 10%% depth transit. Default ="
+                               " %(default)s.")
+    transit_group.add_argument("--transit_period", type=int, default=50,
+                               dest="transit_period", help="Period of the"
+                               " transit signal, specified as the number of"
+                               " fluxes (bins) between the start of each event."
+                               " Default = %(default)s.")
+    transit_group.add_argument("--transit_start", type=int, default=10,
+                               dest="transit_start", help="Start of the first"
+                               " transit, specified as the index of the"
+                               " flux (bin) to use as the start of the first"
+                               " transit event. Default = %(default)s.")
+    transit_group.add_argument("--transit_width", type=int, default=5,
+                               dest="transit_width", help="Width of the"
+                               " transit signal, specified as the number of"
+                               " fluxes (bins) between the start and end of each"
+                               " event. Default = %(default)s.")
+
+    # Sinusoidal-related parameters here.
+    sine_group = parser.add_argument_group("sinusoidal", "Parameters for"
+                                           " sinusoidal signals.")
+    sine_group.add_argument("--sine_amp", type=float, default=10.,
+                            dest="sine_amp", help="Amplitude of the"
+                            " sinusoidal signal to add. Default ="
+                            " %(default)s.")
+    sine_group.add_argument("--sine_period", type=float, default=50.,
+                            dest="sine_period", help="Period of the"
+                            " sinusoidal signal, specified in the (unitless)"
+                            " time axis (flux bins). Default = %(default)s.")
 
     return parser
