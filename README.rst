@@ -16,6 +16,7 @@ include sonification of time series data, specifically light curves.
 
 Project Status
 --------------
+
 .. image:: https://travis-ci.org/spacetelescope/astronify.svg?branch=master
     :target: https://travis-ci.org/spacetelescope/astronify
     
