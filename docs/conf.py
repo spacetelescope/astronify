@@ -106,8 +106,8 @@ release = package.__version__
 
 
 html_theme_options = {
-    'logotext1': 'Astronify',  # white,  semi-bold
-    'logotext2': '',  # orange, light
+    'logotext1': 'Astro',  # white,  semi-bold
+    'logotext2': 'nify',  # orange, light
     'logotext3': ':docs'   # white,  light
     }
 
@@ -117,12 +117,12 @@ html_theme_options = {
 
 # The name of an image file (relative to this directory) to place at the top
 # of the sidebar.
-#html_logo = ''
+html_logo = '_static/astronify-CIRCLE.png'
 
 # The name of an image file (within the static path) to use as favicon of the
 # docs.  This file should be a Windows icon file (.ico) being 16x16 or 32x32
 # pixels large.
-#html_favicon = ''
+#html_favicon = '_static/astronify-CIRCLE.png'
 
 # If not '', a 'Last updated on:' timestamp is inserted at every page bottom,
 # using the given strftime format.

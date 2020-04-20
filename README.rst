@@ -1,3 +1,7 @@
+.. image:: docs/_static/astronify-TEXT.png
+    :width: 800
+    :alt: Astronify logo
+
 Sonification of astronomical data.
 ----------------------------------
 
@@ -5,15 +9,52 @@ Sonification of astronomical data.
     :target: http://www.astropy.org
     :alt: Powered by Astropy Badge
 
+Tools for sonifying astronomical data.
 
-License
--------
+This package is currently in the very beginning stages and is under active development to
+include sonification of time series data, specifically light curves. 
 
-This project is Copyright (c) Clara Brasseur, Scott Fleming, Jennifer Kotler, Kate Meredith and licensed under
-the terms of the BSD 3-Clause license. This package is based upon
-the `Astropy package template <https://github.com/astropy/package-template>`_
-which is licensed under the BSD 3-clause licence. See the licenses folder for
-more information.
+Project Status
+--------------
+.. image:: https://travis-ci.org/spacetelescope/astronify.svg?branch=master
+    :target: https://travis-ci.org/spacetelescope/astronify
+    
+.. image:: https://coveralls.io/repos/github/spacetelescope/astronify/badge.svg?branch=master
+    :target: https://coveralls.io/github/spacetelescope/astronify?branch=master
+
+Developer Documentation
+-----------------------
+
+Installation
+^^^^^^^^^^^^
+
+.. code-block:: bash
+
+    $ git clone https://github.com/spacetelescope/astronify.git
+    $ cd astronify
+    $ pip install .
+
+For active developement intall in develop mode
+
+.. code-block:: bash
+
+    $ pip install -e .
+
+Testing
+^^^^^^^
+
+Tests can be found in ``astronify/tests/``.
+
+Documentation
+^^^^^^^^^^^^^
+
+Documentation files are found in ``docs/``.
+
+
+Release Protocol
+^^^^^^^^^^^^^^^^
+
+Follow the `Astropy template release instructions <https://docs.astropy.org/en/stable/development/astropy-package-template.html>`_.          
 
 
 Contributing
@@ -47,3 +88,14 @@ Note: This disclaimer was originally written by
 `PyCon talk <https://www.youtube.com/watch?v=6Uj746j9Heo>`_, and was adapted by
 Astronify based on its use in the README file for the
 `MetPy project <https://github.com/Unidata/MetPy>`_.
+
+
+License
+-------
+
+This project is Copyright (c) Clara Brasseur, Scott Fleming, Jennifer Kotler, Kate Meredith and licensed under
+the terms of the BSD 3-Clause license. This package is based upon
+the `Astropy package template <https://github.com/astropy/package-template>`_
+which is licensed under the BSD 3-clause licence. See the licenses folder for
+more information.
+
