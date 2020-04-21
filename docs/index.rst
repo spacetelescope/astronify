@@ -1,14 +1,32 @@
-Documentation
-=============
+.. image:: docs/_static/astronify-TEXT.png
+    :width: 800
+    :alt: Astronify logo
 
-This is the documentation for Astronify.
+Astronify
+=========
+
+Astronify is a package for sonifying astronomical data.
+
+This package is under active development should be considered an alpha version.
+Therefore function signatures may change without warning, so update with caution.
+
+Astronify lives on GitHub at: `github.com/spacetelescope/astronify <https://github.com/spacetelescope/astronify>`_.
 
 .. toctree::
   :maxdepth: 2
 
+  astronify/install.rst
+
+
+.. toctree::
+  :maxdepth: 3
+
   astronify/index.rst
 
-.. note:: The layout of this directory is simply a suggestion.  To follow
-          traditional practice, do *not* edit this page, but instead place
-          all documentation for the package inside ``astronify/``.
-          You can follow this practice or choose your own layout.
+.. toctree::
+  :maxdepth: 1
+
+  ../licences/LICENSE.rst
+
+
+
