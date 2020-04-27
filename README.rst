@@ -8,7 +8,11 @@ Sonification of astronomical data.
 .. image:: http://img.shields.io/badge/powered%20by-AstroPy-orange.svg?style=flat
     :target: http://www.astropy.org
     :alt: Powered by Astropy Badge
-
+    
+.. image:: https://readthedocs.org/projects/astronify/badge/?version=latest
+    :target: https://astronify.readthedocs.io/en/latest/?badge=latest
+    :alt: Documentation Status
+    
 Tools for sonifying astronomical data.
 
 This package is currently in the very beginning stages and is under active development to
@@ -19,9 +23,11 @@ Project Status
 
 .. image:: https://travis-ci.org/spacetelescope/astronify.svg?branch=master
     :target: https://travis-ci.org/spacetelescope/astronify
+    :alt: Travis CI Status
     
 .. image:: https://coveralls.io/repos/github/spacetelescope/astronify/badge.svg?branch=master
     :target: https://coveralls.io/github/spacetelescope/astronify?branch=master
+    :alt: Coverage Status
 
 Developer Documentation
 -----------------------
