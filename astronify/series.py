@@ -10,8 +10,9 @@ import os
 
 import numpy as np
 
-from astropy.table import Table
+from astropy.table import Table, MaskedColumn
 from astropy.io import fits
+from astropy.time import Time
 
 import pyo
 import thinkdsp
@@ -28,10 +29,10 @@ class SoniSeries():
     """
 
     def __init__(self, data, method="pyo", time_col="time", val_col="flux"):
-        self.data = data
         self.sonification_method = method
         self.time_col = time_col
         self.val_col = val_col
+        self.data = data
 
         self.pitch_map = data_to_pitch
 
@@ -60,9 +61,22 @@ class SoniSeries():
         return self._data
 
     @data.setter
-    def data(self, value):
-        assert isinstance(value, Table), 'Data must be a Table.'
-        self._data = value
+    def data(self, data_table):
+        assert isinstance(data_table, Table), 'Data must be a Table.'
+
+        # Removing any masked values as they interfere with the sonification
+        if isinstance(data_table[self.val_col], MaskedColumn):
+            data_table = data_table[~data_table[self.val_col].mask]
+        if isinstance(data_table[self.time_col], MaskedColumn):
+            data_table = data_table[~data_table[self.time_col].mask]
+
+        # making sure we have a float column for time
+        if isinstance(data_table[self.time_col], Time):
+            float_col = f"{self.time_col}_jd"
+            data_table[float_col] = data_table[self.time_col].jd
+            self.time_col = float_col
+            
+        self._data = data_table
 
     @property
     def time_col(self):
@@ -102,15 +116,15 @@ class SoniSeries():
         # NOTE: This assumes the times in the time_col are an astropy Time object
         # and thus the np.diff results in a TimeDelta object with structured tags
         # If passing, e.g., simulated data from the simulator, it may not be?
-        exptime = np.median(np.diff(data[self.time_col])).value
+        exptime = np.median(np.diff(data[self.time_col]))
 
         data.meta["exposure_time"] = exptime
         data.meta["note_duration"] = duration
         data.meta["spacing"] = spacing
-
+        
         data["pitch"] = self.pitch_map(data[self.val_col])
-        data["onsets"] = [x for x in (data["time"].jd -
-                                      data["time"].jd[0])/exptime*spacing]
+        data["onsets"] = [x for x in (data[self.time_col] -
+                                      data[self.time_col][0])/exptime*spacing]
 
     def _pyo_play(self):
         """
