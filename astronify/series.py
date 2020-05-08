@@ -72,7 +72,7 @@ class SoniSeries():
 
         # making sure we have a float column for time
         if isinstance(data_table[self.time_col], Time):
-            float_col = f"{self.time_col}_jd"
+            float_col = "asf_time"
             data_table[float_col] = data_table[self.time_col].jd
             self.time_col = float_col
             
@@ -112,18 +112,14 @@ class SoniSeries():
         duration = 0.5 # note duration in seconds
         spacing = 0.01 # spacing between notes in seconds
         data = self.data
-
-        # NOTE: This assumes the times in the time_col are an astropy Time object
-        # and thus the np.diff results in a TimeDelta object with structured tags
-        # If passing, e.g., simulated data from the simulator, it may not be?
         exptime = np.median(np.diff(data[self.time_col]))
 
-        data.meta["exposure_time"] = exptime
-        data.meta["note_duration"] = duration
-        data.meta["spacing"] = spacing
+        data.meta["asf_exposure_time"] = exptime
+        data.meta["asf_note_duration"] = duration
+        data.meta["asf_spacing"] = spacing
         
-        data["pitch"] = self.pitch_map(data[self.val_col])
-        data["onsets"] = [x for x in (data[self.time_col] -
+        data["asf_pitch"] = self.pitch_map(data[self.val_col])
+        data["asf_onsets"] = [x for x in (data[self.time_col] -
                                       data[self.time_col][0])/exptime*spacing]
 
     def _pyo_play(self):
@@ -139,9 +135,9 @@ class SoniSeries():
         self.server.start()
 
         # Getting data ready
-        duration = self.data.meta["note_duration"]
-        pitches = np.repeat(self.data["pitch"], 2)
-        delays = np.repeat(self.data["onsets"], 2)
+        duration = self.data.meta["asf_note_duration"]
+        pitches = np.repeat(self.data["asf_pitch"], 2)
+        delays = np.repeat(self.data["asf_onsets"], 2)
 
         # TODO: This doesn't seem like the best way to do this, but I don't know
         # how to make it better
@@ -166,9 +162,9 @@ class SoniSeries():
         """
 
         # Getting data ready
-        duration = self.data.meta["note_duration"]
-        pitches = np.repeat(self.data["pitch"], 2)
-        delays = np.repeat(self.data["onsets"], 2)
+        duration = self.data.meta["asf_note_duration"]
+        pitches = np.repeat(self.data["asf_pitch"], 2)
+        delays = np.repeat(self.data["asf_onsets"], 2)
 
         # Making sure we have a clean server
         if self.server.getIsBooted():
