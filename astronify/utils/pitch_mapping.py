@@ -16,8 +16,8 @@ from astropy.visualization import (SqrtStretch, LogStretch, AsinhStretch, SinhSt
 from .exceptions import InputWarning, InvalidInputError
 
 
-# TODO: THIS IS SUPER BETA SOME PARTS OF IT DON'T WORK
-def data_to_pitch(data_array, pitch_range=[100,10000], center_value=440, stretch='linear', minmax_percent=None, minmax_value=None):
+def data_to_pitch(data_array, pitch_range=[100,10000], center_pitch=440, zero_point="median",
+                  stretch='linear', minmax_percent=None, minmax_value=None):
     """
     Map data array to audible pitches
     Apply given stretch and scaling to a data array, 
@@ -49,39 +49,48 @@ def data_to_pitch(data_array, pitch_range=[100,10000], center_value=440, stretch
         The normalized data array, with values in given pitch range.
     """
 
-    # Check for a valid stretch
-    if not stretch.lower() in ('asinh', 'sinh', 'sqrt', 'log', 'linear'):
+    # Parsing the zero point
+    if zero_point in ("med", "median"):
+        zero_point = np.median(data_array)
+    if zero_point in ("ave", "mean", "average"):
+        zero_point = np.mean(data_array)
+
+    # Normalizing the data_array and adding the zero point (so it can go through the same transform)
+    data_array = np.append(np.array(data_array), zero_point)
+
+    # Setting up the transform with the stretch
+    if stretch == 'asinh':
+        transform = AsinhStretch()
+    elif stretch == 'sinh':
+        transform = SinhStretch()
+    elif stretch == 'sqrt':
+        transform = SqrtStretch()
+    elif stretch == 'log':
+        transform = LogStretch()
+    elif stretch == 'linear':
+        transform = LinearStretch()
+    else:
         raise InvalidInputError("Stretch {} is not supported!".format(stretch))
 
-    # Check the scaling
-    if (minmax_percent is not None) and (minmax_value is not None):
-        warnings.warn("Both minmax_percent and minmax_value are set, minmax_value will be ignored.",
-                      InputWarning)
-
-    # Setting up the transform with the scaling
-    if minmax_percent:
-        transform = AsymmetricPercentileInterval(*minmax_percent)
-    elif minmax_value:
-        transform = ManualInterval(*minmax_value)
-    else:  # Default, scale the entire image range to [0,1]
-        transform = MinMaxInterval()
+    # Adding the scaling to the transform
+    if minmax_percent is not None:
+        transform += AsymmetricPercentileInterval(*minmax_percent)
         
-    # Adding the stretch to the transform
-    if stretch == 'asinh':
-        transform += AsinhStretch()
-    elif stretch == 'sinh':
-        transform += SinhStretch()
-    elif stretch == 'sqrt':
-        transform += SqrtStretch()
-    elif stretch == 'log':
-        transform += LogStretch()
-
+        if minmax_value is not None:
+            warnings.warn("Both minmax_percent and minmax_value are set, minmax_value will be ignored.",
+                          InputWarning)
+    elif minmax_value is not None:
+        transform += ManualInterval(*minmax_value)
+    else:  # Default, scale the entire image range to [0,1]
+        transform += MinMaxInterval()
    
     # Performing the transform and then putting it into the pich range
-    norm_img = transform(data_array)
+    pitch_array = transform(data_array)
+
+    zero_point = pitch_array[-1]
+    pitch_array = pitch_array[:-1]
     
-    # Want the median to be in about the middle of the human hearing range
-    med = np.median(norm_img)
-    norm_img = np.multiply((center_value - pitch_range[0])/med, norm_img, out=norm_img) + pitch_range[0]
+    pitch_array = np.multiply((center_pitch - pitch_range[0])/zero_point, pitch_array, out=pitch_array) + pitch_range[0]
     
-    return norm_img
+    return pitch_array
+
