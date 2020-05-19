@@ -61,9 +61,13 @@ class PitchMap():
             if not Parameter.VAR_KEYWORD in param_types:
                 for arg_name in list(self.pitch_map_args):
                     if not arg_name in signature(self.pitch_map_func).parameters:
-                        wstr = "{} is not accepted by the pitch mapping function and will be removed".format(arg_name)
+                        wstr = "{} is not accepted by the pitch mapping function and will be ignored".format(arg_name)
                         warnings.warn(wstr, InputWarning)
                         del self.pitch_map_args[arg_name]
+
+    def __call__(self, data):
+        self._check_func_args()
+        return self.pitch_map_func(data, **self.pitch_map_args)
 
     @property
     def pitch_map_func(self):
@@ -183,8 +187,7 @@ class SoniSeries():
         data.meta["asf_note_duration"] = duration
         data.meta["asf_spacing"] = spacing
         
-        data["asf_pitch"] = self.pitch_mapper.pitch_map_func(data[self.val_col],
-                                                             **self.pitch_mapper.pitch_map_args)
+        data["asf_pitch"] = self.pitch_mapper(data[self.val_col])
         data["asf_onsets"] = [x for x in (data[self.time_col] - data[self.time_col][0])/exptime*spacing]
 
     def _pyo_play(self):
