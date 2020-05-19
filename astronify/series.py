@@ -7,6 +7,9 @@ Functionality for sonifying data series.
 """
 
 import os
+import warnings
+
+from inspect import signature, Parameter
 
 import numpy as np
 
@@ -18,12 +21,75 @@ import pyo
 import thinkdsp
 
 from .utils.pitch_mapping import data_to_pitch
+from .utils.exceptions import InputWarning
 
+
+class PitchMap():
+    """
+    Class to describe the data values to pitches function 
+    and associated arguments.
+    """
+
+    def __init__(self, pitch_func=data_to_pitch, **pitch_args):
+        """
+        TODO: document
+        """
+
+        # Setting up the default arguments
+        if (not pitch_args) and  (pitch_func == data_to_pitch):
+                 pitch_args={"pitch_range": [100, 10000],
+                             "center_pitch": 440,
+                             "zero_point": "median",
+                             "stretch": "linear"}
+        
+        self.pitch_map_func = pitch_func
+        self.pitch_map_args = pitch_args
+
+        
+    def _check_func_args(self):
+        """
+        Make sure the pitch mapping function and argument dictionary match.
+
+        Note: This function does not check the the function gets all the required arguments.
+              (Maybe later)
+        """
+        # Only test if both pitch func and args are set
+        if hasattr(self, "pitch_map_func") and hasattr(self, "pitch_map_args"):
+
+            # Only check parameters if there is no kwars argument
+            param_types = [x.kind for x in signature(self.pitch_map_func).parameters.values()]
+            if not Parameter.VAR_KEYWORD in param_types:
+                for arg_name in list(self.pitch_map_args):
+                    if not arg_name in signature(self.pitch_map_func).parameters:
+                        wstr = "{} is not accepted by the pitch mapping function and will be removed".format(arg_name)
+                        warnings.warn(wstr, InputWarning)
+                        del self.pitch_map_args[arg_name]
+
+    @property
+    def pitch_map_func(self):
+        return self._pitch_map_func
+
+    @pitch_map_func.setter
+    def pitch_map_func(self, new_func):
+        assert callable(new_func), "Pitch mapping function must be a function."
+        self._check_func_args()
+        self._pitch_map_func = new_func
+
+    @property
+    def pitch_map_args(self):
+        return self._pitch_map_args
+
+    @pitch_map_args.setter
+    def pitch_map_args(self, new_args):
+        assert isinstance(new_args, dict), "Pitch mapping function args must be in a dictionary."
+        self._check_func_args()
+        self._pitch_map_args = new_args
+             
 
 class SoniSeries():
     """
 
-    Clase that encapsulated a sonified data series.
+    Class to encapsulate a sonified data series.
 
     TODO: finish documentation
     """
@@ -34,7 +100,7 @@ class SoniSeries():
         self.val_col = val_col
         self.data = data
 
-        self.pitch_map = data_to_pitch
+        self.pitch_mapper = PitchMap(data_to_pitch)
 
         if method == "pyo":
             self._init_pyo()
@@ -97,13 +163,12 @@ class SoniSeries():
         self._val_col = value
 
     @property
-    def pitch_map(self):
-        return self._pitch_map
+    def pitch_mapper(self):
+        return self._pitch_mapper
 
-    @pitch_map.setter
-    def pitch_map(self, value):
-        # TODO: test for valid function here
-        self._pitch_map = value
+    @pitch_mapper.setter
+    def pitch_mapper(self, value):
+        self._pitch_mapper = value
 
     def sonify(self):
         """
@@ -118,9 +183,9 @@ class SoniSeries():
         data.meta["asf_note_duration"] = duration
         data.meta["asf_spacing"] = spacing
         
-        data["asf_pitch"] = self.pitch_map(data[self.val_col])
-        data["asf_onsets"] = [x for x in (data[self.time_col] -
-                                      data[self.time_col][0])/exptime*spacing]
+        data["asf_pitch"] = self.pitch_mapper.pitch_map_func(data[self.val_col],
+                                                             **self.pitch_mapper.pitch_map_args)
+        data["asf_onsets"] = [x for x in (data[self.time_col] - data[self.time_col][0])/exptime*spacing]
 
     def _pyo_play(self):
         """
