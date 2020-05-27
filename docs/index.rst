@@ -1,4 +1,4 @@
-.. image:: docs/_static/astronify-TEXT.png
+.. image:: _static/astronify-TEXT.png
     :width: 800
     :alt: Astronify logo
 
