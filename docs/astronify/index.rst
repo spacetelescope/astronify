@@ -19,12 +19,10 @@ In addition to Astronify, we will use the package `Lightkurve <https://docs.ligh
                 >>> import lightkurve
 
                 >>> kep12b_lc = lightkurve.search_lightcurvefile("KIC 11804465", cadence="long", quarter=1).download_all()[0].SAP_FLUX.to_table()
-                >>> kep12b_lc = kep12b_lc[~kep12b_lc["flux"].mask]
                 >>> kep12b_obj = astronify.SoniSeries(kep12b_lc)
                 >>> kep12b_obj.sonify()
                 >>> kep12b_obj.play()
 
-Reference/API
-=============
+                
 
 .. automodapi:: astronify
