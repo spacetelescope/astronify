@@ -19,27 +19,32 @@ from .exceptions import InputWarning, InvalidInputError
 def data_to_pitch(data_array, pitch_range=[100,10000], center_pitch=440, zero_point="median",
                   stretch='linear', minmax_percent=None, minmax_value=None):
     """
-    Map data array to audible pitches
-    Apply given stretch and scaling to a data array, 
+    Map data array to audible pitches in the given range, and apply stretch and scaling
+    as required.
 
     Parameters
     ----------
+    data_array : array-like
+        Data to map to pitch values. Individual data values should be floats.
     pitch_range : array
-        Optional. Range of acceptable pitches in Hz. Defaults to commonly stated range of human
-        hearing which is 20Hz-20kHz.
-    data_array : array
-        The input data array.
+        Optional, default [100,10000]. Range of acceptable pitches in Hz. 
+    center_pitch : float
+        Optional, default 440. The pitch in Hz where that the the zero point of the 
+        data will be mapped to.
+    zero_point : str or float
+        Optional, default "median". The data value that will be mapped to the center
+        pitch. Options are mean, median, or a specifical data value (float).
     stretch : str
-        Optional, default 'asinh'. The stretch to apply to the image array.
+        Optional, default 'linear'. The stretch to apply to the data array.
         Valid values are: asinh, sinh, sqrt, log, linear
     minmax_percent : array
-        Optional. Interval based on a keeping a specified fraction of pixels (can be asymmetric) 
-        when scaling the image. The format is [lower percentile, upper percentile], where pixel
+        Optional. Interval based on a keeping a specified fraction of data values (can be asymmetric) 
+        when scaling the data. The format is [lower percentile, upper percentile], where data
         values below the lower percentile and above the upper percentile are clipped.
-        Only one of minmax_percent and minmax_value shoul be specified.
+        Only one of minmax_percent and minmax_value should be specified.
     minmax_value : array
-        Optional. Interval based on user-specified pixel values when scaling the image.
-        The format is [min value, max value], where pixel values below the min value and above
+        Optional. Interval based on user-specified data values when scaling the data array.
+        The format is [min value, max value], where data values below the min value and above
         the max value are clipped.
         Only one of minmax_percent and minmax_value should be specified.
 

@@ -26,13 +26,24 @@ from .utils.exceptions import InputWarning
 
 class PitchMap():
     """
-    Class to describe the data values to pitches function 
+    Class to describe the data value to pitch function 
     and associated arguments.
     """
 
     def __init__(self, pitch_func=data_to_pitch, **pitch_args):
         """
-        TODO: document
+        Initialize the PitchMap instance with a data to pitch function
+        and default arguments.
+
+        Parameters
+        ----------
+        pitch_func : function
+            Optional. Defaults to `~astronify.utils.data_to_pitch`.
+            If suppling a function it should take a data array as the first
+            parameter, and all other parameters should be optional.
+        **pitch_args 
+            Default parameters and values for the pitch function. Should include
+            all necessary arguments other than the data values.
         """
 
         # Setting up the default arguments
@@ -51,12 +62,11 @@ class PitchMap():
         Make sure the pitch mapping function and argument dictionary match.
 
         Note: This function does not check the the function gets all the required arguments.
-              (Maybe later)
         """
         # Only test if both pitch func and args are set
         if hasattr(self, "pitch_map_func") and hasattr(self, "pitch_map_args"):
 
-            # Only check parameters if there is no kwars argument
+            # Only check parameters if there is no kwargs argument
             param_types = [x.kind for x in signature(self.pitch_map_func).parameters.values()]
             if not Parameter.VAR_KEYWORD in param_types:
                 for arg_name in list(self.pitch_map_args):
@@ -66,11 +76,17 @@ class PitchMap():
                         del self.pitch_map_args[arg_name]
 
     def __call__(self, data):
+        """
+        Where does this show up?
+        """
         self._check_func_args()
         return self.pitch_map_func(data, **self.pitch_map_args)
 
     @property
     def pitch_map_func(self):
+        """
+        The pitch mapping function. 
+        """
         return self._pitch_map_func
 
     @pitch_map_func.setter
@@ -81,6 +97,10 @@ class PitchMap():
 
     @property
     def pitch_map_args(self):
+        """
+        Dictionary of additional arguments (other than the data array)
+        for the pitch mapping function.
+        """
         return self._pitch_map_args
 
     @pitch_map_args.setter
@@ -92,13 +112,25 @@ class PitchMap():
 
 class SoniSeries():
     """
-
-    Class to encapsulate a sonified data series.
-
-    TODO: finish documentation
+    Class that encapsulates a sonified data series.
     """
 
     def __init__(self, data, method="pyo", time_col="time", val_col="flux"):
+        """
+        Initialize a SoniSeries instance.
+
+        Parameters
+        ----------
+        data : `astropy.table.Table`
+            The table of data to be sonified.
+        method : str
+            Optional, default "pyo". Sonification method, currently only pyo 
+            (http://ajaxsoundstudio.com/software/pyo/) is available.
+        time_col : str
+            Optional, default "time". The data column to be mapped to time.
+        val_col : str
+            Optional, default "flux". The data column to be mapped to pitch.
+        """
         self.sonification_method = method
         self.time_col = time_col
         self.val_col = val_col
@@ -115,6 +147,9 @@ class SoniSeries():
 
     @property
     def sonification_method(self):
+        """
+        The Python module used for the sonification.
+        """
         return self._sonification_method
 
     @sonification_method.setter
@@ -128,6 +163,7 @@ class SoniSeries():
 
     @property
     def data(self):
+        """ The data table (~astropy.table.Table). """
         return self._data
 
     @data.setter
@@ -150,6 +186,7 @@ class SoniSeries():
 
     @property
     def time_col(self):
+        """ The data column mappend to time when sonifying. """
         return self._time_col
 
     @time_col.setter
@@ -159,6 +196,7 @@ class SoniSeries():
 
     @property
     def val_col(self):
+        """ The data column mappend to putch when sonifying. """
         return self._val_col
 
     @val_col.setter
@@ -168,6 +206,7 @@ class SoniSeries():
 
     @property
     def pitch_mapper(self):
+        """ The pitch mapping object that takes data values to pitch values (Hz). """
         return self._pitch_mapper
 
     @pitch_mapper.setter
@@ -176,7 +215,11 @@ class SoniSeries():
 
     def sonify(self):
         """
-        TODO: document, also add arguments
+        Perform the sonification, two columns will be added to teh data table: asf_pitch, and asf_onsets. 
+        The asf_pitch column will contain the sonified data in Hz.
+        The asf_onsets column will contain the start time for each note in seconds from the first note.
+        Metadata will also be added to the table giving information about the duration and spacing 
+        of the sonified pitches.
         """
         duration = 0.5 # note duration in seconds
         spacing = 0.01 # spacing between notes in seconds
@@ -192,7 +235,7 @@ class SoniSeries():
 
     def _pyo_play(self):
         """
-        TODO: document
+        Play the sonified data using pyo.
         """
 
         # Making sure we have a clean server
@@ -219,14 +262,13 @@ class SoniSeries():
 
     def _pyo_stop(self):
         """
-        TODO: document
+        Stop playing sonified data with pyo.
         """
-
-        self.streams.stop() # I think this is all?
+        self.streams.stop() 
 
     def _pyo_write(self, filepath):
         """
-        TODO: document
+        Write a wave file with the sonified data using pyo.
         """
 
         # Getting data ready
@@ -265,7 +307,7 @@ class SoniSeries():
 
     def play(self):
         """
-        TODO: document
+        Play the data sonification.
         """
         if self.sonification_method == "pyo":
             self._pyo_play()
@@ -274,7 +316,7 @@ class SoniSeries():
 
     def stop(self):
         """
-        TODO: document
+        Stop playing the data sonification.
         """
         if self.sonification_method == "pyo":
             self._pyo_stop()
@@ -283,7 +325,13 @@ class SoniSeries():
 
     def write(self, filepath):
         """
-        TODO: document
+        Save data sonification to the given file. 
+        Currently the only output option is a wav file.
+
+        Paramters
+        ---------
+        filepath : str
+            The path to the output file.
         """
         if self.sonification_method == "pyo":
             self._pyo_write(filepath)
