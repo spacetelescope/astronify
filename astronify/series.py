@@ -215,7 +215,7 @@ class SoniSeries():
 
     def sonify(self):
         """
-        Perform the sonification, two columns will be added to teh data table: asf_pitch, and asf_onsets. 
+        Perform the sonification, two columns will be added to the data table: asf_pitch, and asf_onsets. 
         The asf_pitch column will contain the sonified data in Hz.
         The asf_onsets column will contain the start time for each note in seconds from the first note.
         Metadata will also be added to the table giving information about the duration and spacing 
@@ -254,7 +254,7 @@ class SoniSeries():
         # how to make it better
         env = pyo.Linseg(list=[(0, 0), (0.01, 1), (duration - 0.1, 1),
                                (duration - 0.05, 0.5), (duration - 0.005, 0)],
-                         mul=[.1 for i in range(len(pitches))]).play(
+                         mul=[.05 for i in range(len(pitches))]).play(
                              delay=list(delays), dur=duration)
 
         self.streams = pyo.Sine(list(pitches), 0, env).out(delay=list(delays),
