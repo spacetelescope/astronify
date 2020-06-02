@@ -41,7 +41,7 @@ Installation
     $ cd astronify
     $ pip install .
 
-For active developement intall in develop mode
+For active development, install in develop mode
 
 .. code-block:: bash
 
