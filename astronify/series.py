@@ -213,6 +213,15 @@ class SoniSeries():
     def pitch_mapper(self, value):
         self._pitch_mapper = value
 
+    @property
+    def gain(self):
+        """ Adjustable gain for output. """
+        return self._gain
+
+    @gain.setter
+    def gain(self, value):
+        self._gain = value;
+
     def sonify(self):
         """
         Perform the sonification, two columns will be added to the data table: asf_pitch, and asf_onsets. 
@@ -223,14 +232,14 @@ class SoniSeries():
         """
         duration = 0.5 # note duration in seconds
         spacing = 0.01 # spacing between notes in seconds
-        gain = 0.05 # multiplier argument, in this case gain in the generated sine wave
+        self.gain = 0.05 # default gain in the generated sine wave. pyo multiplier, -1 to 1.
+
         data = self.data
         exptime = np.median(np.diff(data[self.time_col]))
 
         data.meta["asf_exposure_time"] = exptime
         data.meta["asf_note_duration"] = duration
         data.meta["asf_spacing"] = spacing
-        data.meta["asf_gain"] = gain
         
         data["asf_pitch"] = self.pitch_mapper(data[self.val_col])
         data["asf_onsets"] = [x for x in (data[self.time_col] - data[self.time_col][0])/exptime*spacing]
@@ -251,13 +260,12 @@ class SoniSeries():
         duration = self.data.meta["asf_note_duration"]
         pitches = np.repeat(self.data["asf_pitch"], 2)
         delays = np.repeat(self.data["asf_onsets"], 2)
-        gain = self.data.meta["asf_gain"]
 
         # TODO: This doesn't seem like the best way to do this, but I don't know
         # how to make it better
         env = pyo.Linseg(list=[(0, 0), (0.01, 1), (duration - 0.1, 1),
                                (duration - 0.05, 0.5), (duration - 0.005, 0)],
-                         mul=[gain for i in range(len(pitches))]).play(
+                         mul=[self.gain for i in range(len(pitches))]).play(
                              delay=list(delays), dur=duration)
 
         self.streams = pyo.Sine(list(pitches), 0, env).out(delay=list(delays),
@@ -278,7 +286,6 @@ class SoniSeries():
         duration = self.data.meta["asf_note_duration"]
         pitches = np.repeat(self.data["asf_pitch"], 2)
         delays = np.repeat(self.data["asf_onsets"], 2)
-        gain = self.data.meta["asf_gain"]
 
         # Making sure we have a clean server
         if self.server.getIsBooted():
@@ -290,7 +297,7 @@ class SoniSeries():
 
         env = pyo.Linseg(list=[(0, 0), (0.1, 1), (duration - 0.1, 1),
                                (duration - 0.05, 0.5), (duration - 0.005, 0)],
-                         mul=[gain for i in range(len(pitches))]).play(
+                         mul=[self.gain for i in range(len(pitches))]).play(
                              delay=list(delays), dur=duration)
         sine = pyo.Sine(list(pitches), 0, env).out(delay=list(delays),
                                                    dur=duration)
