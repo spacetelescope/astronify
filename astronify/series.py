@@ -213,16 +213,27 @@ class SoniSeries():
     def pitch_mapper(self, value):
         self._pitch_mapper = value
 
+    @property
+    def gain(self):
+        """ Adjustable gain for output. """
+        return self._gain
+
+    @gain.setter
+    def gain(self, value):
+        self._gain = value;
+
     def sonify(self):
         """
-        Perform the sonification, two columns will be added to teh data table: asf_pitch, and asf_onsets. 
+        Perform the sonification, two columns will be added to the data table: asf_pitch, and asf_onsets. 
         The asf_pitch column will contain the sonified data in Hz.
         The asf_onsets column will contain the start time for each note in seconds from the first note.
         Metadata will also be added to the table giving information about the duration and spacing 
-        of the sonified pitches.
+        of the sonified pitches, as well as an adjustable gain.
         """
         duration = 0.5 # note duration in seconds
         spacing = 0.01 # spacing between notes in seconds
+        self.gain = 0.05 # default gain in the generated sine wave. pyo multiplier, -1 to 1.
+
         data = self.data
         exptime = np.median(np.diff(data[self.time_col]))
 
@@ -254,7 +265,7 @@ class SoniSeries():
         # how to make it better
         env = pyo.Linseg(list=[(0, 0), (0.01, 1), (duration - 0.1, 1),
                                (duration - 0.05, 0.5), (duration - 0.005, 0)],
-                         mul=[.1 for i in range(len(pitches))]).play(
+                         mul=[self.gain for i in range(len(pitches))]).play(
                              delay=list(delays), dur=duration)
 
         self.streams = pyo.Sine(list(pitches), 0, env).out(delay=list(delays),
@@ -286,7 +297,7 @@ class SoniSeries():
 
         env = pyo.Linseg(list=[(0, 0), (0.1, 1), (duration - 0.1, 1),
                                (duration - 0.05, 0.5), (duration - 0.005, 0)],
-                         mul=[0.05 for i in range(len(pitches))]).play(
+                         mul=[self.gain for i in range(len(pitches))]).play(
                              delay=list(delays), dur=duration)
         sine = pyo.Sine(list(pitches), 0, env).out(delay=list(delays),
                                                    dur=duration)
