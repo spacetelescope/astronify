@@ -15,6 +15,8 @@ from astropy.visualization import (SqrtStretch, LogStretch, AsinhStretch, SinhSt
 
 from .exceptions import InputWarning, InvalidInputError
 
+__all__ = ['data_to_pitch']
+
 
 def data_to_pitch(data_array, pitch_range=[100,10000], center_pitch=440, zero_point="median",
                   stretch='linear', minmax_percent=None, minmax_value=None):
@@ -59,6 +61,9 @@ def data_to_pitch(data_array, pitch_range=[100,10000], center_pitch=440, zero_po
         zero_point = np.median(data_array)
     if zero_point in ("ave", "mean", "average"):
         zero_point = np.mean(data_array)
+
+    if (data_array == zero_point).all(): # All values are the same, no more calculation needed
+        return np.full(len(data_array), zero_point) 
 
     # Normalizing the data_array and adding the zero point (so it can go through the same transform)
     data_array = np.append(np.array(data_array), zero_point)
