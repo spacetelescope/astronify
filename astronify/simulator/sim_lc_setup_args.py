@@ -6,6 +6,7 @@
 """
 
 import argparse
+import sim_lc_config
 
 def sim_lc_setup_args():
     """
@@ -23,15 +24,18 @@ def sim_lc_setup_args():
                         " curve to create.", choices=["flat", "transit",
                                                       "sine", "flare"])
 
-    parser.add_argument("lc_ofile", action="store", type=str, help="Name of"
-                        " output FITS file to create.")
+    parser.add_argument("-o", dest="lc_ofile", action="store", type=str,
+                        help="Name of output FITS file to create.",
+                        default=sim_lc_config.sim_lc_ofile)
 
-    parser.add_argument("-l", action="store", type=int, default=500,
+    parser.add_argument("-l", action="store", type=int,
+                        default=sim_lc_config.sim_lc_length,
                         dest="lc_length", help="Total number of flux"
                         " measurements in the light curve. Default ="
                         " %(default)s.")
 
-    parser.add_argument("-n", action="store", type=float, default=0,
+    parser.add_argument("-n", action="store", type=float,
+                        default=sim_lc_config.sim_lc_noise,
                         dest="lc_noise", help="Amount of noise to add to the"
                         " measurements in the light curve, specified by the"
                         " standard deviation of the normal distribution to draw"
@@ -39,11 +43,13 @@ def sim_lc_setup_args():
                         " %(default)s.")
 
     parser.add_argument("-v", action="store_true", dest="visualize",
-                        default=False, help="If True, a plot of the light curve"
+                        default=sim_lc_config.sim_lc_vizualize,
+                        help="If True, a plot of the light curve"
                         " that is generated will be plot on the screen. Default"
                         " = %(default)s.")
 
-    parser.add_argument("-y", action="store", type=float, default=100.,
+    parser.add_argument("-y", action="store", type=float,
+                        default=sim_lc_config.sim_lc_yoffset,
                         dest="lc_yoffset", help="Baseline (unitless) flux height"
                         " of the light curve. Used to test sonification of"
                         " sources with different total brightness. Default ="
@@ -52,22 +58,26 @@ def sim_lc_setup_args():
     # Transit-related parameters here.
     transit_group = parser.add_argument_group("transit", "Parameters for transit"
                                               " signals.")
-    transit_group.add_argument("--transit_depth", type=float, default=10.,
+    transit_group.add_argument("--transit_depth", type=float,
+                               default=sim_lc_config.sim_lc_transit_depth,
                                dest="transit_depth", help="Depth of the transit"
                                " signal specified as a percent, e.g., set to"
                                " 10.0 for a 10%% depth transit. Default ="
                                " %(default)s.")
-    transit_group.add_argument("--transit_period", type=int, default=50,
+    transit_group.add_argument("--transit_period", type=int,
+                               default=sim_lc_config.sim_lc_transit_period,
                                dest="transit_period", help="Period of the"
                                " transit signal, specified as the number of"
                                " fluxes (bins) between the start of each event."
                                " Default = %(default)s.")
-    transit_group.add_argument("--transit_start", type=int, default=10,
+    transit_group.add_argument("--transit_start", type=int,
+                               default=sim_lc_config.sim_lc_transit_start,
                                dest="transit_start", help="Start of the first"
                                " transit, specified as the index of the"
                                " flux (bin) to use as the start of the first"
                                " transit event. Default = %(default)s.")
-    transit_group.add_argument("--transit_width", type=int, default=5,
+    transit_group.add_argument("--transit_width", type=int,
+                               default=sim_lc_config.sim_lc_transit_width,
                                dest="transit_width", help="Width of the"
                                " transit signal, specified as the number of"
                                " fluxes (bins) between the start and end of each"
@@ -76,11 +86,13 @@ def sim_lc_setup_args():
     # Sinusoidal-related parameters here.
     sine_group = parser.add_argument_group("sinusoidal", "Parameters for"
                                            " sinusoidal signals.")
-    sine_group.add_argument("--sine_amp", type=float, default=10.,
+    sine_group.add_argument("--sine_amp", type=float,
+                            default=sim_lc_config.sim_lc_sine_amp,
                             dest="sine_amp", help="Amplitude of the"
                             " sinusoidal signal to add. Default ="
                             " %(default)s.")
-    sine_group.add_argument("--sine_period", type=float, default=50.,
+    sine_group.add_argument("--sine_period", type=float,
+                            default=sim_lc_config.sim_lc_sine_period,
                             dest="sine_period", help="Period of the"
                             " sinusoidal signal, specified in the (unitless)"
                             " time axis (flux bins). Default = %(default)s.")

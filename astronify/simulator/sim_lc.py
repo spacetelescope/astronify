@@ -8,8 +8,10 @@
 """
 
 from astropy.io import fits
+from astropy.table import Table
 import matplotlib.pyplot as plt
 import numpy as np
+import sim_lc_config
 from add_flare_signal import add_flare_signal
 from add_lc_noise import add_lc_noise
 from add_sine_signal import add_sine_signal
@@ -17,16 +19,25 @@ from add_transit_signal import add_transit_signal
 from check_transit_params import check_transit_params
 from sim_lc_setup_args import sim_lc_setup_args
 
-def sim_lc(lc_type, lc_ofile, lc_length, lc_noise, visualize, lc_yoffset,
-           transit_depth, transit_period, transit_start, transit_width,
-           sine_amp, sine_period):
+def sim_lc(lc_type, lc_ofile=sim_lc_config.sim_lc_ofile,
+           lc_length=sim_lc_config.sim_lc_length,
+           lc_noise=sim_lc_config.sim_lc_noise,
+           visualize=sim_lc_config.sim_lc_visualize,
+           lc_yoffset=sim_lc_config.sim_lc_yoffset,
+           transit_depth=sim_lc_config.sim_lc_transit_depth,
+           transit_period=sim_lc_config.sim_lc_transit_period,
+           transit_start=sim_lc_config.sim_lc_transit_start,
+           transit_width=sim_lc_config.sim_lc_transit_width,
+           sine_amp=sim_lc_config.sim_lc_sine_amp,
+           sine_period=sim_lc_config.sim_lc_sine_period):
     """
     Create light curve of specified type as a FITS file.
 
     :param lc_type: Type of light curve to make.
     :type lc_type: str
 
-    :param lc_ofile: Name of output FITS file.
+    :param lc_ofile: Name of output FITS file.  If set to an empty string,
+    no file will be saved to disk.
     :type lc_ofile: str
 
     :param lc_length: Number of fluxes in light curve.
@@ -62,6 +73,8 @@ def sim_lc(lc_type, lc_ofile, lc_length, lc_noise, visualize, lc_yoffset,
 
     :param sine_period: Period of the sinusoidal signal to add.
     :type sine_period: float
+
+    :returns: astropy Table -- The time and flux columns.
     """
 
     # Generate baseline light curve fluxes.
@@ -91,25 +104,31 @@ def sim_lc(lc_type, lc_ofile, lc_length, lc_noise, visualize, lc_yoffset,
         ax1.plot(times, fluxes_with_noise, 'bo')
         plt.show()
 
-    # Save light curve as FITS file.
-    hdr = fits.Header()
-    # Add input arguments as keyword headers here.
-    hdr.append(("LCTYPE", lc_type, "Type of signal."))
-    hdr.append(("LCLENGTH", lc_length, "Number of fluxes."))
-    hdr.append(("LCYOFF", lc_yoffset, "Baseline flux value (unitless)."))
-    hdr.append(("LCNOISE", lc_noise, "Std. dev. of normal dist. used to apply"
-                " noise."))
-    # This builds the primary header, no data, just keywords.
-    primary_hdu = fits.PrimaryHDU(header=hdr)
-    # This sets up the binary table and creates the first extension header.
-    col1 = fits.Column(name="time", array=times, format='D')
-    col2 = fits.Column(name="flux", array=fluxes_with_noise, format='D')
-    col3 = fits.Column(name="flux_pure", array=fluxes, format='D')
-    hdu1 = fits.BinTableHDU.from_columns([col1, col2, col3])
-    # This combines the primary HDU and first extension header together and
-    # writes to the output file.
-    hdu_list = fits.HDUList([primary_hdu, hdu1])
-    hdu_list.writeto(lc_ofile, overwrite=True, checksum=True)
+    if lc_ofile:
+        # Save light curve as FITS file.
+        hdr = fits.Header()
+        # Add input arguments as keyword headers here.
+        hdr.append(("LCTYPE", lc_type, "Type of signal."))
+        hdr.append(("LCLENGTH", lc_length, "Number of fluxes."))
+        hdr.append(("LCYOFF", lc_yoffset, "Baseline flux value (unitless)."))
+        hdr.append(("LCNOISE", lc_noise, "Std. dev. of normal dist. used to"
+                    " apply noise."))
+        # This builds the primary header, no data, just keywords.
+        primary_hdu = fits.PrimaryHDU(header=hdr)
+        # This sets up the binary table and creates the first extension header.
+        col1 = fits.Column(name="time", array=times, format='D')
+        col2 = fits.Column(name="flux", array=fluxes_with_noise, format='D')
+        col3 = fits.Column(name="flux_pure", array=fluxes, format='D')
+        hdu1 = fits.BinTableHDU.from_columns([col1, col2, col3])
+        # This combines the primary HDU and first extension header together and
+        # writes to the output file.
+        hdu_list = fits.HDUList([primary_hdu, hdu1])
+        hdu_list.writeto(lc_ofile, overwrite=True, checksum=True)
+
+    # Return the times and fluxes as an astropy Table so it can be directly
+    # used later in a script.
+    return Table([times, fluxes_with_noise, fluxes],
+                 names=("time", "flux", "flux_pure"))
 
 if __name__ == "__main__":
     # Get command-line arguments.
