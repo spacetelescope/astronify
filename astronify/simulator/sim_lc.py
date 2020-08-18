@@ -11,25 +11,25 @@ from astropy.io import fits
 from astropy.table import Table
 import matplotlib.pyplot as plt
 import numpy as np
-import sim_lc_config
-from add_flare_signal import add_flare_signal
-from add_lc_noise import add_lc_noise
-from add_sine_signal import add_sine_signal
-from add_transit_signal import add_transit_signal
-from check_transit_params import check_transit_params
-from sim_lc_setup_args import sim_lc_setup_args
+from .sim_lc_config import SimLcConfig as sim_lc_config
+from .add_flare_signal import add_flare_signal
+from .add_lc_noise import add_lc_noise
+from .add_sine_signal import add_sine_signal
+from .add_transit_signal import add_transit_signal
+from .check_transit_params import check_transit_params
+from .sim_lc_setup_args import sim_lc_setup_args
 
-def sim_lc(lc_type, lc_ofile=sim_lc_config.sim_lc_ofile,
-           lc_length=sim_lc_config.sim_lc_length,
-           lc_noise=sim_lc_config.sim_lc_noise,
-           visualize=sim_lc_config.sim_lc_visualize,
-           lc_yoffset=sim_lc_config.sim_lc_yoffset,
-           transit_depth=sim_lc_config.sim_lc_transit_depth,
-           transit_period=sim_lc_config.sim_lc_transit_period,
-           transit_start=sim_lc_config.sim_lc_transit_start,
-           transit_width=sim_lc_config.sim_lc_transit_width,
-           sine_amp=sim_lc_config.sim_lc_sine_amp,
-           sine_period=sim_lc_config.sim_lc_sine_period):
+def simulated_lc(lc_type, lc_ofile=sim_lc_config.sim_lc_ofile,
+                 lc_length=sim_lc_config.sim_lc_length,
+                 lc_noise=sim_lc_config.sim_lc_noise,
+                 visualize=sim_lc_config.sim_lc_visualize,
+                 lc_yoffset=sim_lc_config.sim_lc_yoffset,
+                 transit_depth=sim_lc_config.sim_lc_transit_depth,
+                 transit_period=sim_lc_config.sim_lc_transit_period,
+                 transit_start=sim_lc_config.sim_lc_transit_start,
+                 transit_width=sim_lc_config.sim_lc_transit_width,
+                 sine_amp=sim_lc_config.sim_lc_sine_amp,
+                 sine_period=sim_lc_config.sim_lc_sine_period):
     """
     Create light curve of specified type as a FITS file.
 

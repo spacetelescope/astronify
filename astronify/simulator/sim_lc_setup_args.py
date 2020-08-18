@@ -6,7 +6,7 @@
 """
 
 import argparse
-import sim_lc_config
+from .sim_lc_config import SimLcConfig as sim_lc_config
 
 def sim_lc_setup_args():
     """
