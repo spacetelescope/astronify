@@ -19,7 +19,7 @@ __all__ = ['data_to_pitch']
 
 
 def data_to_pitch(data_array, pitch_range=[100,10000], center_pitch=440, zero_point="median",
-                  stretch='linear', minmax_percent=None, minmax_value=None):
+                  stretch='linear', minmax_percent=None, minmax_value=None, invert=False):
     """
     Map data array to audible pitches in the given range, and apply stretch and scaling
     as required.
@@ -49,6 +49,9 @@ def data_to_pitch(data_array, pitch_range=[100,10000], center_pitch=440, zero_po
         The format is [min value, max value], where data values below the min value and above
         the max value are clipped.
         Only one of minmax_percent and minmax_value should be specified.
+    invert : bool
+        Optional, default False.  If True the pitch array is inverted (low pitches become high 
+        and vice versa).
 
     Returns
     -------
@@ -97,10 +100,20 @@ def data_to_pitch(data_array, pitch_range=[100,10000], center_pitch=440, zero_po
     # Performing the transform and then putting it into the pich range
     pitch_array = transform(data_array)
 
+    
+    if invert:
+        pitch_array = 1 - pitch_array
+        
     zero_point = pitch_array[-1]
     pitch_array = pitch_array[:-1]
-    
-    pitch_array = np.multiply((center_pitch - pitch_range[0])/zero_point, pitch_array, out=pitch_array) + pitch_range[0]
+
+          
+    #pitch_array = np.multiply((center_pitch - pitch_range[0])/zero_point, pitch_array, out=pitch_array) + pitch_range[0]
+
+    if ((1/zero_point)*(center_pitch - pitch_range[0]) +  pitch_range[0]) <= pitch_range[1]:
+        pitch_array = (pitch_array/zero_point)*(center_pitch - pitch_range[0]) +  pitch_range[0]
+    else:
+        pitch_array = ((pitch_array-zero_point)/(1-zero_point))*(pitch_range[1] - center_pitch) +  center_pitch
     
     return pitch_array
 

@@ -136,6 +136,10 @@ class SoniSeries():
         self.val_col = val_col
         self.data = data
 
+        # Default specs
+        self.note_duration = 0.5 # note duration in seconds
+        self.note_spacing = 0.01 # spacing between notes in seconds
+        self.gain = 0.05 # default gain in the generated sine wave. pyo multiplier, -1 to 1.
         self.pitch_mapper = PitchMap(data_to_pitch)
 
         if method == "pyo":
@@ -222,6 +226,26 @@ class SoniSeries():
     def gain(self, value):
         self._gain = value;
 
+    @property
+    def note_duration(self):
+        """ How long each individual note will be in seconds."""
+        return self._note_duration
+
+    @note_duration.setter
+    def note_duration(self, value):
+        # Add in min value check
+        self._note_duration = value;
+
+    @property
+    def note_spacing(self):
+        """ The spacing of the notes on average (will adjust based on time) in seconds. """
+        return self._note_spacing
+
+    @note_spacing.setter
+    def note_spacing(self, value):
+        # Add in min value check
+        self._note_spacing = value;
+        
     def sonify(self):
         """
         Perform the sonification, two columns will be added to the data table: asf_pitch, and asf_onsets. 
@@ -230,19 +254,15 @@ class SoniSeries():
         Metadata will also be added to the table giving information about the duration and spacing 
         of the sonified pitches, as well as an adjustable gain.
         """
-        duration = 0.5 # note duration in seconds
-        spacing = 0.01 # spacing between notes in seconds
-        self.gain = 0.05 # default gain in the generated sine wave. pyo multiplier, -1 to 1.
-
         data = self.data
         exptime = np.median(np.diff(data[self.time_col]))
 
         data.meta["asf_exposure_time"] = exptime
-        data.meta["asf_note_duration"] = duration
-        data.meta["asf_spacing"] = spacing
+        data.meta["asf_note_duration"] = self.note_duration
+        data.meta["asf_spacing"] = self.note_spacing
         
         data["asf_pitch"] = self.pitch_mapper(data[self.val_col])
-        data["asf_onsets"] = [x for x in (data[self.time_col] - data[self.time_col][0])/exptime*spacing]
+        data["asf_onsets"] = [x for x in (data[self.time_col] - data[self.time_col][0])/exptime*self.note_spacing]
 
     def _pyo_play(self):
         """
