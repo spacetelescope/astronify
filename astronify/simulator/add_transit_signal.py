@@ -38,8 +38,8 @@ def add_transit_signal(fluxes, transit_depth, transit_period, transit_start,
     transit_indexes = np.zeros(n_fluxes)
 
     # Get the set of start indexes.
-    start_indexes = np.arange(transit_start, n_fluxes+1, transit_period)
-
+    start_indexes = np.arange(transit_start, n_fluxes+1, transit_period,
+                              dtype=np.int)
     # Set transit indexes to 1.
     for st_ind in start_indexes:
         if st_ind + transit_width < fluxes.size:

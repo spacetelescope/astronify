@@ -7,5 +7,6 @@ from ._astropy_init import *   # noqa
 # ----------------------------------------------------------------------------
 
 from .series import SoniSeries   # noqa
+from .simulator.sim_lc import simulated_lc    # noqa
 
-__all__ = ['SoniSeries']   # noqa
+__all__ = ['SoniSeries', 'simulated_lc']   # noqa
