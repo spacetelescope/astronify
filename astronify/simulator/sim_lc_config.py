@@ -1,5 +1,9 @@
 
 class SimLcConfig:
+    """
+    Class that holds the default configuration parameters
+    for simulated light curves.
+    """
 
     # General Parameters
     sim_lc_ofile = ""

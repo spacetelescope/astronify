@@ -18,11 +18,11 @@ from astropy.io import fits
 from astropy.time import Time
 
 import pyo
-import thinkdsp
 
-from .utils.pitch_mapping import data_to_pitch
-from .utils.exceptions import InputWarning
+from ..utils.pitch_mapping import data_to_pitch
+from ..utils.exceptions import InputWarning
 
+__all__ = ['PitchMap', 'SoniSeries']
 
 class PitchMap():
     """
@@ -111,27 +111,20 @@ class PitchMap():
              
 
 class SoniSeries():
-    """
-    Class that encapsulates a sonified data series.
-    """
 
-    def __init__(self, data, method="pyo", time_col="time", val_col="flux"):
+    def __init__(self, data, time_col="time", val_col="flux"):
         """
-        Initialize a SoniSeries instance.
+        Class that encapsulates a sonified data series.
 
         Parameters
         ----------
         data : `astropy.table.Table`
             The table of data to be sonified.
-        method : str
-            Optional, default "pyo". Sonification method, currently only pyo 
-            (http://ajaxsoundstudio.com/software/pyo/) is available.
         time_col : str
             Optional, default "time". The data column to be mapped to time.
         val_col : str
             Optional, default "flux". The data column to be mapped to pitch.
         """
-        self.sonification_method = method
         self.time_col = time_col
         self.val_col = val_col
         self.data = data
@@ -142,28 +135,11 @@ class SoniSeries():
         self.gain = 0.05 # default gain in the generated sine wave. pyo multiplier, -1 to 1.
         self.pitch_mapper = PitchMap(data_to_pitch)
 
-        if method == "pyo":
-            self._init_pyo()
+        self._init_pyo()
 
     def _init_pyo(self):
         self.server = pyo.Server()
         self.streams = None
-
-    @property
-    def sonification_method(self):
-        """
-        The Python module used for the sonification.
-        """
-        return self._sonification_method
-
-    @sonification_method.setter
-    def sonification_method(self, value):
-        method_warn_str = ('The only valid sonification methods are pyo and'
-                           ' thinkdsp.')
-        assert value.lower() in ("pyo", "thinkdsp"), method_warn_str
-        self._sonification_method = value
-        if value == "pyo":
-            self._init_pyo()
 
     @property
     def data(self):
@@ -264,9 +240,9 @@ class SoniSeries():
         data["asf_pitch"] = self.pitch_mapper(data[self.val_col])
         data["asf_onsets"] = [x for x in (data[self.time_col] - data[self.time_col][0])/exptime*self.note_spacing]
 
-    def _pyo_play(self):
+    def play(self):
         """
-        Play the sonified data using pyo.
+        Play the data sonification.
         """
 
         # Making sure we have a clean server
@@ -291,15 +267,21 @@ class SoniSeries():
         self.streams = pyo.Sine(list(pitches), 0, env).out(delay=list(delays),
                                                            dur=duration)
 
-    def _pyo_stop(self):
+    def stop(self):
         """
-        Stop playing sonified data with pyo.
+        Stop playing the data sonification.
         """
         self.streams.stop() 
 
-    def _pyo_write(self, filepath):
+    def write(self, filepath):
         """
-        Write a wave file with the sonified data using pyo.
+        Save data sonification to the given file. 
+        Currently the only output option is a wav file.
+
+        Parameters
+        ----------
+        filepath : str
+            The path to the output file.
         """
 
         # Getting data ready
@@ -327,44 +309,3 @@ class SoniSeries():
         self.server.shutdown()
         self.server.reinit(audio="portaudio")
 
-    def _thinkdsp_play(self):
-        pass
-
-    def _thinkdsp_stop(self):
-        pass
-
-    def _thinkdsp_write(self, filepath):
-        pass
-
-    def play(self):
-        """
-        Play the data sonification.
-        """
-        if self.sonification_method == "pyo":
-            self._pyo_play()
-        else:  # thinkdsp
-            self._thinkdsp_play()
-
-    def stop(self):
-        """
-        Stop playing the data sonification.
-        """
-        if self.sonification_method == "pyo":
-            self._pyo_stop()
-        else:  # thinkdsp
-            self._thinkdsp_stop()
-
-    def write(self, filepath):
-        """
-        Save data sonification to the given file. 
-        Currently the only output option is a wav file.
-
-        Paramters
-        ---------
-        filepath : str
-            The path to the output file.
-        """
-        if self.sonification_method == "pyo":
-            self._pyo_write(filepath)
-        else:  # thinkdsp
-            self._thinkdsp_write(filepath)
