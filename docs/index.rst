@@ -1,3 +1,8 @@
++++++++
+Welcome
++++++++
+
+
 .. image:: _static/astronify-TEXT.png
     :width: 800
     :alt: Astronify logo
@@ -15,7 +20,7 @@ Astronify lives on GitHub at: `github.com/spacetelescope/astronify <https://gith
 
   astronify/index.rst
 
-  Series Sonifiction Tutorial <astronify/Intro_Astronify_Series.rst>
+  astronify/tutorials.rst
 
 
 

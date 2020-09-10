@@ -29,7 +29,7 @@ not use.
 
 .. code:: python
 
-    >>> import astronify
+    >>> from astronify.series import SoniSeries
     >>> import lightkurve
     
     >>> import matplotlib    
@@ -77,7 +77,7 @@ Now to sonify the same data.
 
 .. code:: python
 
-    >>> kep12b_obj = astronify.SoniSeries(kep12b_lc)
+    >>> kep12b_obj = SoniSeries(kep12b_lc)
     >>> kep12b_obj.sonify()
 
 

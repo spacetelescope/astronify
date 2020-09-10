@@ -113,7 +113,7 @@ html_theme_options = {
 
 
 # Custom sidebar templates, maps document names to template names.
-#html_sidebars = {}
+html_sidebars = { '**': ['globaltoc.html', 'localtoc.html', 'searchbox.html'] }
 
 # The name of an image file (relative to this directory) to place at the top
 # of the sidebar.
@@ -122,7 +122,7 @@ html_logo = '_static/astronify-CIRCLE.png'
 # The name of an image file (within the static path) to use as favicon of the
 # docs.  This file should be a Windows icon file (.ico) being 16x16 or 32x32
 # pixels large.
-#html_favicon = '_static/astronify-CIRCLE.png'
+html_favicon = '_static/astronify-CIRCLE.png'
 
 # If not '', a 'Last updated on:' timestamp is inserted at every page bottom,
 # using the given strftime format.
@@ -134,6 +134,10 @@ html_title = '{0} v{1}'.format(project, release)
 
 # Output file base name for HTML help builder.
 htmlhelp_basename = project + 'doc'
+
+# Static files to copy after template files
+html_static_path = ['_static']
+html_style = 'astronify.css'
 
 
 # -- Options for LaTeX output -------------------------------------------------
