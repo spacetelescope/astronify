@@ -4,5 +4,20 @@ div.topbar a.brand {
   background: transparent url("astronify-CIRCLE.png") no-repeat 10px 4px;
   background-image: url("astronify-CIRCLE.png"), none;
   background-size: 32px 32px;
+}
 
+
+
+.logo{
+    height: 120px;
+    width:120px;
+    margin-left:auto;
+    margin-right: auto;
+    padding-bottom: 20px;
+    margin-top: 15px;
+    
+}
+
+div.document{
+    margin-top: 40px;
 }
