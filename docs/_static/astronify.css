@@ -1,5 +1,9 @@
 @import url("bootstrap-astropy.css");
 
+*{
+    font-family: sans-serif;
+}
+
 div.topbar a.brand {
   background: transparent url("astronify-CIRCLE.png") no-repeat 10px 4px;
   background-image: url("astronify-CIRCLE.png"), none;
@@ -21,3 +25,21 @@ div.topbar a.brand {
 div.document{
     margin-top: 40px;
 }
+
+H1{
+    color:white;
+    font-size: 1px;
+}
+
+.intro{
+    color: aqua;
+}
+
+.heading{
+    color: #0D4960;
+    font-size: 25px;
+    font-weight: 800;
+    line-height: 30px;
+
+}
+
