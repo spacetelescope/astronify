@@ -25,21 +25,17 @@ from ..utils.exceptions import InputWarning
 __all__ = ['PitchMap', 'SoniSeries']
 
 class PitchMap():
-    """
-    Class to describe the data value to pitch function 
-    and associated arguments.
-    """
 
     def __init__(self, pitch_func=data_to_pitch, **pitch_args):
         """
-        Initialize the PitchMap instance with a data to pitch function
-        and default arguments.
+        Class that encapsulates the data value to pitch function 
+        and associated arguments.
 
         Parameters
         ----------
         pitch_func : function
             Optional. Defaults to `~astronify.utils.data_to_pitch`.
-            If suppling a function it should take a data array as the first
+            If supplying a function it should take a data array as the first
             parameter, and all other parameters should be optional.
         **pitch_args 
             Default parameters and values for the pitch function. Should include

@@ -13,7 +13,7 @@ Data Series Sonification
 
 Data series sonification refers to taking a data table and mapping one column to
 time, and one column to pitch. In astronomy this technique is commonly used to
-sonify light curves, where time is mapped to time (scaled for reasonable listening)
+sonify light curves, where observation time is scaled to listening time
 and flux is mapped to pitch. While Astronify's sonification uses the columns "time"
 and "flux" by default, any two columns can be supplied and a sonification created.
 
@@ -89,7 +89,8 @@ of float values and transformed them into audible pitch values (in Hz).
 Given a center pitch, zero point, and pitch range, the data values will be scaled with a
 chosen stretch (linear, hyperbolic sine, hyperbolic arcsine, logarithmic or square
 root) such that the zero point maps to the center pitch and all pitches fall within
-the pitch range (the entire pitch range may not be used).
+the pitch range. The given pitch range defines the maximum pitch boundaries, but
+depending on the parameters of sonification output pitches may not reach the edges.
 
 The zero point is calculated based on the input argument (mean, median, or specified value)
 and then appended to the data array. The resulting array is scaled to the interval [0,1]
@@ -98,7 +99,11 @@ if the invert argument is set, the array is inverted by subtracting all values f
 
 The scaled zero point is then removed from the array which is scaled to the pitch range
 such that the scaled zero point become the center pitch value and the entire pitch range
-fell within the input pitch range. In practice this means one of two things: The array is scaled such that the 0 corresponds to the minimum of the input pitch range and the scaled zero point corresponds to the center pitch value. Or, the scaled zero point corresponds to the center pitch value and 1 corresponds to the maximum of the input pitch range. Whichever scaling means that all output pitch values fall within the desired range.
+fell within the input pitch range. In practice this means one of two things:
+The array is scaled such that the 0 corresponds to the minimum of the input pitch range and the
+scaled zero point corresponds to the center pitch value. Or, the scaled zero point corresponds to
+the center pitch value and 1 corresponds to the maximum of the input pitch range. Whichever
+scaling means that all output pitch values fall within the desired range.
 
 
 Troubleshooting
@@ -134,7 +139,7 @@ exoplanet or stellar flare.
 
                 >>> from astronify import simulator, series
 
-                >>> lc_data = simulator.simulated_lc("transit", visualize=Fake, transit_depth=1.5,
+                >>> lc_data = simulator.simulated_lc("transit", visualize=False, transit_depth=1.5,
                 ...                                   transit_period=145, transit_width=42,
                 ...                                   lc_noise=0.5, lc_length=750)
                 >>> soni_obj = series.SoniSeries(lc_data)

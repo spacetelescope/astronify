@@ -66,11 +66,11 @@ def simulated_lc(lc_type, lc_ofile=SimLcConfig.sim_lc_ofile,
 
     transit_period : int
         Period of transit (number of fluxes/bins between the start of each event.)
-        (Only relevent for transit type light curve).
+        (Only relevant for transit type light curve).
 
     transit_start : int
         Start index of transit (the index of the flux/bin to use as the start of the first transit event.)
-        (Only relevent for transit type light curve).
+        (Only relevant for transit type light curve).
 
     transit_width : int
         Width of transit (number of fluxes/bins between the start and end of each event.)

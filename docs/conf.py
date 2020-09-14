@@ -113,7 +113,7 @@ html_theme_options = {
 
 
 # Custom sidebar templates, maps document names to template names.
-html_sidebars = { '**': ['globaltoc.html', 'localtoc.html', 'searchbox.html'] }
+html_sidebars = { '**': ['localtoc.html', 'searchbox.html'] }
 
 # The name of an image file (relative to this directory) to place at the top
 # of the sidebar.

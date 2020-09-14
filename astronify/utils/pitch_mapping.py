@@ -35,7 +35,7 @@ def data_to_pitch(data_array, pitch_range=[100,10000], center_pitch=440, zero_po
         data will be mapped to.
     zero_point : str or float
         Optional, default "median". The data value that will be mapped to the center
-        pitch. Options are mean, median, or a specifical data value (float).
+        pitch. Options are mean, median, or a specified data value (float).
     stretch : str
         Optional, default 'linear'. The stretch to apply to the data array.
         Valid values are: asinh, sinh, sqrt, log, linear
@@ -106,9 +106,6 @@ def data_to_pitch(data_array, pitch_range=[100,10000], center_pitch=440, zero_po
         
     zero_point = pitch_array[-1]
     pitch_array = pitch_array[:-1]
-
-          
-    #pitch_array = np.multiply((center_pitch - pitch_range[0])/zero_point, pitch_array, out=pitch_array) + pitch_range[0]
 
     if ((1/zero_point)*(center_pitch - pitch_range[0]) +  pitch_range[0]) <= pitch_range[1]:
         pitch_array = (pitch_array/zero_point)*(center_pitch - pitch_range[0]) +  pitch_range[0]

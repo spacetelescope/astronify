@@ -1,8 +1,6 @@
-+++++++++
-Astronify
-+++++++++
-
-
++++++++
+Welcome
++++++++
 .. image:: _static/astronify-TEXT.png
     :width: 600
     :alt: Astronify logo
@@ -10,17 +8,25 @@ Astronify
     
 .. role:: heading
     
-
-   
+ 
 :heading:`Astronify sonifies astronimical data! Turning telescope observations into sound.`
 
 
-Code Documentation
-==================
-This package is under active development should be considered an alpha version.
-Therefore function signatures may change without warning, so update with caution.
+Documentation
+=============
 
-Astronify lives on GitHub at: `github.com/spacetelescope/astronify <https://github.com/spacetelescope/astronify>`_.
+This package is under active development. Currently Astronify can sonify data series, and will ultimately grow to encompass a range of sonification functionality.
+
+We welcome feedback and code contributions, visit us on GitHub at: `github.com/spacetelescope/astronify <https://github.com/spacetelescope/astronify>`_.
+
+.. toctree::
+   :maxdepth: 1
+
+   astronify/install.rst
+
+   astronify/index.rst
+
+   astronify/tutorials.rst
 
 
 Try Listening
@@ -35,22 +41,16 @@ Feel free to reach out with any questions or ideas!
 
 Email us at astronify@stsci.edu
 
-Join our list serv. Send a blank email to astronify-users-subscribe-request@maillist.stsci.edu to be added.
-astronify-users@maillist.stsci.edu
+..
+   Join our list serv. Send a blank email to astronify-users-subscribe-request@maillist.stsci.edu to be added. astronify-users@maillist.stsci.edu --->
     
+..
+   Media
+   =====
+   `Out of The Blocks Podcast Episode <https://www.wypr.org/programs/out-blocks>`_
 
-Media
-=====
-`Out of The Blocks Podcast Episode <https://www.wypr.org/programs/out-blocks>`_
 
 
-.. toctree::
-
-  astronify/install.rst
-
-  astronify/index.rst
-
-  astronify/tutorials.rst
 
 
 
