@@ -2,3 +2,8 @@
 
 # This sub-module is destined for common non-package specific utility
 # functions.
+
+
+from .pitch_mapping import *
+
+__all__ = ['data_to_pitch']

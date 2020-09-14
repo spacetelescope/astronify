@@ -11,7 +11,7 @@ from astropy.io import fits
 from astropy.table import Table
 import matplotlib.pyplot as plt
 import numpy as np
-from .sim_lc_config import SimLcConfig as sim_lc_config
+from .sim_lc_config import SimLcConfig
 from .add_flare_signal import add_flare_signal
 from .add_lc_noise import add_lc_noise
 from .add_sine_signal import add_sine_signal
@@ -19,62 +19,73 @@ from .add_transit_signal import add_transit_signal
 from .check_transit_params import check_transit_params
 from .sim_lc_setup_args import sim_lc_setup_args
 
-def simulated_lc(lc_type, lc_ofile=sim_lc_config.sim_lc_ofile,
-                 lc_length=sim_lc_config.sim_lc_length,
-                 lc_noise=sim_lc_config.sim_lc_noise,
-                 visualize=sim_lc_config.sim_lc_visualize,
-                 lc_yoffset=sim_lc_config.sim_lc_yoffset,
-                 transit_depth=sim_lc_config.sim_lc_transit_depth,
-                 transit_period=sim_lc_config.sim_lc_transit_period,
-                 transit_start=sim_lc_config.sim_lc_transit_start,
-                 transit_width=sim_lc_config.sim_lc_transit_width,
-                 sine_amp=sim_lc_config.sim_lc_sine_amp,
-                 sine_period=sim_lc_config.sim_lc_sine_period):
+__all__ = ["simulated_lc", 'SimLcConfig']
+
+def simulated_lc(lc_type, lc_ofile=SimLcConfig.sim_lc_ofile,
+                 lc_length=SimLcConfig.sim_lc_length,
+                 lc_noise=SimLcConfig.sim_lc_noise,
+                 visualize=SimLcConfig.sim_lc_visualize,
+                 lc_yoffset=SimLcConfig.sim_lc_yoffset,
+                 transit_depth=SimLcConfig.sim_lc_transit_depth,
+                 transit_period=SimLcConfig.sim_lc_transit_period,
+                 transit_start=SimLcConfig.sim_lc_transit_start,
+                 transit_width=SimLcConfig.sim_lc_transit_width,
+                 sine_amp=SimLcConfig.sim_lc_sine_amp,
+                 sine_period=SimLcConfig.sim_lc_sine_period):
     """
-    Create light curve of specified type as a FITS file.
+    Create light curve with specified parameters as a `~astropy.table.Table`,
+    and optionally writes a FITS file with the same information.
 
-    :param lc_type: Type of light curve to make.
-    :type lc_type: str
+    All parameters default to the configuration values.
 
-    :param lc_ofile: Name of output FITS file.  If set to an empty string,
-    no file will be saved to disk.
-    :type lc_ofile: str
+    Parameters
+    ----------
+    lc_type : str
+        The type of light curve to make. Valid options are 'flat', 'transit',
+        'sine', and 'flare'. 
 
-    :param lc_length: Number of fluxes in light curve.
-    :type lc_length: int
+    lc_ofile : str or None
+        Optional. Name of output FITS file.  If set to None,
+        no file will be saved to disk.
 
-    :param lc_noise: Standard deviation of normal distribution to draw from when
-    adding noise, a value of zero means no noise is added.
-    :type lc_noise: float
+    lc_length : int
+        Optional. Length of the light curve (i.e. the number of flux values).
 
-    :param visualize: If True, plot the light curve being made to the screen.
-    :type visualize: bool
+    lc_noise : float
+        Optional. Standard deviation of normal distribution to draw from when
+        adding noise, a value of zero means no noise is added.
 
-    :param lc_yoffset: Baseline flux level (unitless).
-    :type lc_yoffset: float
+    visualize : bool
+        Optional. If True, plot the light curve being made to the screen.
 
-    :param transit_depth: Depth of transit, as a percent (e.g., 10.0 = 10%.)
-    :type transit_depth: float
+    lc_yoffset : float
+        Optional. Baseline flux level (unitless).
 
-    :param transit_period: Period of transit (number of fluxes/bins between
-    the start of each event.)
-    :type transit_period: int
+    transit_depth: float
+        Depth of transit, as a percent (e.g., 10.0 = 10%.)
 
-    :param transit_start: Start index of transit (the index of the flux/bin to
-    use as the start of the first transit event.)
-    :type transit_start: int
+    transit_period : int
+        Period of transit (number of fluxes/bins between the start of each event.)
+        (Only relevant for transit type light curve).
 
-    :param transit_width: Width of transit (number of fluxes/bins between
-    the start and end of each event.)
-    :type transit_width: int
+    transit_start : int
+        Start index of transit (the index of the flux/bin to use as the start of the first transit event.)
+        (Only relevant for transit type light curve).
 
-    :param sine_amp: Amplitude of the sinusoidal signal to add.
-    :type sine_anp: float
+    transit_width : int
+        Width of transit (number of fluxes/bins between the start and end of each event.)
+    
 
-    :param sine_period: Period of the sinusoidal signal to add.
-    :type sine_period: float
+    sine_amp : float
+        Amplitude of the sinusoidal signal to add.
 
-    :returns: astropy Table -- The time and flux columns.
+    sine_period : float
+        Period of the sinusoidal signal to add.
+
+    Returns
+    --------
+    response : `~astropy.table.Table`
+        The time and flux columns.
     """
 
     # Generate baseline light curve fluxes.

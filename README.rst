@@ -57,6 +57,22 @@ Documentation
 
 Documentation files are found in ``docs/``.
 
+We build the documentation with `tox <https://tox.readthedocs.io>`_ (``pip install tox``):
+
+.. code-block:: bash
+
+    $ tox -e build_docs
+
+You can also build the documentation with Sphinx directly using:
+
+.. code-block:: bash
+                
+    $ pip install -e .[docs]
+    $ cd docs
+    $ make html
+    
+The built docs will be in ``docs/_build/html/``, to view them go to ``file:///path/to/astronify/repo/docs/_build/html/index.html`` in the browser of your choice.
+
 
 Release Protocol
 ^^^^^^^^^^^^^^^^

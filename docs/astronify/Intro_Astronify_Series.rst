@@ -10,7 +10,7 @@ browser, and saving the sonification as a wav file.
 2. `Getting data`_
 3. `Basic sonification`_
 4. `Changing sonification parameters`_
-5. `Outputing an audio file`_
+5. `Outputting an audio file`_
 
 Imports
 -------
@@ -29,7 +29,7 @@ not use.
 
 .. code:: python
 
-    >>> import astronify
+    >>> from astronify.series import SoniSeries
     >>> import lightkurve
     
     >>> import matplotlib    
@@ -44,9 +44,8 @@ Fundamentally all that Astronify requires is an Astropy Table object
 where one colum will be translated into time (default is “time”) and one
 column will be translated into pitch (default is “flux”).
 
-Simply because it is easy I will download a Kepler light curve using
-lightkurve (lightkurve is a user friendly way to get Kepler and TESS
-data). This is a light curve that shows Kepler 12b, a transiting
+I will download a Kepler light curve using Lightkurve (Lightkurve is a user friendly way
+to get Kepler and TESS data). This is a light curve that shows Kepler 12b, a transiting
 exoplanet.
 
 .. code:: python
@@ -77,7 +76,7 @@ Now to sonify the same data.
 
 .. code:: python
 
-    >>> kep12b_obj = astronify.SoniSeries(kep12b_lc)
+    >>> kep12b_obj = SoniSeries(kep12b_lc)
     >>> kep12b_obj.sonify()
 
 
@@ -164,8 +163,8 @@ Removing the outer 1% of data points
     
     >>> del kep12b_obj.pitch_mapper.pitch_map_args["minmax_percent"]
 
-Outputing an audio file
------------------------
+Outputting an audio file
+------------------------
 
 Once the sonification sounds the way we like we can output the result to
 a wav file.
