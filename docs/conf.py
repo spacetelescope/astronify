@@ -104,6 +104,8 @@ release = package.__version__
 # name of a builtin theme or the name of a custom theme in html_theme_path.
 #html_theme = None
 
+master_doc='contents'
+html_extra_path=['index.html']
 
 html_theme_options = {
     'logotext1': 'Astro',  # white,  semi-bold
