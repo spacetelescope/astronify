@@ -41,8 +41,16 @@ h1{
 }
 
 h2{
-    font-size: 45px;
+    text-align: center;
+    font-size: 55px;
+    margin-bottom: 25px;
+    margin-top: 30px;
+}
+
+h3{
+    font-size: 40px;
     margin-bottom: 15px;
+    margin-right: 0px;
 }
 
 a{
@@ -67,7 +75,7 @@ br{
     border: 2px;
     border-color: white;
     border-style: solid;
-    padding-left: 20px;
+    padding-left: 25px;
     padding-right: 20px;
     padding-bottom: 20px;
     padding-top: 5px;
@@ -79,10 +87,15 @@ a:hover .big-button {
 }
 
 .small-link{
+    background: #0D4960;
     font-size: 25px;
-    text-decoration: underline;
     display:inline;
     margin-right: 10px;
+    border: 2px;
+    border-color: white;
+    border-style: solid;
+    padding: 15px;
+    
 }
 
 .small-link:hover{
