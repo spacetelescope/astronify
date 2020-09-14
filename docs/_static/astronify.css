@@ -1,9 +1,5 @@
 @import url("bootstrap-astropy.css");
 
-*{
-    font-family: sans-serif;
-}
-
 div.topbar a.brand {
   background: transparent url("astronify-CIRCLE.png") no-repeat 10px 4px;
   background-image: url("astronify-CIRCLE.png"), none;
