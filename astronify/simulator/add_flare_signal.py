@@ -50,16 +50,9 @@ def add_flare_signal(fluxes, flare_time, flare_amp, flare_halfwidth):
         flare_time += n_to_add_rise
 
     # Where "n" = 6 in Davenport et al., where the decay phase is defined from
-    # t_1/2 = [0,6], but we may choose to extend further so that the decay gets
-    # as close to zero as possible.
-    n_t12 = 10
-
-    # Need to check if our decay tail will extend past the input array.
-    truncated_end = flare_time + n_t12*flare_halfwidth-1 > fluxes_to_add.shape[0]
-    if truncated_end:
-        n_to_add_decay = (flare_time + n_t12*flare_halfwidth -
-                          fluxes_to_add.shape[0])
-        fluxes_to_add = np.concatenate([np.zeros(n_to_add_decay), fluxes_to_add])
+    # t_1/2 = [0,6], but we will choose to extend to the end of the light curve
+    # so that the decay gets as close to zero as possible.
+    n_t12 = int((fluxes_to_add.shape[0] + 1 - flare_time)/flare_halfwidth)
 
     # Create the normalized part of the rise time.
     # In the Davenport et al. flare template, the rise part of the flare
@@ -99,11 +92,11 @@ def add_flare_signal(fluxes, flare_time, flare_amp, flare_halfwidth):
 
     # Generate indices in "t_1/2" units.
     t12_decay_indices = np.linspace(0., n_t12, n_t12*flare_halfwidth)
+    
     # Compute fluxes for the decay part.
-    # math.exp() doesn't accept numpy arrays, so using list comprehension...
-    decay_fluxes = np.asarray([(0.6890*math.exp(-1.600*x) +
-                                0.3030*math.exp(-0.2783*x))
-                               for x in t12_decay_indices])
+    decay_fluxes = (0.6890*np.exp(-1.600*t12_decay_indices) +
+                    0.3030*np.exp(-0.2783*t12_decay_indices))
+    
     # Insert these fluxes into the correct location in our light curve.
     # Note: the above index range is correct, but in Python you need to go one
     # extra when slicing, hence 6*flare_halfwidth-1+1 = 6*flare_halfwidth...
@@ -115,9 +108,5 @@ def add_flare_signal(fluxes, flare_time, flare_amp, flare_halfwidth):
     # If we needed to add some filler indices in the beginning, remove them now.
     if truncated_start:
         fluxes_to_add = fluxes_to_add[n_to_add_rise:]
-
-    # If we needed to add some fillter indices at the end, remove them now.
-    if truncated_end:
-        fluxes_to_add = fluxes_to_add[0:fluxes.shape[0]]
 
     return fluxes + fluxes_to_add
