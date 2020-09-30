@@ -97,4 +97,23 @@ def sim_lc_setup_args():
                             " sinusoidal signal, specified in the (unitless)"
                             " time axis (flux bins). Default = %(default)s.")
 
+    # Flare-related parameters here.
+    flare_group = parser.add_argument_group("flare", "Parameters for"
+                                            " adding flares.")
+    flare_group.add_argument("--flare_time", type=int,
+                             default=sim_lc_config.sim_lc_flare_time,
+                             dest="flare_time", help="Time corresponding to"
+                             " the maximum flux of the flare, specified"
+                             " as the index of the flux (bin) to use as"
+                             " the peak time. Default = %(default)s.")
+    flare_group.add_argument("--flare_amp", type=float,
+                             default=sim_lc_config.sim_lc_flare_amp,
+                             dest="flare_amp", help="Amplitude (maximum flux)"
+                             " of the flare to add. Default = %(default)s.")
+    flare_group.add_argument("--flare_halfwidth", type=int,
+                             default="flare_halfwidth", help="The flare"
+                             " half-width (measured in indices) that"
+                             " corresponds to 't_1/2' in the Davenport et al."
+                             " flare template.")
+
     return parser

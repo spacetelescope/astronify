@@ -12,3 +12,6 @@
 # Sinosoidal light curves:
 #python sim_lc.py sine outputs/sine_nonoise.fits -v
 #python sim_lc.py sine outputs/sine_shallow_withnoise.fits -v --sine_amp 1.5 --sine_period 142 -n 0.5
+
+# Flare light curves:
+python sim_lc.py flare outputs/flare_nonoises.fits -v

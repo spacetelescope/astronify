@@ -21,3 +21,8 @@ class SimLcConfig:
     # Sinusoidal Parameters
     sim_lc_sine_amp = 10.
     sim_lc_sine_period = 50.
+
+    # Flare Parameters
+    sim_lc_flare_time = 10
+    sim_lc_flare_amp = 100.
+    sim_lc_flare_halfwidth = 5
