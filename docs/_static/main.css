@@ -58,7 +58,6 @@ a{
     color: white;
     text-decoration: none;
     cursor: pointer;
-    display: block;
 }
 
 
@@ -81,10 +80,16 @@ br{
     padding-bottom: 20px;
     padding-top: 5px;
     margin-bottom: 20px;
+    display: block;
 }
 
 a:hover .big-button {
     background-color: #00617E;
+}
+
+.text-link{
+    text-decoration: underline;
+   
 }
 
 .small-link{
@@ -98,8 +103,9 @@ a:hover .big-button {
     max-width: 800;
     text-align: center;
     font-weight: bold;
-    
+    display: block;
 }
+
 
 .small-link:hover{
     background-color: #00617E;
@@ -113,4 +119,9 @@ a:hover .big-button {
     padding-bottom: 20px;
     padding-top: 5px;
     margin-bottom: 20px;
+}
+
+.footer{
+    margin-top: 100px;
+    margin-bottom: 30px;
 }
