@@ -8,7 +8,11 @@ Sonification of astronomical data.
 .. image:: http://img.shields.io/badge/powered%20by-AstroPy-orange.svg?style=flat
     :target: http://www.astropy.org
     :alt: Powered by Astropy Badge
-    
+
+.. image:: https://badge.fury.io/py/astronify.svg
+    :target: https://badge.fury.io/py/astronify 
+    :alt: PyPi Status
+          
 .. image:: https://readthedocs.org/projects/astronify/badge/?version=latest
     :target: https://astronify.readthedocs.io/en/latest/?badge=latest
     :alt: Documentation Status
@@ -25,9 +29,9 @@ Project Status
     :target: https://travis-ci.org/spacetelescope/astronify
     :alt: Travis CI Status
     
-.. image:: https://coveralls.io/repos/github/spacetelescope/astronify/badge.svg?branch=master
-    :target: https://coveralls.io/github/spacetelescope/astronify?branch=master
-    :alt: Coverage Status
+.. image:: https://codecov.io/gh/spacetelescope/astronify/branch/master/graph/badge.svg
+  :target: https://codecov.io/gh/spacetelescope/astronify
+  :alt: Codecov coverage status
 
 Developer Documentation
 -----------------------
@@ -47,10 +51,24 @@ For active development, install in develop mode
 
     $ pip install -e .
 
+
 Testing
 ^^^^^^^
+Testing is run with `tox <https://tox.readthedocs.io>`_ (``pip install tox``).
+Tests can be found in ``tests/`` sub-directories.
 
-Tests can be found in ``astronify/tests/``.
+.. code-block:: bash
+
+    $ tox -e test
+
+Tests can also be run directly with pytest:
+
+.. code-block:: bash
+
+    $ pip install -e .[test]
+    $ pytest
+
+ 
 
 Documentation
 ^^^^^^^^^^^^^
