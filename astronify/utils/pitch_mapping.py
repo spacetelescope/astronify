@@ -18,7 +18,7 @@ from .exceptions import InputWarning, InvalidInputError
 __all__ = ['data_to_pitch']
 
 
-def data_to_pitch(data_array, pitch_range=[100,10000], center_pitch=440, zero_point="median",
+def data_to_pitch(data_array, pitch_range=[100, 10000], center_pitch=440, zero_point="median",
                   stretch='linear', minmax_percent=None, minmax_value=None, invert=False):
     """
     Map data array to audible pitches in the given range, and apply stretch and scaling
@@ -65,7 +65,7 @@ def data_to_pitch(data_array, pitch_range=[100,10000], center_pitch=440, zero_po
     if zero_point in ("ave", "mean", "average"):
         zero_point = np.mean(data_array)
 
-    if (data_array == zero_point).all(): # All values are the same, no more calculation needed
+    if (data_array == zero_point).all():  # All values are the same, no more calculation needed
         return np.full(len(data_array), zero_point) 
 
     # Normalizing the data_array and adding the zero point (so it can go through the same transform)
@@ -107,10 +107,10 @@ def data_to_pitch(data_array, pitch_range=[100,10000], center_pitch=440, zero_po
     zero_point = pitch_array[-1]
     pitch_array = pitch_array[:-1]
 
-    if ((1/zero_point)*(center_pitch - pitch_range[0]) +  pitch_range[0]) <= pitch_range[1]:
-        pitch_array = (pitch_array/zero_point)*(center_pitch - pitch_range[0]) +  pitch_range[0]
+    if ((1/zero_point)*(center_pitch - pitch_range[0]) + pitch_range[0]) <= pitch_range[1]:
+        pitch_array = (pitch_array/zero_point)*(center_pitch - pitch_range[0]) + pitch_range[0]
     else:
-        pitch_array = ((pitch_array-zero_point)/(1-zero_point))*(pitch_range[1] - center_pitch) +  center_pitch
+        pitch_array = ((pitch_array-zero_point)/(1-zero_point))*(pitch_range[1] - center_pitch) + center_pitch
     
     return pitch_array
 

@@ -5,8 +5,8 @@
 .. moduleauthor:: Scott W. Fleming <fleming@stsci.edu>
 """
 
-import math
 import numpy as np
+
 
 def add_flare_signal(fluxes, flare_time, flare_amp, flare_halfwidth):
     """

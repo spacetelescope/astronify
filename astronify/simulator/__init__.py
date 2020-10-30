@@ -14,6 +14,6 @@ Author: Scott W. Fleming (fleming@stsci.edu)
 
 """
 
-from .sim_lc import *
+from .sim_lc import *  # noqa: F403
 
-__all__ = ["simulated_lc", "SimLcConfig"]
+__all__ = ["simulated_lc", "SimLcConfig"]  # noqa: F405

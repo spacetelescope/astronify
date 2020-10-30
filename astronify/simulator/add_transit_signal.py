@@ -7,6 +7,7 @@
 
 import numpy as np
 
+
 def add_transit_signal(fluxes, transit_depth, transit_period, transit_start,
                        transit_width):
     """

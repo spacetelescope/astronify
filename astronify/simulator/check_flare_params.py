@@ -9,6 +9,7 @@
 
 import argparse
 
+
 def check_flare_params(n_fluxes, flare_time, flare_amp):
     """
     :param n_fluxes: Number of fluxes in the light curve.
@@ -26,8 +27,8 @@ def check_flare_params(n_fluxes, flare_time, flare_amp):
         raise argparse.ArgumentTypeError("The flare time at peak flux must be"
                                          " less than the total number of fluxes"
                                          " in the simulated light curve."
-                                         " Number of fluxes = " + str(n_fluxes)
-                                         + ", flare time requested is " +
+                                         " Number of fluxes = " + str(n_fluxes) +
+                                         ", flare time requested is " +
                                          str(flare_time) + ".")
 
     # Flare time index must be greater than or equal to zero.

@@ -176,13 +176,14 @@ def simulated_lc(lc_type, lc_ofile=SimLcConfig.sim_lc_ofile,
     return Table([times, fluxes_with_noise, fluxes],
                  names=("time", "flux", "flux_pure"))
 
+
 if __name__ == "__main__":
     # Get command-line arguments.
     INPUT_ARGS = sim_lc_setup_args().parse_args()
 
-    sim_lc(INPUT_ARGS.lc_type, INPUT_ARGS.lc_ofile, INPUT_ARGS.lc_length,
-           INPUT_ARGS.lc_noise, INPUT_ARGS.visualize, INPUT_ARGS.lc_yoffset,
-           INPUT_ARGS.transit_depth, INPUT_ARGS.transit_period,
-           INPUT_ARGS.transit_start, INPUT_ARGS.transit_width,
-           INPUT_ARGS.sine_amp, INPUT_ARGS.sine_period, INPUT_ARGS.flare_time,
-           INPUT_ARGS.flare_amp, INPUT_ARGS.flare_halfwidth)
+    simulated_lc(INPUT_ARGS.lc_type, INPUT_ARGS.lc_ofile, INPUT_ARGS.lc_length,
+                 INPUT_ARGS.lc_noise, INPUT_ARGS.visualize, INPUT_ARGS.lc_yoffset,
+                 INPUT_ARGS.transit_depth, INPUT_ARGS.transit_period,
+                 INPUT_ARGS.transit_start, INPUT_ARGS.transit_width,
+                 INPUT_ARGS.sine_amp, INPUT_ARGS.sine_period, INPUT_ARGS.flare_time,
+                 INPUT_ARGS.flare_amp, INPUT_ARGS.flare_halfwidth)

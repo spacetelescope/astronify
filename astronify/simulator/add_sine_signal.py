@@ -7,6 +7,7 @@
 
 from astropy.modeling.models import Sine1D
 
+
 def add_sine_signal(times, fluxes, sine_amp, sine_period):
     """
     :param times: Array of (unitless) times (flux bins) associated with the

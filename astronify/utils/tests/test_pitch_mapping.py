@@ -1,11 +1,9 @@
 import pytest
-
 import numpy as np
-
-from astropy.table import Table
 
 from ..pitch_mapping import data_to_pitch
 from ..exceptions import InputWarning, InvalidInputError
+
 
 def test_data_to_pitch():
     """
@@ -13,7 +11,7 @@ def test_data_to_pitch():
     """
 
     # Simplifying output
-    pitch_range = [400,500]
+    pitch_range = [400, 500]
     center_pitch = 450
 
     # basic linear stretch
@@ -29,7 +27,7 @@ def test_data_to_pitch():
 
     # linear stretch where input image must be scaled 
     data_arr = np.array([10, 20, 12.5, 17.5])
-    pitch_arr = ((data_arr - data_arr.min())/(data_arr.max()-data_arr.min())*
+    pitch_arr = ((data_arr - data_arr.min())/(data_arr.max()-data_arr.min()) *
                  (pitch_range[1]-pitch_range[0])) + pitch_range[0]
     assert (pitch_arr == data_to_pitch(data_arr, pitch_range, center_pitch,
                                        stretch='linear')).all()
@@ -38,13 +36,13 @@ def test_data_to_pitch():
     data_arr = np.array([[1, 0, .25, .75]])
     pitch_arr = data_arr*(pitch_range[1]-pitch_range[0]) + pitch_range[0]
 
-    pitch_range = [300,500]
-    assert (pitch_arr == data_to_pitch(data_arr, [300,500],
+    pitch_range = [300, 500]
+    assert (pitch_arr == data_to_pitch(data_arr, [300, 500],
                                        center_pitch, stretch='linear')).all()
-    pitch_range = [400,600]
-    assert (pitch_arr == data_to_pitch(data_arr, [400,600],
+    pitch_range = [400, 600]
+    assert (pitch_arr == data_to_pitch(data_arr, [400, 600],
                                        center_pitch, stretch='linear')).all()
-    pitch_range = [400,500]
+    pitch_range = [400, 500]
     
     # min_max val
     minval, maxval = 0, 1
@@ -69,7 +67,7 @@ def test_data_to_pitch():
     data_arr = np.array([1.1, -0.1, 1, 0, .25, .75])
     pitch_arr = data_to_pitch(data_arr, pitch_range, center_pitch,
                               stretch='linear', minmax_percent=[20, 80])
-    assert (np.isclose(pitch_arr, np.array([500 , 400 , 500 , 400 ,
+    assert (np.isclose(pitch_arr, np.array([500, 400, 500, 400,
                                             422.22222222, 477.77777778]))).all()
 
     # asinh

@@ -8,6 +8,7 @@
 import argparse
 from .sim_lc_config import SimLcConfig as sim_lc_config
 
+
 def sim_lc_setup_args():
     """
     Set up command-line arguments and options.
