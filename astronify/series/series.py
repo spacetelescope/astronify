@@ -88,8 +88,8 @@ class PitchMap():
     @pitch_map_func.setter
     def pitch_map_func(self, new_func):
         assert callable(new_func), "Pitch mapping function must be a function."
-        self._check_func_args()
         self._pitch_map_func = new_func
+        self._check_func_args()
 
     @property
     def pitch_map_args(self):
@@ -102,8 +102,9 @@ class PitchMap():
     @pitch_map_args.setter
     def pitch_map_args(self, new_args):
         assert isinstance(new_args, dict), "Pitch mapping function args must be in a dictionary."
-        self._check_func_args()
         self._pitch_map_args = new_args
+        self._check_func_args()
+
              
 
 class SoniSeries():
@@ -151,6 +152,9 @@ class SoniSeries():
             data_table = data_table[~data_table[self.val_col].mask]
         if isinstance(data_table[self.time_col], MaskedColumn):
             data_table = data_table[~data_table[self.time_col].mask]
+
+        # Removing any nans as they interfere with the sonification
+        data_table = data_table[~np.isnan(data_table[self.val_col])]
 
         # making sure we have a float column for time
         if isinstance(data_table[self.time_col], Time):

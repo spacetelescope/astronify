@@ -36,7 +36,7 @@ alternate column names can also be provided (see `~astronify.series.SoniSeries`)
                 >>> data_soni = SoniSeries(data_table)
                 >>> data_soni.note_spacing = 0.2
                 >>> data_soni.sonify()
-                >>> data_soni.play()
+                >>> data_soni.play()   #doctest: +SKIP
 
 
 The default note spacing (median time between notes in seconds) is 0.01, so for short data series
@@ -46,15 +46,16 @@ This more interesting example sonifies real data from the Kepler space telescope
 The package `Lightkurve <https://docs.lightkurve.org/>`_ is used to download a Kepler
 light curve and then sonify it.
 
+
 .. code-block:: python
-
+   
                 >>> from astronify.series import SoniSeries
-                >>> import lightkurve
+                >>> import lightkurve    #doctest: +SKIP
 
-                >>> kep12b_lc = lightkurve.search_lightcurvefile("KIC 11804465", cadence="long", quarter=1).download_all()[0].SAP_FLUX.to_table()
-                >>> kep12b_obj = SoniSeries(kep12b_lc)
-                >>> kep12b_obj.sonify()
-                >>> kep12b_obj.play()
+                >>> kep12b_lc = lightkurve.search_lightcurvefile("KIC 11804465", cadence="long", quarter=1).download_all()[0].SAP_FLUX.to_table()    #doctest: +SKIP
+                >>> kep12b_obj = SoniSeries(kep12b_lc)    #doctest: +SKIP
+                >>> kep12b_obj.sonify()    #doctest: +SKIP
+                >>> kep12b_obj.play()   #doctest: +SKIP
 
                 
 A variety of arguments can be set to change the parameters of the sonification. You can control note spacing, note duration (each data point will get a note of the same duration),
@@ -63,13 +64,13 @@ and change a number of aspects of the algorithm used to transform data values in
 .. code-block:: python
 
                 >>> from astronify.series import SoniSeries
-                >>> import lightkurve
+                >>> import lightkurve    #doctest: +SKIP
 
-                >>> kep12b_lc = lightkurve.search_lightcurvefile("KIC 11804465", cadence="long", quarter=1).download_all()[0].SAP_FLUX.to_table()
-                >>> kep12b_obj = SoniSeries(kep12b_lc)
-                >>> kep12b_obj.pitch_mapper.pitch_map_args["center_pitch"] = 880
-                >>> kep12b_obj.sonify()
-                >>> kep12b_obj.play()
+                >>> kep12b_lc = lightkurve.search_lightcurvefile("KIC 11804465", cadence="long", quarter=1).download_all()[0].SAP_FLUX.to_table()    #doctest: +SKIP
+                >>> kep12b_obj = SoniSeries(kep12b_lc)    #doctest: +SKIP
+                >>> kep12b_obj.pitch_mapper.pitch_map_args["center_pitch"] = 880    #doctest: +SKIP
+                >>> kep12b_obj.sonify()    #doctest: +SKIP
+                >>> kep12b_obj.play()   #doctest: +SKIP
 
                 
 See `~astronify.utils.data_to_pitch` for a full list of the parameters that can be changed in the
@@ -144,7 +145,7 @@ exoplanet or stellar flare.
                 ...                                   lc_noise=0.5, lc_length=750)
                 >>> soni_obj = series.SoniSeries(lc_data)
                 >>> soni_obj.sonify()
-                >>> soni_obj.play()
+                >>> soni_obj.play()   #doctest: +SKIP
 
 
 
