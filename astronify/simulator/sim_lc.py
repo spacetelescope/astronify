@@ -24,6 +24,7 @@ from .sim_lc_setup_args import sim_lc_setup_args
 
 __all__ = ["simulated_lc", 'SimLcConfig']
 
+
 def simulated_lc(lc_type, lc_ofile=SimLcConfig.sim_lc_ofile,
                  lc_length=SimLcConfig.sim_lc_length,
                  lc_noise=SimLcConfig.sim_lc_noise,
