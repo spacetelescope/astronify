@@ -49,7 +49,7 @@ def simulated_lc(lc_type, lc_ofile=SimLcConfig.sim_lc_ofile,
     ----------
     lc_type : str
         The type of light curve to make. Valid options are 'flat', 'transit',
-        'sine', and 'flare'. 
+        'sine', and 'flare'.
 
     lc_ofile : str or None
         Optional. Name of output FITS file.  If set to None,
@@ -76,7 +76,8 @@ def simulated_lc(lc_type, lc_ofile=SimLcConfig.sim_lc_ofile,
         (Only relevant for transit type light curve).
 
     transit_start : int
-        Start index of transit (the index of the flux/bin to use as the start of the first transit event.)
+        Start index of transit (the index of the flux/bin to use as the start of the first transit
+        event.)
         (Only relevant for transit type light curve).
 
     transit_width : int
@@ -95,7 +96,7 @@ def simulated_lc(lc_type, lc_ofile=SimLcConfig.sim_lc_ofile,
         The peak (maximum flux) of the flare.
 
     flare_halfwidth : float
-        The flare half-width (measured in indices) that 
+        The flare half-width (measured in indices) that
         corresponds to "t_1/2" in the Davenport et al. flare template.
 
     Returns
@@ -165,7 +166,7 @@ def simulated_lc(lc_type, lc_ofile=SimLcConfig.sim_lc_ofile,
         col3 = fits.Column(name="flux_pure", array=fluxes, format='D')
         hdu1 = fits.BinTableHDU.from_columns([col1, col2, col3])
         # If the output directory doesn't exist, create it.
-        if not os.path.isdir(os.path.dirname(lc_ofile)):
+        if not os.path.isdir(os.path.abspath(os.path.dirname(lc_ofile))):
             os.makedirs(os.path.dirname(os.path.abspath(lc_ofile)))
         # This combines the primary HDU and first extension header together and
         # writes to the output file.
