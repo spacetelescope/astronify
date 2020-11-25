@@ -16,11 +16,6 @@ jobs:
       matrix:
         include:
 
-          - name: Code style checks
-            os: ubuntu-latest
-            python: 3.x
-            toxenv: codestyle
-
           - name: Python 3.7 with minimal dependencies
             os: ubuntu-latest
             python: 3.7
@@ -82,6 +77,12 @@ jobs:
       fail-fast: false
       matrix:
         include:
+
+          - name: Code style checks
+            os: ubuntu-latest
+            python: 3.x
+            toxenv: codestyle
+ 
           - name: (Allowed Failure) Python 3.7 with dev version of key dependencies
             os: ubuntu-latest
             python: 3.7
