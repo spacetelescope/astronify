@@ -7,6 +7,7 @@
 
 import numpy as np
 
+
 def add_lc_noise(fluxes, lc_noise):
     """
     :param fluxes: Array of fluxes to add noise to.

@@ -1,3 +1,5 @@
+.. doctest-skip-all
+
 Astronify: Sonifying Time Series
 ================================
 

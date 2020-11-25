@@ -9,6 +9,7 @@
 
 import argparse
 
+
 def check_transit_params(n_fluxes, transit_period, transit_start, transit_width):
     """
     :param n_fluxes: Number of fluxes in the light curve.
@@ -32,8 +33,8 @@ def check_transit_params(n_fluxes, transit_period, transit_start, transit_width)
         raise argparse.ArgumentTypeError("The transit start must be less than"
                                          " the total number of fluxes in the"
                                          " simulated light curve."
-                                         " Number of fluxes = " + str(n_fluxes)
-                                         + ", start index requested is " +
+                                         " Number of fluxes = " + str(n_fluxes) +
+                                         ", start index requested is " +
                                          str(transit_start) + ".")
 
     # The start index must be greater than or equal to zero.

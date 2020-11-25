@@ -9,6 +9,6 @@ This module contains functionality for sonifying data series.
 """
 
 
-from .series import *
+from .series import *  # noqa: F403
 
-__all__ = ["SoniSeries", "PitchMap"]
+__all__ = ["SoniSeries", "PitchMap"]  # noqa: F405

@@ -6,7 +6,6 @@ Data Series Sonification
 Functionality for sonifying data series.
 """
 
-import os
 import warnings
 
 from inspect import signature, Parameter
@@ -14,7 +13,6 @@ from inspect import signature, Parameter
 import numpy as np
 
 from astropy.table import Table, MaskedColumn
-from astropy.io import fits
 from astropy.time import Time
 
 import pyo
@@ -23,6 +21,7 @@ from ..utils.pitch_mapping import data_to_pitch
 from ..utils.exceptions import InputWarning
 
 __all__ = ['PitchMap', 'SoniSeries']
+
 
 class PitchMap():
 
@@ -43,11 +42,11 @@ class PitchMap():
         """
 
         # Setting up the default arguments
-        if (not pitch_args) and  (pitch_func == data_to_pitch):
-                 pitch_args={"pitch_range": [100, 10000],
-                             "center_pitch": 440,
-                             "zero_point": "median",
-                             "stretch": "linear"}
+        if (not pitch_args) and (pitch_func == data_to_pitch):
+            pitch_args = {"pitch_range": [100, 10000],
+                          "center_pitch": 440,
+                          "zero_point": "median",
+                          "stretch": "linear"}
         
         self.pitch_map_func = pitch_func
         self.pitch_map_args = pitch_args
@@ -64,9 +63,9 @@ class PitchMap():
 
             # Only check parameters if there is no kwargs argument
             param_types = [x.kind for x in signature(self.pitch_map_func).parameters.values()]
-            if not Parameter.VAR_KEYWORD in param_types:
+            if Parameter.VAR_KEYWORD not in param_types:
                 for arg_name in list(self.pitch_map_args):
-                    if not arg_name in signature(self.pitch_map_func).parameters:
+                    if arg_name not in signature(self.pitch_map_func).parameters:
                         wstr = "{} is not accepted by the pitch mapping function and will be ignored".format(arg_name)
                         warnings.warn(wstr, InputWarning)
                         del self.pitch_map_args[arg_name]
@@ -88,8 +87,8 @@ class PitchMap():
     @pitch_map_func.setter
     def pitch_map_func(self, new_func):
         assert callable(new_func), "Pitch mapping function must be a function."
-        self._check_func_args()
         self._pitch_map_func = new_func
+        self._check_func_args()
 
     @property
     def pitch_map_args(self):
@@ -102,8 +101,9 @@ class PitchMap():
     @pitch_map_args.setter
     def pitch_map_args(self, new_args):
         assert isinstance(new_args, dict), "Pitch mapping function args must be in a dictionary."
-        self._check_func_args()
         self._pitch_map_args = new_args
+        self._check_func_args()
+
              
 
 class SoniSeries():
@@ -126,9 +126,9 @@ class SoniSeries():
         self.data = data
 
         # Default specs
-        self.note_duration = 0.5 # note duration in seconds
-        self.note_spacing = 0.01 # spacing between notes in seconds
-        self.gain = 0.05 # default gain in the generated sine wave. pyo multiplier, -1 to 1.
+        self.note_duration = 0.5  # note duration in seconds
+        self.note_spacing = 0.01  # spacing between notes in seconds
+        self.gain = 0.05  # default gain in the generated sine wave. pyo multiplier, -1 to 1.
         self.pitch_mapper = PitchMap(data_to_pitch)
 
         self._init_pyo()
@@ -151,6 +151,9 @@ class SoniSeries():
             data_table = data_table[~data_table[self.val_col].mask]
         if isinstance(data_table[self.time_col], MaskedColumn):
             data_table = data_table[~data_table[self.time_col].mask]
+
+        # Removing any nans as they interfere with the sonification
+        data_table = data_table[~np.isnan(data_table[self.val_col])]
 
         # making sure we have a float column for time
         if isinstance(data_table[self.time_col], Time):
@@ -196,7 +199,7 @@ class SoniSeries():
 
     @gain.setter
     def gain(self, value):
-        self._gain = value;
+        self._gain = value
 
     @property
     def note_duration(self):
@@ -206,7 +209,7 @@ class SoniSeries():
     @note_duration.setter
     def note_duration(self, value):
         # Add in min value check
-        self._note_duration = value;
+        self._note_duration = value
 
     @property
     def note_spacing(self):
@@ -216,7 +219,7 @@ class SoniSeries():
     @note_spacing.setter
     def note_spacing(self, value):
         # Add in min value check
-        self._note_spacing = value;
+        self._note_spacing = value
         
     def sonify(self):
         """
@@ -297,8 +300,7 @@ class SoniSeries():
                                (duration - 0.05, 0.5), (duration - 0.005, 0)],
                          mul=[self.gain for i in range(len(pitches))]).play(
                              delay=list(delays), dur=duration)
-        sine = pyo.Sine(list(pitches), 0, env).out(delay=list(delays),
-                                                   dur=duration)
+        pyo.Sine(list(pitches), 0, env).out(delay=list(delays), dur=duration)
         self.server.start()
 
         # Clean up
