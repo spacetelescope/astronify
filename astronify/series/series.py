@@ -300,7 +300,7 @@ class SoniSeries():
                                (duration - 0.05, 0.5), (duration - 0.005, 0)],
                          mul=[self.gain for i in range(len(pitches))]).play(
                              delay=list(delays), dur=duration)
-        pyo.Sine(list(pitches), 0, env).out(delay=list(delays), dur=duration)
+        sine = pyo.Sine(list(pitches), 0, env).out(delay=list(delays), dur=duration)  # noqa: F841
         self.server.start()
 
         # Clean up
