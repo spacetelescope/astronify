@@ -3,7 +3,8 @@ name: CI
 on:
   push:
     branches:
-    - setup_ci
+    - main
+    - testing
     tags:
   pull_request:
 
