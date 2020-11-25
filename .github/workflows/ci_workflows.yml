@@ -47,6 +47,11 @@ jobs:
             os: windows-latest
             python: 3.8
             toxenv: py38-test-alldeps
+            
+          - name: Python 3.7 with all optional dependencies (MacOS X)
+            os: macos-latest
+            python: 3.7
+            toxenv: py37-test-alldeps
 
     steps:
     - name: Checkout code
