@@ -1,12 +1,12 @@
-Simulating Light Curves
-=======================
+.. doctest-skip-all
 
+Astronify: How to Use the Simulator
+===================================
 
 .. code:: python
 
     from astropy.io import fits
     from astropy.table import Table
-    
     from astronify import simulator, series
 
 
@@ -55,7 +55,6 @@ And now let’s listen to the sound!
 
 .. parsed-literal::
 
-    Pyo warning: Portaudio input device `Display Audio` has fewer channels (1) than requested (2).
     Pyo warning: Portmidi warning: no midi device found!
     Portmidi closed.
 
@@ -85,7 +84,6 @@ Let’s sonify this light curve and listen to it.
 
 .. parsed-literal::
 
-    Pyo warning: Portaudio input device `Display Audio` has fewer channels (1) than requested (2).
     Pyo warning: Portmidi warning: no midi device found!
     Portmidi closed.
 
@@ -96,7 +94,7 @@ now, we will use all the defaults for the parameters.
 
 .. code:: python
 
-    lc_data = simulator.simulated_lc("transit", visualize=True)
+    lc_data = simulator.simulated_lc("transit", visualize=True, transit_width=10)
 
 
 
@@ -110,14 +108,13 @@ surface when it passes in front of the star.
 .. code:: python
 
     soni_obj = series.SoniSeries(lc_data)
-    soni_obj.pitch_mapper.pitch_map_args["pitch_range"] = [440,880]
+    soni_obj.pitch_mapper.pitch_map_args["zero_point"] = 95.
     soni_obj.sonify()
     soni_obj.play()
 
 
 .. parsed-literal::
 
-    Pyo warning: Portaudio input device `Display Audio` has fewer channels (1) than requested (2).
     Pyo warning: Portmidi warning: no midi device found!
     Portmidi closed.
 
@@ -145,13 +142,70 @@ Let’s sonify this light curve!
 .. code:: python
 
     soni_obj = series.SoniSeries(lc_data)
+    soni_obj.pitch_mapper.pitch_map_args["zero_point"] = 99.
     soni_obj.sonify()
     soni_obj.play()
 
 
 .. parsed-literal::
 
-    Pyo warning: Portaudio input device `Display Audio` has fewer channels (1) than requested (2).
+    Pyo warning: Portmidi warning: no midi device found!
+    Portmidi closed.
+
+
+You can add a stellar flare to the data. Let’s add one using the default
+parameters. Stellar flares are sudden increases in brightness over a
+short time.
+
+.. code:: python
+
+    lc_data = simulator.simulated_lc("flare", visualize=True)
+
+
+
+.. image:: How_To_Use_The_Simulator_files/How_To_Use_The_Simulator_20_0.png
+
+
+Time to sonify!
+
+.. code:: python
+
+    soni_obj = series.SoniSeries(lc_data)
+    soni_obj.sonify()
+    soni_obj.play()
+
+
+.. parsed-literal::
+
+    Pyo warning: Portmidi warning: no midi device found!
+    Portmidi closed.
+
+
+You can change the amplitude (height) of the flare, and the width. Let’s
+make one that is 10 times larger in amplitude and lasts 10 times as
+long. You can also specify the index that corresponds to the peak of the
+flare.
+
+.. code:: python
+
+    lc_data = simulator.simulated_lc("flare", visualize=True, flare_amp=1000., flare_halfwidth=50, flare_time=100)
+
+
+
+.. image:: How_To_Use_The_Simulator_files/How_To_Use_The_Simulator_24_0.png
+
+
+Let’s give it a listen.
+
+.. code:: python
+
+    soni_obj = series.SoniSeries(lc_data)
+    soni_obj.sonify()
+    soni_obj.play()
+
+
+.. parsed-literal::
+
     Pyo warning: Portmidi warning: no midi device found!
     Portmidi closed.
 
@@ -165,7 +219,7 @@ curve like this using the default parameters.
 
 
 
-.. image:: How_To_Use_The_Simulator_files/How_To_Use_The_Simulator_20_0.png
+.. image:: How_To_Use_The_Simulator_files/How_To_Use_The_Simulator_28_0.png
 
 
 Let’s sonify this light curve and listen to it.
@@ -179,7 +233,6 @@ Let’s sonify this light curve and listen to it.
 
 .. parsed-literal::
 
-    Pyo warning: Portaudio input device `Display Audio` has fewer channels (1) than requested (2).
     Pyo warning: Portmidi warning: no midi device found!
     Portmidi closed.
 
@@ -197,7 +250,7 @@ long as the default.
 
 
 
-.. image:: How_To_Use_The_Simulator_files/How_To_Use_The_Simulator_24_0.png
+.. image:: How_To_Use_The_Simulator_files/How_To_Use_The_Simulator_32_0.png
 
 
 Let’s sonify this.
@@ -211,7 +264,6 @@ Let’s sonify this.
 
 .. parsed-literal::
 
-    Pyo warning: Portaudio input device `Display Audio` has fewer channels (1) than requested (2).
     Pyo warning: Portmidi warning: no midi device found!
     Portmidi closed.
 
@@ -228,4 +280,3 @@ exactly the same as the one above, but will be close enough.
 
     lc_data = simulator.simulated_lc("sine", lc_ofile="sim_lc_sine.fits", visualize=False, sine_amp=1.5, sine_period=142,
                                      lc_noise=0.5, lc_length=1000)
-
