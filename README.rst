@@ -29,7 +29,7 @@ Project Status
     :target: https://github.com/spacetelescope/astronify/actions
     :alt: Astronify's GitHub Actions CI Status
     
-.. image:: https://codecov.io/gh/spacetelescope/astronify/branch/master/graph/badge.svg
+.. image:: https://codecov.io/gh/spacetelescope/astronify/branch/main/graph/badge.svg
   :target: https://codecov.io/gh/spacetelescope/astronify
   :alt: Astronify's Codecov coverage status
 
