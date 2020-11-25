@@ -26,6 +26,13 @@ jobs:
             python: 3.7
             toxenv: py37-test
             
+          - name: Python 3.8 with all optional dependencies
+            os: ubuntu-latest
+            python: 3.8
+            toxenv: py38-test-alldeps
+            toxargs: -v --develop
+            toxposargs: --open-files
+            
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
