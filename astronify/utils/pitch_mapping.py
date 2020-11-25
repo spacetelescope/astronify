@@ -112,14 +112,6 @@ def data_to_pitch(data_array, pitch_range=[100, 10000], center_pitch=440, zero_p
     zero_point = pitch_array[-1]
     pitch_array = pitch_array[:-1]
 
-<<<<<<< HEAD
-    if ((1/zero_point)*(center_pitch - pitch_range[0]) + pitch_range[0]) <= pitch_range[1]:
-        pitch_array = (pitch_array/zero_point)*(center_pitch - pitch_range[0]) + pitch_range[0]
-    else:
-        pitch_array = ((pitch_array-zero_point)/(1-zero_point))*(pitch_range[1] - center_pitch) + center_pitch
-    
-    return pitch_array
-=======
     # In rare cases, the zero-point at this stage might be 0.0.
     # One example is an input array of two values where the median() is the same as the
     # lowest of the two values. In this case, the zero-point is 0.0 and will lead to error
@@ -135,6 +127,5 @@ def data_to_pitch(data_array, pitch_range=[100, 10000], center_pitch=440, zero_p
     else:
         pitch_array = (((pitch_array-zero_point)/(1-zero_point))*(pitch_range[1] - center_pitch) +
                        center_pitch)
->>>>>>> fixes #43, fixes #42, adds protections to pitch mapper for bad conditions
 
     return pitch_array
