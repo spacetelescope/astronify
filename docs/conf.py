@@ -97,12 +97,15 @@ release = package.__version__
 
 # Add any paths that contain custom themes here, relative to this directory.
 # To use a different custom theme, add the directory containing the theme.
-#html_theme_path = []
+html_theme_path = ["_themes",]
 
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes. To override the custom theme, set this to the
 # name of a builtin theme or the name of a custom theme in html_theme_path.
-#html_theme = None
+html_theme = 'sphinx_rtd_theme'
+
+def setup_style(app):
+    app.add_stylesheet("astronify.css")
 
 master_doc='contents'
 html_extra_path=['index.html']
@@ -139,7 +142,9 @@ htmlhelp_basename = project + 'doc'
 
 # Static files to copy after template files
 html_static_path = ['_static']
-html_style = 'astronify.css'
+#html_style = 'astronify.css'
+
+html_css_files = ['astronify.css']
 
 
 # -- Options for LaTeX output -------------------------------------------------
