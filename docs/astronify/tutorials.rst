@@ -1,6 +1,6 @@
-===================
+*******************
 Astronify Tutorials
-===================
+*******************
 
 This is a collection of tutorials on various Astronify features.
 
