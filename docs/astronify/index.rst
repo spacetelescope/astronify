@@ -146,18 +146,3 @@ exoplanet or stellar flare.
                 >>> soni_obj = series.SoniSeries(lc_data)
                 >>> soni_obj.sonify()
                 >>> soni_obj.play()   #doctest: +SKIP
-
-
-
-Astronify API
-=============  
-        
-.. automodapi:: astronify.series
-    :no-inheritance-diagram:
-
-.. automodapi:: astronify.utils
-    :no-inheritance-diagram:
-
-.. automodapi:: astronify.simulator
-    :no-inheritance-diagram:
-

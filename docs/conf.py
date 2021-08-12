@@ -57,7 +57,7 @@ highlight_language = 'python3'
 
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
-exclude_patterns.append('_templates')
+#exclude_patterns.append('_templates')
 
 # This is added to the end of RST files - a good place to put substitutions to
 # be used globally.
@@ -97,7 +97,10 @@ release = package.__version__
 
 # Add any paths that contain custom themes here, relative to this directory.
 # To use a different custom theme, add the directory containing the theme.
-html_theme_path = ["_themes",]
+#html_theme_path = ["_themes",]
+
+# Custome template path, adding custom css and home link
+templates_path = ["_templates"]
 
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes. To override the custom theme, set this to the
@@ -110,19 +113,13 @@ def setup_style(app):
 master_doc='contents'
 html_extra_path=['index.html']
 
-html_theme_options = {
-    'logotext1': 'Astro',  # white,  semi-bold
-    'logotext2': 'nify',  # orange, light
-    'logotext3': ':docs'   # white,  light
-    }
-
 
 # Custom sidebar templates, maps document names to template names.
 html_sidebars = { '**': ['globaltoc.html', 'localtoc.html', 'searchbox.html'] }
 
 # The name of an image file (relative to this directory) to place at the top
 # of the sidebar.
-html_logo = '_static/astronify-CIRCLE.png'
+html_logo = '_static/ASTRONIFY_Ball_white.svg'
 
 # The name of an image file (within the static path) to use as favicon of the
 # docs.  This file should be a Windows icon file (.ico) being 16x16 or 32x32
@@ -170,7 +167,7 @@ if setup_cfg.get('edit_on_github').lower() == 'true':
     extensions += ['sphinx_astropy.ext.edit_on_github']
 
     edit_on_github_project = setup_cfg['github_project']
-    edit_on_github_branch = "master"
+    edit_on_github_branch = "main"
 
     edit_on_github_source_root = ""
     edit_on_github_doc_root = "docs"
