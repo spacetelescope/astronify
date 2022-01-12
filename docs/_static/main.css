@@ -41,6 +41,13 @@ h3{
     margin-right: 0px;
 }
 
+h5{
+    font-size: 95px;
+    margin-bottom: 15px;
+    margin-right: 0px;
+    font-family: 'Oswald';
+}
+
 a{
     color: white;
     text-decoration: none;
@@ -90,13 +97,37 @@ a:hover .big-button {
     max-width: 800;
     text-align: center;
     font-weight: bold;
-    display: block;
+   display: block;
 }
 
 
 .small-link:hover{
     background-color: #00617E;
 }
+
+
+.artist-link{
+    background: #0D4960;
+    font-size: 20px;
+    margin-bottom: 20px;
+    border: 2px;
+    border-color: white;
+    border-style: solid;
+    padding: 15px;
+    max-width: 400px;
+    text-align: center;
+    font-weight: bold;
+    display: block;
+        margin-left: auto;
+    margin-right: auto;
+}
+
+
+.artist-link:hover{
+    background-color: #00617E;
+}
+
+
 
 .big-button ORANGE{
     background: #C75109;
@@ -112,3 +143,15 @@ a:hover .big-button {
     margin-top: 100px;
     margin-bottom: 30px;
 }
+
+
+hr{
+    border-color: white;
+    border-style:dashed;
+
+}
+
+.painting{
+    width: 800px;
+}
+
