@@ -111,7 +111,7 @@ def setup_style(app):
     app.add_stylesheet("astronify.css")
 
 master_doc='contents'
-html_extra_path=['index.html']
+html_extra_path=['index.html', 'CreateWithLight.html']
 
 
 # Custom sidebar templates, maps document names to template names.
