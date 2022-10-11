@@ -307,3 +307,75 @@ class SoniSeries():
         self.server.shutdown()
         self.server.reinit(audio="portaudio")
 
+
+class SeriesPreviews():
+        """ Previews (or snapshots) of 1d spectra by binning the data into
+        five equal pieces by assigning a sound to each piece. 
+        """
+
+        def __init__(self, soniseries):
+            # Allows access to SoniSeries class methods and variables
+            self._soniseries = soniseries
+
+            self.pitch_values = [300, 400, 500, 600, 700]
+            # Amplitudes will be stored as a % between 0-1
+            self.amplitudes = np.zeros(5)
+            # TODO: Make robust
+            self.n_pitch_values = len(self.pitch_values)
+
+
+        def sonify_preview(self):
+            """ Perform the sonification of the preview """
+            data = self._soniseries.data[self._soniseries.val_col]
+            xdata = np.asarray(self._soniseries.data[self._soniseries.time_col])
+            transform = LinearStretch()
+
+            pitch_array = data/max(data)#np.asarray(transform(data))
+            #print(data)
+            #print(pitch_array)
+            bin_size = int(np.round(len(data) // self.n_pitch_values, 1))
+
+            total_area = np.trapz(pitch_array, xdata)
+            print('total area = ', total_area)
+
+            pitch_bins = [pitch_array[i:i+bin_size] for i in range(0, len(pitch_array), bin_size)]
+            xdata_bins = [xdata[i:i+bin_size] for i in range(0, len(xdata), bin_size)]
+            
+            
+            print('PITCH_BINS')
+            print(pitch_bins)
+
+            print('XDATA_BINS')
+            print(xdata_bins)
+
+            std_vals = []
+            for idx, (pitch_bin, x) in enumerate(zip(pitch_bins, xdata_bins)):
+
+                std_vals.append(np.std(pitch_bin))
+
+                #self.amplitudes[idx] = np.trapz(pitch_bins, x)/total_area
+                #print(np.trapz(pitch_bin, x))
+
+            self.amplitudes = np.asarray(std_vals) / max(std_vals)
+
+            print('AMPLITUDES')
+            print(self.amplitudes)
+
+
+        def play_preview(self):
+            
+            if self._soniseries.server.getIsBooted():
+                self._soniseries.server.shutdown()
+        
+            self._soniseries.server.boot()
+            self._soniseries.server.start()
+
+            self.duration = 1.0
+            
+            #env = pyo.Linseg(list=[(0, 0), (0.01, 1), (duration - 0.1, 1),
+            #                   (duration - 0.05, 0.5), (duration - 0.005, 0)],
+            #             mul=[self.gain for i in range(len(pitches))]).play(
+            #                 delay=list(delays), dur=duration)
+            MUL = list(self.amplitudes)
+            #print(MUL)
+            self.preview_streams = pyo.Sine(self.pitch_values, mul=MUL).out(dur=self.duration)
