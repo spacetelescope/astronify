@@ -130,7 +130,7 @@ class SoniSeries():
         self.note_spacing = 0.01  # spacing between notes in seconds
         self.gain = 0.05  # default gain in the generated sine wave. pyo multiplier, -1 to 1.
         self.pitch_mapper = PitchMap(data_to_pitch)
-        self.preview_object = SeriesPreviews()
+        self.preview_object = SeriesPreviews(self)
 
         self._init_pyo()
 
@@ -401,7 +401,7 @@ class SeriesPreviews():
             self._soniseries.server.boot()
             self._soniseries.server.start()
 
-            self.duration = 1.0
+            self.duration = 2.0
             
             #env = pyo.Linseg(list=[(0, 0), (0.01, 1), (duration - 0.1, 1),
             #                   (duration - 0.05, 0.5), (duration - 0.005, 0)],
@@ -410,6 +410,12 @@ class SeriesPreviews():
             #a = LFO(freq=lf, sharp=0, type=3, mul=100, add=300)
             MUL = list(self.amplitudes)
             #print(MUL)
-            self.preview_streams = pyo.Sine(self.pitch_values, mul=MUL).out(dur=self.duration)
+            # self.preview_streams = pyo.Sine([100, 100], add=10)
+            
+            # a = pyo.LFO(freq=self.preview_streams, sharp=10, type=3, mul=100, add=1000)#add is the frequency input value (fundamental freq.)
+            #b = pyo.SineLoop(freq=a, feedback=0, mul=.1).out()
 
-            return self.pitch_values
+            lf = pyo.Sine([300, 400], mul=1, add=10)## Our target variable is mul as the LFO frequency (from 0-flat to different stages)
+            a = pyo.LFO(freq=lf, sharp=10, type=3, mul=100, add=1000)#add is the frequency input value (fundamental freq.)
+            b = pyo.SineLoop(freq=a, feedback=0, mul=.1).out()
+            return self.pitch_values, self.frequencies
