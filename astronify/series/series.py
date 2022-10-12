@@ -328,13 +328,13 @@ class SeriesPreviews():
             """ Perform the sonification of the preview """
             data = self._soniseries.data[self._soniseries.val_col]
             xdata = np.asarray(self._soniseries.data[self._soniseries.time_col])
-            transform = LinearStretch()
 
             pitch_array = data/max(data)#np.asarray(transform(data))
             #print(data)
             #print(pitch_array)
             bin_size = int(np.round(len(data) // self.n_pitch_values, 1))
 
+            # total_area is no longer needed
             total_area = np.trapz(pitch_array, xdata)
             print('total area = ', total_area)
 
@@ -356,7 +356,8 @@ class SeriesPreviews():
                 #self.amplitudes[idx] = np.trapz(pitch_bins, x)/total_area
                 #print(np.trapz(pitch_bin, x))
 
-            self.amplitudes = np.asarray(std_vals) / max(std_vals)
+            self.amplitudes = [1., 1., 1., 1., 1.]
+            self.frequencies = np.asarray(std_vals) / max(std_vals)
 
             print('AMPLITUDES')
             print(self.amplitudes)
@@ -376,6 +377,9 @@ class SeriesPreviews():
             #                   (duration - 0.05, 0.5), (duration - 0.005, 0)],
             #             mul=[self.gain for i in range(len(pitches))]).play(
             #                 delay=list(delays), dur=duration)
+            #a = LFO(freq=lf, sharp=0, type=3, mul=100, add=300)
             MUL = list(self.amplitudes)
             #print(MUL)
             self.preview_streams = pyo.Sine(self.pitch_values, mul=MUL).out(dur=self.duration)
+
+            return self.pitch_values
