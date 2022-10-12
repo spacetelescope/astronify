@@ -406,10 +406,16 @@ class SeriesPreviews():
         
             self._soniseries.server.boot()
             self._soniseries.server.start()
-
-            self.duration = 2.0
             
             factor = 10
+            
+            # `step` must go into `stop` 5 times, since we have 5 pitches
+            #start, stop, step = 0, 2.5, 0.5 
+            #self.delays = np.arange(start, stop, step)
+            self.delays = [0., 0.5, 1., 1.5, 2.0]
+            
+            # total_duration is in seconds
+            self.total_duration = 8.0 
 
             lfo1 = pyo.Sine(float(self.tremolo_vals[0]*factor), 0, float(self.amplitudes[0])*factor, 0)
             lfo2 = pyo.Sine(float(self.tremolo_vals[1]*factor), 0, float(self.amplitudes[1])*factor, 0)
@@ -417,15 +423,15 @@ class SeriesPreviews():
             lfo4 = pyo.Sine(float(self.tremolo_vals[3]*factor), 0, float(self.amplitudes[3])*factor, 0)
             lfo5 = pyo.Sine(float(self.tremolo_vals[4]*factor), 0, float(self.amplitudes[4])*factor, 0)
 
-            self.stream1 = pyo.Sine(freq=self.pitch_values[0], mul=lfo1).out(dur=4.0)
+            self.stream1 = pyo.Sine(freq=self.pitch_values[0], mul=lfo1).out(dur=self.total_duration-self.delays[0])
             
-            self.stream2 = pyo.Sine(freq=self.pitch_values[1], mul=lfo2).out(delay=0.5, dur=3.5)
+            self.stream2 = pyo.Sine(freq=self.pitch_values[1], mul=lfo2).out(delay=self.delays[1], dur=self.total_duration-self.delays[1])
 
-            self.stream3 = pyo.Sine(freq=self.pitch_values[2], mul=lfo3).out(delay=1.0, dur=3.0)
+            self.stream3 = pyo.Sine(freq=self.pitch_values[2], mul=lfo3).out(delay=self.delays[2], dur=self.total_duration-self.delays[2])
 
-            self.stream4 = pyo.Sine(freq=self.pitch_values[3], mul=lfo4).out(delay=1.5, dur=2.5)
+            self.stream4 = pyo.Sine(freq=self.pitch_values[3], mul=lfo4).out(delay=self.delays[3], dur=self.total_duration-self.delays[3])
 
-            self.stream5 = pyo.Sine(freq=self.pitch_values[4], mul=lfo5).out(delay=2.0, dur=2.0)
+            self.stream5 = pyo.Sine(freq=self.pitch_values[4], mul=lfo5).out(delay=self.delays[4], dur=self.total_duration-self.delays[4])
             
             #self.preview_streams = pyo.Sine(self.pitch_values, mul=2).out(dur=10)
             #self.streams = pyo.Sine([400,500], mul=.2).out(dur=2.0)
