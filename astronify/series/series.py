@@ -316,54 +316,83 @@ class SeriesPreviews():
         def __init__(self, soniseries):
             # Allows access to SoniSeries class methods and variables
             self._soniseries = soniseries
-
+            # Define the frequencies to use for each piece.
             self.pitch_values = [300, 400, 500, 600, 700]
-            # Amplitudes will be stored as a % between 0-1
-            self.amplitudes = np.zeros(5)
             # TODO: Make robust
             self.n_pitch_values = len(self.pitch_values)
+            # Amplitudes will be stored as a % between 0-1.
+            self.amplitudes = np.zeros(self.n_pitch_values)
+            # Tremolo values will be stored as a number, typically ranging from some small number
+            # (avoid 0.0, e.g., 0.1) through ~10.
+            self.tremolo_vals = np.zeros(self.n_pitch_values)
 
+        def area_of_pieces(self, ydata_bins, xdata_bins):
+            """
+            Given pieces of a series of 1D data, calculate the area-under-the-curve of each piece
+            such that the total area of all the pieces equals the total area of the entire curve.
+            """
+            area_vals = []
+            for idx, (ydata_bin, xdata_bin) in enumerate(zip(ydata_bins, xdata_bins)):
+                if idx < len(ydata_bins)-1:
+                    # Then you need to include the first (x,y) point from the NEXT bin as well
+                    # when calculating the trapezoidal area so the pieces all add up to the total.
+                    ydata_bin.append(ydata_bins[idx+1][0])
+                    xdata_bin.append(xdata_bins[idx+1][0])
+                area_vals.append(np.trapz(ydata_bin, xdata_bin))
+            return area_vals
 
         def sonify_preview(self):
-            """ Perform the sonification of the preview """
-            data = self._soniseries.data[self._soniseries.val_col]
+            """
+            Make a "preview-style" sonification.  The data is split into even pieces.  Each piece
+            gets assigned a specific frequency.  The amplitude is defined by the area under the curve
+            in this piece, normalized by the total area under the curve.  The tremolo is defined
+            by the standard deviation of data in this piece, normalized by the maximum standard
+            deviation across all pieces.
+            """
+            # Get a copy of the 'y' and 'x' data.
+            ydata = np.asarray(self._soniseries.data[self._soniseries.val_col])
             xdata = np.asarray(self._soniseries.data[self._soniseries.time_col])
 
-            pitch_array = data/max(data)#np.asarray(transform(data))
-            #print(data)
-            #print(pitch_array)
+            # Normalize the y-data by the maximum to constrain values from 0-1.
+            ydata_norm = ydata/max(ydata)
+
+            # Split the data into `n_pitch_values` equal-sized pieces.
             bin_size = int(np.round(len(data) // self.n_pitch_values, 1))
-
-            # total_area is no longer needed
-            total_area = np.trapz(pitch_array, xdata)
-            print('total area = ', total_area)
-
-            pitch_bins = [pitch_array[i:i+bin_size] for i in range(0, len(pitch_array), bin_size)]
+            # Split the y-values into pieces.
+            ydata_bins = [ydata_norm[i:i+bin_size] for i in range(0, len(ydata_norm), bin_size)]
+            # Split the x-values into pieces.
             xdata_bins = [xdata[i:i+bin_size] for i in range(0, len(xdata), bin_size)]
             
-            
-            print('PITCH_BINS')
-            print(pitch_bins)
+            # Calculate the total area under the curve, used to normalize the areas in each piece.
+            total_area = np.trapz(ydata_norm, xdata)
+            print('Total area = {0:0f}'.format(total_area))
 
-            print('XDATA_BINS')
-            print(xdata_bins)
-
+            # Loop through each piece and calculate the standard deviation of the y-data
+            # and the area under the curve in each piece.
             std_vals = []
-            for idx, (pitch_bin, x) in enumerate(zip(pitch_bins, xdata_bins)):
+            for ydata_bin in ydata_bins:
+                # Calculate standard deviation and add to the list.
+                std_vals.append(np.std(ydata_bin))
+                
+            # Calculate the area under the curve for each piece.
+            area_vals = self.area_of_pieces(ydata_bins, xdata_bins)
 
-                std_vals.append(np.std(pitch_bin))
+            # Normalize the standard deviations in each piece by this factor.
+            std_dev_norm = max(std_vals)
 
-                #self.amplitudes[idx] = np.trapz(pitch_bins, x)/total_area
-                #print(np.trapz(pitch_bin, x))
-
-            self.amplitudes = [1., 1., 1., 1., 1.]
-            self.frequencies = np.asarray(std_vals) / max(std_vals)
-
-            print('AMPLITUDES')
-            print(self.amplitudes)
-
+            # Set the amplitude of each pitch to the area under the curve normalized by the total
+            # area.
+            self.amplitudes = np.asarray(area_vals) / total_area
+            # Set the tremolo values based on the standard deviation of the piece normalized by the
+            # `std_dev_norm` factor.
+            ## TODO: Add some constraints, don't want to go much larger than ~10 and want to avoid
+            ##       tremolo values of 0 (aim for a minimum of no less than ~0.1?)
+            self.tremolo_vals = np.asarray(std_vals) / std_dev_norm
 
         def play_preview(self):
+            """
+            Play the sound of a "preview-style" sonification.
+            """
             
             if self._soniseries.server.getIsBooted():
                 self._soniseries.server.shutdown()
