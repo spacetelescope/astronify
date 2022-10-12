@@ -390,9 +390,6 @@ class SeriesPreviews():
             ## TODO: Add some constraints, don't want to go much larger than ~10 and want to avoid
             ##       tremolo values of 0 (aim for a minimum of no less than ~0.1?)
             self.tremolo_vals = np.asarray(std_vals) / std_dev_norm
-            print(self.tremolo_vals)
-            print(self.amplitudes)
-            print(self.pitch_values)
 
 
         def play_preview(self):
@@ -414,18 +411,21 @@ class SeriesPreviews():
             
             factor = 10
 
-            lfo1 = pyo.Sine(float(self.tremolo_vals[0]*factor), 0, float(self.amplitudes[0]), 0)
-            lfo2 = pyo.Sine(float(self.tremolo_vals[1]*factor), 0, float(self.amplitudes[1]), 0)
-            lfo3 = pyo.Sine(float(self.tremolo_vals[2]*factor), 0, float(self.amplitudes[2]), 0)
-            lfo4 = pyo.Sine(float(self.tremolo_vals[3]*factor), 0, float(self.amplitudes[3]), 0)
-            lfo5 = pyo.Sine(float(self.tremolo_vals[4]*factor), 0, float(self.amplitudes[4]), 0)
+            lfo1 = pyo.Sine(float(self.tremolo_vals[0]*factor), 0, float(self.amplitudes[0])*factor, 0)
+            lfo2 = pyo.Sine(float(self.tremolo_vals[1]*factor), 0, float(self.amplitudes[1])*factor, 0)
+            lfo3 = pyo.Sine(float(self.tremolo_vals[2]*factor), 0, float(self.amplitudes[2])*factor, 0)
+            lfo4 = pyo.Sine(float(self.tremolo_vals[3]*factor), 0, float(self.amplitudes[3])*factor, 0)
+            lfo5 = pyo.Sine(float(self.tremolo_vals[4]*factor), 0, float(self.amplitudes[4])*factor, 0)
 
-            sine1 = pyo.Sine(freq=self.pitch_values[0], mul=lfo1).out(dur=4.0)
+            self.stream1 = pyo.Sine(freq=self.pitch_values[0], mul=lfo1).out(dur=4.0)
             
-            sine2 = pyo.Sine(freq=self.pitch_values[1], mul=lfo2).out(delay=0.5, dur=3.5)
+            self.stream2 = pyo.Sine(freq=self.pitch_values[1], mul=lfo2).out(delay=0.5, dur=3.5)
 
-            sine3 = pyo.Sine(freq=self.pitch_values[2], mul=lfo3).out(delay=1.0, dur=3.0)
+            self.stream3 = pyo.Sine(freq=self.pitch_values[2], mul=lfo3).out(delay=1.0, dur=3.0)
 
-            sine4 = pyo.Sine(freq=self.pitch_values[3], mul=lfo4).out(delay=1.5, dur=2.5)
+            self.stream4 = pyo.Sine(freq=self.pitch_values[3], mul=lfo4).out(delay=1.5, dur=2.5)
 
-            sine5 = pyo.Sine(freq=self.pitch_values[4], mul=lfo5).out(delay=2.0, dur=2.0)
+            self.stream5 = pyo.Sine(freq=self.pitch_values[4], mul=lfo5).out(delay=2.0, dur=2.0)
+            
+            #self.preview_streams = pyo.Sine(self.pitch_values, mul=2).out(dur=10)
+            #self.streams = pyo.Sine([400,500], mul=.2).out(dur=2.0)
