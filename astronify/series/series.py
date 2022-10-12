@@ -130,6 +130,7 @@ class SoniSeries():
         self.note_spacing = 0.01  # spacing between notes in seconds
         self.gain = 0.05  # default gain in the generated sine wave. pyo multiplier, -1 to 1.
         self.pitch_mapper = PitchMap(data_to_pitch)
+        self.preview_object = SeriesPreviews()
 
         self._init_pyo()
 
