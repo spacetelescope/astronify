@@ -337,8 +337,9 @@ class SeriesPreviews():
                 if idx < len(ydata_bins)-1:
                     # Then you need to include the first (x,y) point from the NEXT bin as well
                     # when calculating the trapezoidal area so the pieces all add up to the total.
-                    ydata_bin.append(ydata_bins[idx+1][0])
-                    xdata_bin.append(xdata_bins[idx+1][0])
+                    list(ydata_bin).append(ydata_bins[idx+1][0])
+                    list(xdata_bin).append(xdata_bins[idx+1][0])
+
                 area_vals.append(np.trapz(ydata_bin, xdata_bin))
             return area_vals
 
@@ -358,7 +359,7 @@ class SeriesPreviews():
             ydata_norm = ydata/max(ydata)
 
             # Split the data into `n_pitch_values` equal-sized pieces.
-            bin_size = int(np.round(len(data) // self.n_pitch_values, 1))
+            bin_size = int(np.round(len(xdata) // self.n_pitch_values, 1))
             # Split the y-values into pieces.
             ydata_bins = [ydata_norm[i:i+bin_size] for i in range(0, len(ydata_norm), bin_size)]
             # Split the x-values into pieces.
@@ -389,10 +390,18 @@ class SeriesPreviews():
             ## TODO: Add some constraints, don't want to go much larger than ~10 and want to avoid
             ##       tremolo values of 0 (aim for a minimum of no less than ~0.1?)
             self.tremolo_vals = np.asarray(std_vals) / std_dev_norm
+            print(self.tremolo_vals)
+            print(self.amplitudes)
+            print(self.pitch_values)
+
 
         def play_preview(self):
-            """
-            Play the sound of a "preview-style" sonification.
+            """ Play the sound of a "preview-style" sonification.
+
+            The assigned pitch for each section of the spectra will begin
+            to play, with the calculated amplitude and frequency, one 
+            at a time until all pitches are playing together for the full 
+            audio preview of the spectra.
             """
             
             if self._soniseries.server.getIsBooted():
@@ -403,19 +412,20 @@ class SeriesPreviews():
 
             self.duration = 2.0
             
-            #env = pyo.Linseg(list=[(0, 0), (0.01, 1), (duration - 0.1, 1),
-            #                   (duration - 0.05, 0.5), (duration - 0.005, 0)],
-            #             mul=[self.gain for i in range(len(pitches))]).play(
-            #                 delay=list(delays), dur=duration)
-            #a = LFO(freq=lf, sharp=0, type=3, mul=100, add=300)
-            MUL = list(self.amplitudes)
-            #print(MUL)
-            # self.preview_streams = pyo.Sine([100, 100], add=10)
-            
-            # a = pyo.LFO(freq=self.preview_streams, sharp=10, type=3, mul=100, add=1000)#add is the frequency input value (fundamental freq.)
-            #b = pyo.SineLoop(freq=a, feedback=0, mul=.1).out()
+            factor = 10
 
-            lf = pyo.Sine([300, 400], mul=1, add=10)## Our target variable is mul as the LFO frequency (from 0-flat to different stages)
-            a = pyo.LFO(freq=lf, sharp=10, type=3, mul=100, add=1000)#add is the frequency input value (fundamental freq.)
-            b = pyo.SineLoop(freq=a, feedback=0, mul=.1).out()
-            return self.pitch_values, self.frequencies
+            lfo1 = pyo.Sine(float(self.tremolo_vals[0]*factor), 0, float(self.amplitudes[0]), 0)
+            lfo2 = pyo.Sine(float(self.tremolo_vals[1]*factor), 0, float(self.amplitudes[1]), 0)
+            lfo3 = pyo.Sine(float(self.tremolo_vals[2]*factor), 0, float(self.amplitudes[2]), 0)
+            lfo4 = pyo.Sine(float(self.tremolo_vals[3]*factor), 0, float(self.amplitudes[3]), 0)
+            lfo5 = pyo.Sine(float(self.tremolo_vals[4]*factor), 0, float(self.amplitudes[4]), 0)
+
+            sine1 = pyo.Sine(freq=self.pitch_values[0], mul=lfo1).out(dur=4.0)
+            
+            sine2 = pyo.Sine(freq=self.pitch_values[1], mul=lfo2).out(delay=0.5, dur=3.5)
+
+            sine3 = pyo.Sine(freq=self.pitch_values[2], mul=lfo3).out(delay=1.0, dur=3.0)
+
+            sine4 = pyo.Sine(freq=self.pitch_values[3], mul=lfo4).out(delay=1.5, dur=2.5)
+
+            sine5 = pyo.Sine(freq=self.pitch_values[4], mul=lfo5).out(delay=2.0, dur=2.0)
