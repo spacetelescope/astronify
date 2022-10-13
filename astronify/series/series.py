@@ -409,8 +409,10 @@ class SeriesPreviews():
             self._soniseries.server.boot()
             self._soniseries.server.start()
             
+            # TODO: Amplitude factor could be fed in as a "volume" setting 
             factor = 10
             
+            # TODO: Generalize the self.delays list
             # `step` must go into `stop` 5 times, since we have 5 pitches
             #start, stop, step = 0, 2.5, 0.5 
             #self.delays = np.arange(start, stop, step)
@@ -418,9 +420,8 @@ class SeriesPreviews():
 
             # total_duration is in seconds
             self.total_duration = 8.0 
-            
-            print('TREMOLO')
-            print(self.tremolo_vals)
+
+            # TODO: Make everything below iterable to it's cleaner and takes up less lines
             lfo1 = pyo.Sine(float(self.tremolo_vals[0]), 0, float(self.amplitudes[0])*factor, 0)
             lfo2 = pyo.Sine(float(self.tremolo_vals[1]), 0, float(self.amplitudes[1])*factor, 0)
             lfo3 = pyo.Sine(float(self.tremolo_vals[2]), 0, float(self.amplitudes[2])*factor, 0)
@@ -437,5 +438,3 @@ class SeriesPreviews():
 
             self.stream5 = pyo.Sine(freq=self.pitch_values[4], mul=lfo5).out(delay=self.delays[4], dur=self.total_duration-self.delays[4])
             
-            #self.preview_streams = pyo.Sine(self.pitch_values, mul=2).out(dur=10)
-            #self.streams = pyo.Sine([400,500], mul=.2).out(dur=2.0)
