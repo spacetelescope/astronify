@@ -364,7 +364,7 @@ class SeriesPreviews():
             ydata_bins = [ydata_norm[i:i+bin_size] for i in range(0, len(ydata_norm), bin_size)]
             # Split the x-values into pieces.
             xdata_bins = [xdata[i:i+bin_size] for i in range(0, len(xdata), bin_size)]
-            
+            print(xdata_bins)
             # Calculate the total area under the curve, used to normalize the areas in each piece.
             total_area = np.trapz(ydata_norm, xdata)
             print('Total area = {0:0f}'.format(total_area))
@@ -373,6 +373,7 @@ class SeriesPreviews():
             # and the area under the curve in each piece.
             std_vals = []
             for ydata_bin in ydata_bins:
+                
                 # Calculate standard deviation and add to the list.
                 std_vals.append(np.std(ydata_bin))
                 
@@ -387,9 +388,10 @@ class SeriesPreviews():
             self.amplitudes = np.asarray(area_vals) / total_area
             # Set the tremolo values based on the standard deviation of the piece normalized by the
             # `std_dev_norm` factor.
-            ## TODO: Add some constraints, don't want to go much larger than ~10 and want to avoid
-            ##       tremolo values of 0 (aim for a minimum of no less than ~0.1?)
             self.tremolo_vals = np.asarray(std_vals) / std_dev_norm
+            # Constraint added to keep tremolo values at or below 15, otherwise oscillations are 
+            # more difficult to hear 
+            self.tremolo_vals[self.tremolo_vals > 15] = 15
 
 
         def play_preview(self):
@@ -413,15 +415,17 @@ class SeriesPreviews():
             #start, stop, step = 0, 2.5, 0.5 
             #self.delays = np.arange(start, stop, step)
             self.delays = [0., 0.5, 1., 1.5, 2.0]
-            
+
             # total_duration is in seconds
             self.total_duration = 8.0 
-
-            lfo1 = pyo.Sine(float(self.tremolo_vals[0]*factor), 0, float(self.amplitudes[0])*factor, 0)
-            lfo2 = pyo.Sine(float(self.tremolo_vals[1]*factor), 0, float(self.amplitudes[1])*factor, 0)
-            lfo3 = pyo.Sine(float(self.tremolo_vals[2]*factor), 0, float(self.amplitudes[2])*factor, 0)
-            lfo4 = pyo.Sine(float(self.tremolo_vals[3]*factor), 0, float(self.amplitudes[3])*factor, 0)
-            lfo5 = pyo.Sine(float(self.tremolo_vals[4]*factor), 0, float(self.amplitudes[4])*factor, 0)
+            
+            print('TREMOLO')
+            print(self.tremolo_vals)
+            lfo1 = pyo.Sine(float(self.tremolo_vals[0]), 0, float(self.amplitudes[0])*factor, 0)
+            lfo2 = pyo.Sine(float(self.tremolo_vals[1]), 0, float(self.amplitudes[1])*factor, 0)
+            lfo3 = pyo.Sine(float(self.tremolo_vals[2]), 0, float(self.amplitudes[2])*factor, 0)
+            lfo4 = pyo.Sine(float(self.tremolo_vals[3]), 0, float(self.amplitudes[3])*factor, 0)
+            lfo5 = pyo.Sine(float(self.tremolo_vals[4]), 0, float(self.amplitudes[4])*factor, 0)
 
             self.stream1 = pyo.Sine(freq=self.pitch_values[0], mul=lfo1).out(dur=self.total_duration-self.delays[0])
             
