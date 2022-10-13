@@ -364,7 +364,7 @@ class SeriesPreviews():
             ydata_bins = [ydata_norm[i:i+bin_size] for i in range(0, len(ydata_norm), bin_size)]
             # Split the x-values into pieces.
             xdata_bins = [xdata[i:i+bin_size] for i in range(0, len(xdata), bin_size)]
-            print(xdata_bins)
+            
             # Calculate the total area under the curve, used to normalize the areas in each piece.
             total_area = np.trapz(ydata_norm, xdata)
             print('Total area = {0:0f}'.format(total_area))
@@ -388,7 +388,9 @@ class SeriesPreviews():
             self.amplitudes = np.asarray(area_vals) / total_area
             # Set the tremolo values based on the standard deviation of the piece normalized by the
             # `std_dev_norm` factor.
-            self.tremolo_vals = np.asarray(std_vals) / std_dev_norm
+            # The final calculated tremolo values are multiplied by a factor of 10 for auditory 
+            # purposes
+            self.tremolo_vals = (np.asarray(std_vals) / std_dev_norm)*10
             # Constraint added to keep tremolo values at or below 15, otherwise oscillations are 
             # more difficult to hear 
             self.tremolo_vals[self.tremolo_vals > 15] = 15
@@ -421,6 +423,7 @@ class SeriesPreviews():
             # total_duration is in seconds
             self.total_duration = 8.0 
 
+            print(self.tremolo_vals)
             # TODO: Make everything below iterable to it's cleaner and takes up less lines
             lfo1 = pyo.Sine(float(self.tremolo_vals[0]), 0, float(self.amplitudes[0])*factor, 0)
             lfo2 = pyo.Sine(float(self.tremolo_vals[1]), 0, float(self.amplitudes[1])*factor, 0)
