@@ -375,6 +375,7 @@ class SeriesPreviews():
             for ydata_bin in ydata_bins:
                 
                 # Calculate standard deviation and add to the list.
+                num_range = max(ydata_bin) - min(ydata_bin)
                 std_vals.append(np.std(ydata_bin))
                 
             # Calculate the area under the curve for each piece.
@@ -385,12 +386,36 @@ class SeriesPreviews():
 
             # Set the amplitude of each pitch to the area under the curve normalized by the total
             # area.
+            print('area vals')
+            print(np.asarray(area_vals))
+            print('TOTAL AREA')
+            print(total_area)
             self.amplitudes = np.asarray(area_vals) / total_area
+            print('amplitudes')
+            print(self.amplitudes)
+             
+            print('stdvals')
+            print(np.asarray(std_vals))
+            print('stddevnorm')
+            print(std_dev_norm)
+            
+            if std_dev_norm == 0.0: std_dev_norm = 1.0
+
             # Set the tremolo values based on the standard deviation of the piece normalized by the
             # `std_dev_norm` factor.
+
+            # TODO: Might be worth trying a different way of calculating the tremolo values other 
+            # than the normalized standard dev. Maybe using RMS vals? 
+            # To more accurately represent all forms of data.
+
             # The final calculated tremolo values are multiplied by a factor of 10 for auditory 
             # purposes
+            print('before factiring')
+            print((np.asarray(std_vals) / std_dev_norm))
             self.tremolo_vals = (np.asarray(std_vals) / std_dev_norm)*10
+
+            print('TREMOLO VALS')
+            print(self.tremolo_vals)
             # Constraint added to keep tremolo values at or below 15, otherwise oscillations are 
             # more difficult to hear 
             self.tremolo_vals[self.tremolo_vals > 15] = 15
@@ -418,26 +443,36 @@ class SeriesPreviews():
             # `step` must go into `stop` 5 times, since we have 5 pitches
             #start, stop, step = 0, 2.5, 0.5 
             #self.delays = np.arange(start, stop, step)
-            self.delays = [0., 0.5, 1., 1.5, 2.0]
+            self.delays = [0., 2., 4., 6., 8.]
 
             # total_duration is in seconds
             self.total_duration = 8.0 
-
-            print(self.tremolo_vals)
-            # TODO: Make everything below iterable to it's cleaner and takes up less lines
-            lfo1 = pyo.Sine(float(self.tremolo_vals[0]), 0, float(self.amplitudes[0])*factor, 0)
-            lfo2 = pyo.Sine(float(self.tremolo_vals[1]), 0, float(self.amplitudes[1])*factor, 0)
-            lfo3 = pyo.Sine(float(self.tremolo_vals[2]), 0, float(self.amplitudes[2])*factor, 0)
-            lfo4 = pyo.Sine(float(self.tremolo_vals[3]), 0, float(self.amplitudes[3])*factor, 0)
-            lfo5 = pyo.Sine(float(self.tremolo_vals[4]), 0, float(self.amplitudes[4])*factor, 0)
-
-            self.stream1 = pyo.Sine(freq=self.pitch_values[0], mul=lfo1).out(dur=self.total_duration-self.delays[0])
             
-            self.stream2 = pyo.Sine(freq=self.pitch_values[1], mul=lfo2).out(delay=self.delays[1], dur=self.total_duration-self.delays[1])
+            # TODO: Make everything below iterable to it's cleaner and takes up less lines
+            lfo1 = pyo.Sine(float(self.tremolo_vals[0]), 0, float(1/np.abs(np.log(self.amplitudes[0]))), 0) if self.tremolo_vals[0] > 0 else 0.1
+            lfo2 = pyo.Sine(float(self.tremolo_vals[1]), 0, float(1/np.abs(np.log(self.amplitudes[1]))), 0) if self.tremolo_vals[1] > 0 else 0.1
+            lfo3 = pyo.Sine(float(self.tremolo_vals[2]), 0, float(1/np.abs(np.log(self.amplitudes[2]))), 0) if self.tremolo_vals[2] > 0 else 0.1
+            lfo4 = pyo.Sine(float(self.tremolo_vals[3]), 0, float(1/np.abs(np.log(self.amplitudes[3]))), 0) if self.tremolo_vals[3] > 0 else 0.1
+            lfo5 = pyo.Sine(float(self.tremolo_vals[4]), 0, float(1/np.abs(np.log(self.amplitudes[4]))), 0) if self.tremolo_vals[4] > 0 else 0.1
 
-            self.stream3 = pyo.Sine(freq=self.pitch_values[2], mul=lfo3).out(delay=self.delays[2], dur=self.total_duration-self.delays[2])
+            self.stream1 = pyo.Sine(freq=self.pitch_values[0], mul=lfo1).out(delay=self.delays[0], dur=2.0)
+            
+            self.stream2 = pyo.Sine(freq=self.pitch_values[1], mul=lfo2).out(delay=self.delays[1], dur=2.0)
 
-            self.stream4 = pyo.Sine(freq=self.pitch_values[3], mul=lfo4).out(delay=self.delays[3], dur=self.total_duration-self.delays[3])
+            self.stream3 = pyo.Sine(freq=self.pitch_values[2], mul=lfo3).out(delay=self.delays[2], dur=2.0)
 
-            self.stream5 = pyo.Sine(freq=self.pitch_values[4], mul=lfo5).out(delay=self.delays[4], dur=self.total_duration-self.delays[4])
+            self.stream4 = pyo.Sine(freq=self.pitch_values[3], mul=lfo4).out(delay=self.delays[3], dur=2.0)
+
+            self.stream5 = pyo.Sine(freq=self.pitch_values[4], mul=lfo5).out(delay=self.delays[4], dur=2.0)
+
+            # All together
+            self.stream6 = pyo.Sine(freq=self.pitch_values[0], mul=lfo1).out(delay=10, dur=4)
+            
+            self.stream7 = pyo.Sine(freq=self.pitch_values[1], mul=lfo2).out(delay=10, dur=4)
+
+            self.stream8 = pyo.Sine(freq=self.pitch_values[2], mul=lfo3).out(delay=10, dur=4)
+
+            self.stream9 = pyo.Sine(freq=self.pitch_values[3], mul=lfo4).out(delay=10, dur=4)
+
+            self.stream10 = pyo.Sine(freq=self.pitch_values[4], mul=lfo5).out(delay=10, dur=4)
             
