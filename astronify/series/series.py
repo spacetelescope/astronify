@@ -15,6 +15,8 @@ from scipy import stats
 from astropy.table import Table, MaskedColumn
 from astropy.time import Time
 
+import matplotlib.pyplot as plt 
+
 import pyo
 
 from ..utils.pitch_mapping import data_to_pitch
@@ -345,7 +347,19 @@ class SeriesPreviews():
                 area_vals.append(np.abs(np.trapz(ydata_bin, xdata_bin)))
             return area_vals
 
-        def sonify_preview(self):
+        def plot_preview(self, xdata_bin_ranges): 
+
+            plt.plot(self._soniseries.data[self._soniseries.time_col], self._soniseries.data[self._soniseries.val_col], color='k')
+
+            plt.axvspan(xdata_bin_ranges[0][0], xdata_bin_ranges[0][1], color='r', alpha=0.5, lw=0)
+            plt.axvspan(xdata_bin_ranges[1][0], xdata_bin_ranges[1][1], color='orange', alpha=0.5, lw=0)
+            plt.axvspan(xdata_bin_ranges[2][0], xdata_bin_ranges[2][1], color='y', alpha=0.5, lw=0)
+            plt.axvspan(xdata_bin_ranges[3][0], xdata_bin_ranges[3][1], color='g', alpha=0.5, lw=0)
+            plt.axvspan(xdata_bin_ranges[4][0], xdata_bin_ranges[4][1], color='royalblue', alpha=0.5, lw=0)
+
+            plt.show()
+
+        def sonify_preview(self, plotting=True, verbose=False):
             """
             Make a "preview-style" sonification.  The data is split into even pieces.  Each piece
             gets assigned a specific frequency.  The amplitude is defined by the area under the curve
@@ -369,18 +383,22 @@ class SeriesPreviews():
             
             # Calculate the total area under the curve, used to normalize the areas in each piece.
             total_area = np.trapz(ydata_norm, xdata)
-            print('Total area = {0:0f}'.format(total_area))
 
             # Loop through each piece and calculate the standard deviation of the y-data
             # and the area under the curve in each piece.
-            std_vals = []
+            std_vals, xdata_bin_ranges = [], []
             for xdata_bin, ydata_bin in zip(xdata_bins, ydata_bins):
-                
-                # Calculate standard deviation and add to the list.
+
+                xdata_bin_ranges.append((min(xdata_bin), max(xdata_bin)))
+                # Calculate standard deviation error and add to the list.
                 _, _, _, _, std_err = stats.linregress(xdata_bin, ydata_bin)
                 std_vals.append(std_err)
                 #std_vals.append(np.std(ydata_bin))
                 
+            # Plot the spectra and ranges if in troubleshooting mode
+            if plotting:
+                self.plot_preview(xdata_bin_ranges)
+
             # Calculate the area under the curve for each piece.
             area_vals = self.area_of_pieces(ydata_bins, xdata_bins)
 
@@ -389,18 +407,7 @@ class SeriesPreviews():
 
             # Set the amplitude of each pitch to the area under the curve normalized by the total
             # area.
-            print('area vals')
-            print(np.asarray(area_vals))
-            print('TOTAL AREA')
-            print(total_area)
             self.amplitudes = np.asarray(area_vals) / total_area
-            print('amplitudes')
-            print(self.amplitudes)
-             
-            print('stdvals')
-            print(np.asarray(std_vals))
-            print('stddevnorm')
-            print(std_dev_norm)
             
             if std_dev_norm == 0.0: std_dev_norm = 1.0
 
@@ -413,15 +420,26 @@ class SeriesPreviews():
 
             # The final calculated tremolo values are multiplied by a factor of 10 for auditory 
             # purposes
-            print('before factiring')
-            print((np.asarray(std_vals) / std_dev_norm))
             self.tremolo_vals = (np.asarray(std_vals) / std_dev_norm)*10
 
-            print('TREMOLO VALS')
-            print(self.tremolo_vals)
             # Constraint added to keep tremolo values at or below 15, otherwise oscillations are 
             # more difficult to hear 
-            self.tremolo_vals[self.tremolo_vals > 15] = 15
+            #self.tremolo_vals[self.tremolo_vals > 15] = 15
+
+            if verbose:
+                print('Total Expected area = {0:0f}'.format(total_area))
+                print(' ')
+                print('Area Values = ', np.asarray(area_vals))
+                print(' ')
+                #print('Total Calculated area = {0:0f}'.format(np.sum(str(area_vals).split(' '))))
+                print(' ')
+                print('Amplitudes = ', self.amplitudes)
+                print(' ')
+                print('Standard Dev. Error Vals = ', np.asarray(std_vals))
+                print(' ')
+                print('Standard Dev. Error MAX = ', std_dev_norm)
+                print(' ')
+                print('Tremolo Vals (x10) = ', self.tremolo_vals)
 
 
         def play_preview(self):
