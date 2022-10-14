@@ -11,7 +11,7 @@ import warnings
 from inspect import signature, Parameter
 
 import numpy as np
-
+from scipy import stats
 from astropy.table import Table, MaskedColumn
 from astropy.time import Time
 
@@ -372,11 +372,12 @@ class SeriesPreviews():
             # Loop through each piece and calculate the standard deviation of the y-data
             # and the area under the curve in each piece.
             std_vals = []
-            for ydata_bin in ydata_bins:
+            for xdata_bin, ydata_bin in zip(xdata_bins, ydata_bins):
                 
                 # Calculate standard deviation and add to the list.
-                num_range = max(ydata_bin) - min(ydata_bin)
-                std_vals.append(np.std(ydata_bin))
+                _, _, _, _, std_err = stats.linregress(xdata_bin, ydata_bin)
+                std_vals.append(std_err)
+                #std_vals.append(np.std(ydata_bin))
                 
             # Calculate the area under the curve for each piece.
             area_vals = self.area_of_pieces(ydata_bins, xdata_bins)
