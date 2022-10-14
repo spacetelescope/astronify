@@ -450,12 +450,20 @@ class SeriesPreviews():
             
             default = 1.0 #float(min(self.amplitudes))#float((max(self.amplitudes) - min(self.amplitudes))/2)
             self.amplitudes = [amp/max(self.amplitudes) for amp in self.amplitudes]
+
+            a = pyo.Phasor(self.pitch_values[0], mul=np.pi*2)
+            b = pyo.Phasor(self.pitch_values[1], mul=np.pi*2)
+            c = pyo.Phasor(self.pitch_values[2], mul=np.pi*2)
+            d = pyo.Phasor(self.pitch_values[3], mul=np.pi*2)
+            e = pyo.Phasor(self.pitch_values[4], mul=np.pi*2)
+            
+
             # TODO: Make everything below iterable to it's cleaner and takes up less lines
-            lfo1 = pyo.Sine(float(self.tremolo_vals[0]), 0, float(self.amplitudes[0]), 0) if self.tremolo_vals[0] > 0 else default
-            lfo2 = pyo.Sine(float(self.tremolo_vals[1]), 0, float(self.amplitudes[1]), 0) if self.tremolo_vals[1] > 0 else default
-            lfo3 = pyo.Sine(float(self.tremolo_vals[2]), 0, float(self.amplitudes[2]), 0) if self.tremolo_vals[2] > 0 else default
-            lfo4 = pyo.Sine(float(self.tremolo_vals[3]), 0, float(self.amplitudes[3]), 0) if self.tremolo_vals[3] > 0 else default
-            lfo5 = pyo.Sine(float(self.tremolo_vals[4]), 0, float(self.amplitudes[4]), 0) if self.tremolo_vals[4] > 0 else default
+            lfo1 = pyo.Sine(float(self.tremolo_vals[0]), 0, float(self.amplitudes[0]), 0) if self.tremolo_vals[0] > 0 else pyo.Cos(a, mul=float(self.amplitudes[0]))
+            lfo2 = pyo.Sine(float(self.tremolo_vals[1]), 0, float(self.amplitudes[1]), 0) if self.tremolo_vals[1] > 0 else pyo.Cos(b, mul=float(self.amplitudes[1]))
+            lfo3 = pyo.Sine(float(self.tremolo_vals[2]), 0, float(self.amplitudes[2]), 0) if self.tremolo_vals[2] > 0 else pyo.Cos(c, mul=float(self.amplitudes[2]))
+            lfo4 = pyo.Sine(float(self.tremolo_vals[3]), 0, float(self.amplitudes[3]), 0) if self.tremolo_vals[3] > 0 else pyo.Cos(d, mul=float(self.amplitudes[3]))
+            lfo5 = pyo.Sine(float(self.tremolo_vals[4]), 0, float(self.amplitudes[4]), 0) if self.tremolo_vals[4] > 0 else pyo.Cos(e, mul=float(self.amplitudes[4]))
 
             self.stream1 = pyo.Sine(freq=self.pitch_values[0], mul=lfo1).out(delay=self.delays[0], dur=2.0)
             
