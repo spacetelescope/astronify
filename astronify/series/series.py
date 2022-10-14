@@ -340,7 +340,9 @@ class SeriesPreviews():
                     list(ydata_bin).append(ydata_bins[idx+1][0])
                     list(xdata_bin).append(xdata_bins[idx+1][0])
 
-                area_vals.append(np.trapz(ydata_bin, xdata_bin))
+                # Taking the absolute value so that emission lines and absorption lines 
+                # have the same amplitude
+                area_vals.append(np.abs(np.trapz(ydata_bin, xdata_bin)))
             return area_vals
 
         def sonify_preview(self):
@@ -446,7 +448,7 @@ class SeriesPreviews():
             # total_duration is in seconds
             self.total_duration = 8.0 
             
-            default = float(min(self.amplitudes))#float((max(self.amplitudes) - min(self.amplitudes))/2)
+            default = 1.0 #float(min(self.amplitudes))#float((max(self.amplitudes) - min(self.amplitudes))/2)
             self.amplitudes = [amp/max(self.amplitudes) for amp in self.amplitudes]
             # TODO: Make everything below iterable to it's cleaner and takes up less lines
             lfo1 = pyo.Sine(float(self.tremolo_vals[0]), 0, float(self.amplitudes[0]), 0) if self.tremolo_vals[0] > 0 else default
