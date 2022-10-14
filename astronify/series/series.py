@@ -437,9 +437,6 @@ class SeriesPreviews():
             self._soniseries.server.boot()
             self._soniseries.server.start()
             
-            # TODO: Amplitude factor could be fed in as a "volume" setting 
-            factor = 10
-            
             # TODO: Generalize the self.delays list
             # `step` must go into `stop` 5 times, since we have 5 pitches
             #start, stop, step = 0, 2.5, 0.5 
@@ -449,12 +446,14 @@ class SeriesPreviews():
             # total_duration is in seconds
             self.total_duration = 8.0 
             
+            default = float(min(self.amplitudes))#float((max(self.amplitudes) - min(self.amplitudes))/2)
+            self.amplitudes = [amp/max(self.amplitudes) for amp in self.amplitudes]
             # TODO: Make everything below iterable to it's cleaner and takes up less lines
-            lfo1 = pyo.Sine(float(self.tremolo_vals[0]), 0, float(1/np.abs(np.log(self.amplitudes[0]))), 0) if self.tremolo_vals[0] > 0 else 0.1
-            lfo2 = pyo.Sine(float(self.tremolo_vals[1]), 0, float(1/np.abs(np.log(self.amplitudes[1]))), 0) if self.tremolo_vals[1] > 0 else 0.1
-            lfo3 = pyo.Sine(float(self.tremolo_vals[2]), 0, float(1/np.abs(np.log(self.amplitudes[2]))), 0) if self.tremolo_vals[2] > 0 else 0.1
-            lfo4 = pyo.Sine(float(self.tremolo_vals[3]), 0, float(1/np.abs(np.log(self.amplitudes[3]))), 0) if self.tremolo_vals[3] > 0 else 0.1
-            lfo5 = pyo.Sine(float(self.tremolo_vals[4]), 0, float(1/np.abs(np.log(self.amplitudes[4]))), 0) if self.tremolo_vals[4] > 0 else 0.1
+            lfo1 = pyo.Sine(float(self.tremolo_vals[0]), 0, float(self.amplitudes[0]), 0) if self.tremolo_vals[0] > 0 else default
+            lfo2 = pyo.Sine(float(self.tremolo_vals[1]), 0, float(self.amplitudes[1]), 0) if self.tremolo_vals[1] > 0 else default
+            lfo3 = pyo.Sine(float(self.tremolo_vals[2]), 0, float(self.amplitudes[2]), 0) if self.tremolo_vals[2] > 0 else default
+            lfo4 = pyo.Sine(float(self.tremolo_vals[3]), 0, float(self.amplitudes[3]), 0) if self.tremolo_vals[3] > 0 else default
+            lfo5 = pyo.Sine(float(self.tremolo_vals[4]), 0, float(self.amplitudes[4]), 0) if self.tremolo_vals[4] > 0 else default
 
             self.stream1 = pyo.Sine(freq=self.pitch_values[0], mul=lfo1).out(delay=self.delays[0], dur=2.0)
             
