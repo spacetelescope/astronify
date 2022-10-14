@@ -445,7 +445,7 @@ class SeriesPreviews():
             #self.delays = np.arange(start, stop, step)
             self.delays = [0., 2., 4., 6., 8.]
 
-            # total_duration is in seconds
+            # `total_duration` is in seconds
             self.total_duration = 8.0 
             
             default = 1.0 #float(min(self.amplitudes))#float((max(self.amplitudes) - min(self.amplitudes))/2)
