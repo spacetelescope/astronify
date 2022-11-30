@@ -15,7 +15,7 @@ from scipy import stats
 from astropy.table import Table, MaskedColumn
 from astropy.time import Time
 
-import matplotlib.pyplot as plt 
+import matplotlib.pyplot as plt
 
 import pyo
 
@@ -29,7 +29,7 @@ class PitchMap():
 
     def __init__(self, pitch_func=data_to_pitch, **pitch_args):
         """
-        Class that encapsulates the data value to pitch function 
+        Class that encapsulates the data value to pitch function
         and associated arguments.
 
         Parameters
@@ -38,7 +38,7 @@ class PitchMap():
             Optional. Defaults to `~astronify.utils.data_to_pitch`.
             If supplying a function it should take a data array as the first
             parameter, and all other parameters should be optional.
-        **pitch_args 
+        **pitch_args
             Default parameters and values for the pitch function. Should include
             all necessary arguments other than the data values.
         """
@@ -49,11 +49,11 @@ class PitchMap():
                           "center_pitch": 440,
                           "zero_point": "median",
                           "stretch": "linear"}
-        
+
         self.pitch_map_func = pitch_func
         self.pitch_map_args = pitch_args
 
-        
+
     def _check_func_args(self):
         """
         Make sure the pitch mapping function and argument dictionary match.
@@ -82,7 +82,7 @@ class PitchMap():
     @property
     def pitch_map_func(self):
         """
-        The pitch mapping function. 
+        The pitch mapping function.
         """
         return self._pitch_map_func
 
@@ -106,7 +106,7 @@ class PitchMap():
         self._pitch_map_args = new_args
         self._check_func_args()
 
-             
+
 
 class SoniSeries():
 
@@ -163,7 +163,7 @@ class SoniSeries():
             float_col = "asf_time"
             data_table[float_col] = data_table[self.time_col].jd
             self.time_col = float_col
-            
+
         self._data = data_table
 
     @property
@@ -223,13 +223,13 @@ class SoniSeries():
     def note_spacing(self, value):
         # Add in min value check
         self._note_spacing = value
-        
+
     def sonify(self):
         """
-        Perform the sonification, two columns will be added to the data table: asf_pitch, and asf_onsets. 
+        Perform the sonification, two columns will be added to the data table: asf_pitch, and asf_onsets.
         The asf_pitch column will contain the sonified data in Hz.
         The asf_onsets column will contain the start time for each note in seconds from the first note.
-        Metadata will also be added to the table giving information about the duration and spacing 
+        Metadata will also be added to the table giving information about the duration and spacing
         of the sonified pitches, as well as an adjustable gain.
         """
         data = self.data
@@ -238,7 +238,7 @@ class SoniSeries():
         data.meta["asf_exposure_time"] = exptime
         data.meta["asf_note_duration"] = self.note_duration
         data.meta["asf_spacing"] = self.note_spacing
-        
+
         data["asf_pitch"] = self.pitch_mapper(data[self.val_col])
         data["asf_onsets"] = [x for x in (data[self.time_col] - data[self.time_col][0])/exptime*self.note_spacing]
 
@@ -273,11 +273,11 @@ class SoniSeries():
         """
         Stop playing the data sonification.
         """
-        self.streams.stop() 
+        self.streams.stop()
 
     def write(self, filepath):
         """
-        Save data sonification to the given file. 
+        Save data sonification to the given file.
         Currently the only output option is a wav file.
 
         Parameters
@@ -313,7 +313,7 @@ class SoniSeries():
 
 class SeriesPreviews():
         """ Previews (or snapshots) of 1d spectra by binning the data into
-        five equal pieces by assigning a sound to each piece. 
+        five equal pieces by assigning a sound to each piece.
         """
 
         def __init__(self, soniseries):
@@ -342,12 +342,12 @@ class SeriesPreviews():
                     list(ydata_bin).append(ydata_bins[idx+1][0])
                     list(xdata_bin).append(xdata_bins[idx+1][0])
 
-                # Taking the absolute value so that emission lines and absorption lines 
+                # Taking the absolute value so that emission lines and absorption lines
                 # have the same amplitude
                 area_vals.append(np.abs(np.trapz(ydata_bin, xdata_bin)))
             return area_vals
 
-        def plot_preview(self, xdata_bin_ranges): 
+        def plot_preview(self, xdata_bin_ranges):
 
             plt.plot(self._soniseries.data[self._soniseries.time_col], self._soniseries.data[self._soniseries.val_col], color='k')
 
@@ -380,7 +380,7 @@ class SeriesPreviews():
             ydata_bins = [ydata_norm[i:i+bin_size] for i in range(0, len(ydata_norm), bin_size)]
             # Split the x-values into pieces.
             xdata_bins = [xdata[i:i+bin_size] for i in range(0, len(xdata), bin_size)]
-            
+
             # Calculate the total area under the curve, used to normalize the areas in each piece.
             total_area = np.trapz(ydata_norm, xdata)
 
@@ -394,7 +394,7 @@ class SeriesPreviews():
                 _, _, _, _, std_err = stats.linregress(xdata_bin, ydata_bin)
                 std_vals.append(std_err)
                 #std_vals.append(np.std(ydata_bin))
-                
+
             # Plot the spectra and ranges if in troubleshooting mode
             if plotting:
                 self.plot_preview(xdata_bin_ranges)
@@ -408,22 +408,22 @@ class SeriesPreviews():
             # Set the amplitude of each pitch to the area under the curve normalized by the total
             # area.
             self.amplitudes = np.asarray(area_vals) / total_area
-            
+
             if std_dev_norm == 0.0: std_dev_norm = 1.0
 
             # Set the tremolo values based on the standard deviation of the piece normalized by the
             # `std_dev_norm` factor.
 
-            # TODO: Might be worth trying a different way of calculating the tremolo values other 
-            # than the normalized standard dev. Maybe using RMS vals? 
+            # TODO: Might be worth trying a different way of calculating the tremolo values other
+            # than the normalized standard dev. Maybe using RMS vals?
             # To more accurately represent all forms of data.
 
-            # The final calculated tremolo values are multiplied by a factor of 10 for auditory 
+            # The final calculated tremolo values are multiplied by a factor of 10 for auditory
             # purposes
             self.tremolo_vals = (np.asarray(std_vals) / std_dev_norm)*10
 
-            # Constraint added to keep tremolo values at or below 15, otherwise oscillations are 
-            # more difficult to hear 
+            # Constraint added to keep tremolo values at or below 15, otherwise oscillations are
+            # more difficult to hear
             #self.tremolo_vals[self.tremolo_vals > 15] = 15
 
             if verbose:
@@ -446,26 +446,26 @@ class SeriesPreviews():
             """ Play the sound of a "preview-style" sonification.
 
             The assigned pitch for each section of the spectra will begin
-            to play, with the calculated amplitude and frequency, one 
-            at a time until all pitches are playing together for the full 
+            to play, with the calculated amplitude and frequency, one
+            at a time until all pitches are playing together for the full
             audio preview of the spectra.
             """
-            
+
             if self._soniseries.server.getIsBooted():
                 self._soniseries.server.shutdown()
-        
+
             self._soniseries.server.boot()
             self._soniseries.server.start()
-            
+
             # TODO: Generalize the self.delays list
             # `step` must go into `stop` 5 times, since we have 5 pitches
-            #start, stop, step = 0, 2.5, 0.5 
+            #start, stop, step = 0, 2.5, 0.5
             #self.delays = np.arange(start, stop, step)
             self.delays = [0., 2., 4., 6., 8.]
 
             # `total_duration` is in seconds
-            self.total_duration = 8.0 
-            
+            self.total_duration = 8.0
+
             default = 1.0 #float(min(self.amplitudes))#float((max(self.amplitudes) - min(self.amplitudes))/2)
             self.amplitudes = [amp/max(self.amplitudes) for amp in self.amplitudes]
 
@@ -474,7 +474,7 @@ class SeriesPreviews():
             c = pyo.Phasor(self.pitch_values[2], mul=np.pi*2)
             d = pyo.Phasor(self.pitch_values[3], mul=np.pi*2)
             e = pyo.Phasor(self.pitch_values[4], mul=np.pi*2)
-            
+
 
             # TODO: Make everything below iterable to it's cleaner and takes up less lines
             lfo1 = pyo.Sine(float(self.tremolo_vals[0]), 0, float(self.amplitudes[0]), 0) if self.tremolo_vals[0] > 0 else pyo.Cos(a, mul=float(self.amplitudes[0]))
@@ -483,24 +483,23 @@ class SeriesPreviews():
             lfo4 = pyo.Sine(float(self.tremolo_vals[3]), 0, float(self.amplitudes[3]), 0) if self.tremolo_vals[3] > 0 else pyo.Cos(d, mul=float(self.amplitudes[3]))
             lfo5 = pyo.Sine(float(self.tremolo_vals[4]), 0, float(self.amplitudes[4]), 0) if self.tremolo_vals[4] > 0 else pyo.Cos(e, mul=float(self.amplitudes[4]))
 
-            self.stream1 = pyo.Sine(freq=self.pitch_values[0], mul=lfo1).out(delay=self.delays[0], dur=2.0)
-            
-            self.stream2 = pyo.Sine(freq=self.pitch_values[1], mul=lfo2).out(delay=self.delays[1], dur=2.0)
+            self.stream1 = pyo.Sine(freq=[self.pitch_values[0], self.pitch_values[0]], mul=lfo1).out(delay=self.delays[0], dur=2.0)
 
-            self.stream3 = pyo.Sine(freq=self.pitch_values[2], mul=lfo3).out(delay=self.delays[2], dur=2.0)
+            self.stream2 = pyo.Sine(freq=[self.pitch_values[1], self.pitch_values[1]], mul=lfo2).out(delay=self.delays[1], dur=2.0)
 
-            self.stream4 = pyo.Sine(freq=self.pitch_values[3], mul=lfo4).out(delay=self.delays[3], dur=2.0)
+            self.stream3 = pyo.Sine(freq=[self.pitch_values[2], self.pitch_values[2]], mul=lfo3).out(delay=self.delays[2], dur=2.0)
 
-            self.stream5 = pyo.Sine(freq=self.pitch_values[4], mul=lfo5).out(delay=self.delays[4], dur=2.0)
+            self.stream4 = pyo.Sine(freq=[self.pitch_values[3], self.pitch_values[3]], mul=lfo4).out(delay=self.delays[3], dur=2.0)
+
+            self.stream5 = pyo.Sine(freq=[self.pitch_values[4], self.pitch_values[4]], mul=lfo5).out(delay=self.delays[4], dur=2.0)
 
             # All together
-            self.stream6 = pyo.Sine(freq=self.pitch_values[0], mul=lfo1).out(delay=10, dur=4)
-            
-            self.stream7 = pyo.Sine(freq=self.pitch_values[1], mul=lfo2).out(delay=10, dur=4)
+            self.stream6 = pyo.Sine(freq=[self.pitch_values[0], self.pitch_values[0]], mul=lfo1).out(delay=10, dur=4)
 
-            self.stream8 = pyo.Sine(freq=self.pitch_values[2], mul=lfo3).out(delay=10, dur=4)
+            self.stream7 = pyo.Sine(freq=[self.pitch_values[1], self.pitch_values[1]], mul=lfo2).out(delay=10, dur=4)
 
-            self.stream9 = pyo.Sine(freq=self.pitch_values[3], mul=lfo4).out(delay=10, dur=4)
+            self.stream8 = pyo.Sine(freq=[self.pitch_values[2], self.pitch_values[2]],mul=lfo3).out(delay=10, dur=4)
 
-            self.stream10 = pyo.Sine(freq=self.pitch_values[4], mul=lfo5).out(delay=10, dur=4)
-            
+            self.stream9 = pyo.Sine(freq=[self.pitch_values[3], self.pitch_values[3]],mul=lfo4).out(delay=10, dur=4)
+
+            self.stream10 = pyo.Sine(freq=[self.pitch_values[4], self.pitch_values[4]],mul=lfo5).out(delay=10, dur=4)
