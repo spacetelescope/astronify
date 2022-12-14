@@ -125,6 +125,10 @@ class SoniSeries():
         self.val_col = val_col
         self.data = data
 
+        print(self.data.columns)
+        for c in list(self.data.columns):
+            self.data.rename_column(c, c.lower())
+
         # Default specs
         self.note_duration = 0.5  # note duration in seconds
         self.note_spacing = 0.01  # spacing between notes in seconds
@@ -144,7 +148,13 @@ class SoniSeries():
 
     @data.setter
     def data(self, data_table):
-        assert isinstance(data_table, Table), 'Data must be a Table.'
+        assert isinstance(data_table, Table), 'Data must be an astropy.table.Table object.'
+
+        for c in list(data_table.columns):
+             data_table.rename_column(c, c.lower())
+
+        assert "time" in data_table.columns, "Input Table must contain a column 'time'"
+        assert "flux" in data_table.columns, "Input Table must contain a column 'flux'"
 
         # Removing any masked values as they interfere with the sonification
         if isinstance(data_table[self.val_col], MaskedColumn):
