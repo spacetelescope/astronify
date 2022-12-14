@@ -73,7 +73,7 @@ class TestSoniSeries(object):
         new_data = Table({"foo": [0, 1, 2, 3, 4, 5, 6],
                           "Flux": [1, 2, 1, 2, 5, 3, np.nan]})
     
-        with pytest.raises(AssertionError):
+        with pytest.raises(AttributeError):
             so = SoniSeries(new_data)    
 
     def test_assert_flux_exists(self):
@@ -81,7 +81,7 @@ class TestSoniSeries(object):
         new_data = Table({"time": [0, 1, 2, 3, 4, 5, 6],
                           "bar": [1, 2, 1, 2, 5, 3, np.nan]})
         
-        with pytest.raises(AssertionError):
+        with pytest.raises(AttributeError):
             so = SoniSeries(new_data)
 
     def test_default_parameters(self):

@@ -125,7 +125,6 @@ class SoniSeries():
         self.val_col = val_col
         self.data = data
 
-        print(self.data.columns)
         for c in list(self.data.columns):
             self.data.rename_column(c, c.lower())
 
@@ -148,13 +147,18 @@ class SoniSeries():
 
     @data.setter
     def data(self, data_table):
-        assert isinstance(data_table, Table), 'Data must be an astropy.table.Table object.'
+
+        if not isinstance(data_table, Table):
+            raise TypeError('Data must be an astropy.table.Table object.')
 
         for c in list(data_table.columns):
-             data_table.rename_column(c, c.lower())
+            data_table.rename_column(c, c.lower())
 
-        assert "time" in data_table.columns, "Input Table must contain a column 'time'"
-        assert "flux" in data_table.columns, "Input Table must contain a column 'flux'"
+        if "time" not in data_table.columns:
+            raise AttributeError("Input Table must contain a column 'time'")
+
+        if "flux" not in data_table.columns:
+            raise AttributeError("Input Table must contain a column 'flux'")
 
         # Removing any masked values as they interfere with the sonification
         if isinstance(data_table[self.val_col], MaskedColumn):
