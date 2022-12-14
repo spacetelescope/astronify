@@ -125,9 +125,6 @@ class SoniSeries():
         self.val_col = val_col
         self.data = data
 
-        for c in list(self.data.columns):
-            self.data.rename_column(c, c.lower())
-
         # Default specs
         self.note_duration = 0.5  # note duration in seconds
         self.note_spacing = 0.01  # spacing between notes in seconds
@@ -154,10 +151,11 @@ class SoniSeries():
         for c in list(data_table.columns):
             data_table.rename_column(c, c.lower())
 
-        if "time" not in data_table.columns:
+
+        if self.time_col not in data_table.columns:
             raise AttributeError("Input Table must contain a column 'time'")
 
-        if "flux" not in data_table.columns:
+        if self.val_col not in data_table.columns:
             raise AttributeError("Input Table must contain a column 'flux'")
 
         # Removing any masked values as they interfere with the sonification
