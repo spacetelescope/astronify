@@ -17,26 +17,26 @@ jobs:
       matrix:
         include:
 
-          - name: Python 3.8 with minimal dependencies
+          - name: Python 3.8.13 with minimal dependencies
             os: ubuntu-latest
-            python: 3.8
+            python: 3.8.13
             toxenv: py38-test
 
-          - name: Python 3.8 with all optional dependencies
+          - name: Python 3.8.13 with all optional dependencies
             os: ubuntu-latest
-            python: 3.8
+            python: 3.8.13
             toxenv: py38-test-alldeps
             toxargs: -v --develop
             toxposargs: --open-files
             
-          - name: Python 3.8 with all optional dependencies (Windows)
+          - name: Python 3.8.13 with all optional dependencies (Windows)
             os: windows-latest
-            python: 3.8
+            python: 3.8.13
             toxenv: py38-test-alldeps
             
-          - name: Python 3.8 with all optional dependencies (MacOS X)
+          - name: Python 3.8.13 with all optional dependencies (MacOS X)
             os: macos-latest
-            python: 3.8
+            python: 3.8.13
             toxenv: py38-test-alldeps
 
     steps:
