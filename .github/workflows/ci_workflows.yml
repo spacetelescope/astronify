@@ -22,22 +22,22 @@ jobs:
             python: 3.8.13
             toxenv: py38-test
 
-          - name: Python 3.8.13 with all optional dependencies
-            os: ubuntu-latest
-            python: 3.8.13
-            toxenv: py38-test-alldeps
-            toxargs: -v --develop
-            toxposargs: --open-files
+#          - name: Python 3.8.13 with all optional dependencies
+#            os: ubuntu-latest
+#            python: 3.8.13
+#            toxenv: py38-test-alldeps
+#            toxargs: -v --develop
+#            toxposargs: --open-files
             
-          - name: Python 3.8.10 with all optional dependencies (Windows)
-            os: windows-latest
-            python: 3.8.10
-            toxenv: py38-test-alldeps
+#          - name: Python 3.8.10 with all optional dependencies (Windows)
+#            os: windows-latest
+#            python: 3.8.10
+#            toxenv: py38-test-alldeps
             
-          - name: Python 3.8.13 with all optional dependencies (MacOS X)
-            os: macos-latest
-            python: 3.8.13
-            toxenv: py38-test-alldeps
+#          - name: Python 3.8.13 with all optional dependencies (MacOS X)
+#            os: macos-latest
+#            python: 3.8.13
+#            toxenv: py38-test-alldeps
 
     steps:
     - name: Checkout code
