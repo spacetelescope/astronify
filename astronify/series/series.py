@@ -153,10 +153,10 @@ class SoniSeries():
 
 
         if self.time_col not in data_table.columns:
-            raise AttributeError("Input Table must contain a column 'time'")
+            raise AttributeError(f"Input Table must contain time column '{self.time_col}'")
 
         if self.val_col not in data_table.columns:
-            raise AttributeError("Input Table must contain a column 'flux'")
+            raise AttributeError(f"Input Table must contain a value column '{self.val_col}'")
 
         # Removing any masked values as they interfere with the sonification
         if isinstance(data_table[self.val_col], MaskedColumn):
