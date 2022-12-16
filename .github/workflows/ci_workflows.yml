@@ -22,22 +22,22 @@ jobs:
             python: 3.8.13
             toxenv: py38-test
 
-#          - name: Python 3.8.13 with all optional dependencies
-#            os: ubuntu-latest
-#            python: 3.8.13
-#            toxenv: py38-test-alldeps
-#            toxargs: -v --develop
-#            toxposargs: --open-files
+          - name: Python 3.8.13 with all optional dependencies
+            os: ubuntu-latest
+            python: 3.8.13
+            toxenv: py38-test-alldeps
+            toxargs: -v --develop
+            toxposargs: --open-files
             
-#          - name: Python 3.8.10 with all optional dependencies (Windows)
-#            os: windows-latest
-#            python: 3.8.10
-#            toxenv: py38-test-alldeps
+          - name: Python 3.8.10 with all optional dependencies (Windows)
+            os: windows-latest
+            python: 3.8.10
+            toxenv: py38-test-alldeps
             
-#          - name: Python 3.8.13 with all optional dependencies (MacOS X)
-#            os: macos-latest
-#            python: 3.8.13
-#            toxenv: py38-test-alldeps
+          - name: Python 3.8.13 with all optional dependencies (MacOS X)
+            os: macos-latest
+            python: 3.8.13
+            toxenv: py38-test-alldeps
 
     steps:
     - name: Checkout code
@@ -87,6 +87,6 @@ jobs:
       if: startsWith(matrix.os, 'ubuntu')
       run: sudo apt-get install language-pack-de tzdata
     - name: Install Python dependencies
-      run: python -m pip install --upgrade tox codecov
+      run: python -m pip install --upgrade tox codecov sphinx_rtd_theme
     - name: Run tests
       run: tox ${{ matrix.toxargs }} -e ${{ matrix.toxenv }} -- ${{ matrix.toxposargs }}
