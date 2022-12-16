@@ -74,7 +74,7 @@ class TestSoniSeries(object):
                           "Flux": [1, 2, 1, 2, 5, 3, np.nan]})
     
         with pytest.raises(AttributeError):
-            so = SoniSeries(new_data)    
+            SoniSeries(new_data)    
 
     def test_assert_flux_exists(self):
         
@@ -82,7 +82,7 @@ class TestSoniSeries(object):
                           "bar": [1, 2, 1, 2, 5, 3, np.nan]})
         
         with pytest.raises(AttributeError):
-            so = SoniSeries(new_data)
+            SoniSeries(new_data)
 
     def test_default_parameters(self):
         assert self.soni_obj.note_duration == 0.5
