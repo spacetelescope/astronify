@@ -144,7 +144,19 @@ class SoniSeries():
 
     @data.setter
     def data(self, data_table):
-        assert isinstance(data_table, Table), 'Data must be a Table.'
+
+        if not isinstance(data_table, Table):
+            raise TypeError('Data must be an astropy.table.Table object.')
+
+        for c in list(data_table.columns):
+            data_table.rename_column(c, c.lower())
+
+
+        if self.time_col not in data_table.columns:
+            raise AttributeError(f"Input Table must contain time column '{self.time_col}'")
+
+        if self.val_col not in data_table.columns:
+            raise AttributeError(f"Input Table must contain a value column '{self.val_col}'")
 
         # Removing any masked values as they interfere with the sonification
         if isinstance(data_table[self.val_col], MaskedColumn):
