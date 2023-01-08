@@ -130,6 +130,11 @@ class SoniSeries():
             are played together at the end. Scan means each section is assigned
             to the same pitch value, played separately, and no combined sound
             is made at the end.
+
+            Additional "piano" mode. Each section is assigned to a different
+            piano note, also played separately with the tremolo representing
+            the activity of each section, and with no combined sound at the end.
+            Stereo piano samples are used to enhance the auditory representation.
         """
         self.time_col = time_col
         self.val_col = val_col
@@ -504,7 +509,6 @@ class SeriesPreviews():
                 self.stream10 = pyo.Sine(freq=[self.pitch_values[4], self.pitch_values[4]],mul=lfo5).out(delay=10, dur=4)
 
             if self._soniseries.preview_type == "piano":
-                print("Piano preview")
 
                 folder = "piano_samples/"
                 samples = ["sample0.wav", "sample1.wav", "sample2.wav", "sample3.wav", "sample4.wav"]
