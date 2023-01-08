@@ -502,3 +502,21 @@ class SeriesPreviews():
                 self.stream8 = pyo.Sine(freq=[self.pitch_values[2], self.pitch_values[2]],mul=lfo3).out(delay=10, dur=4)
                 self.stream9 = pyo.Sine(freq=[self.pitch_values[3], self.pitch_values[3]],mul=lfo4).out(delay=10, dur=4)
                 self.stream10 = pyo.Sine(freq=[self.pitch_values[4], self.pitch_values[4]],mul=lfo5).out(delay=10, dur=4)
+
+            if self._soniseries.preview_type == "piano":
+                print("Piano preview")
+
+                folder = "piano_samples/"
+                samples = ["sample0.wav", "sample1.wav", "sample2.wav", "sample3.wav", "sample4.wav"]
+
+                lfo1 = pyo.Sine(float(self.tremolo_vals[0]), 0, float(self.amplitudes[0]), 0) if self.tremolo_vals[0] > 0 else float(self.amplitudes[0])
+                lfo2 = pyo.Sine(float(self.tremolo_vals[1]), 0, float(self.amplitudes[1]), 0) if self.tremolo_vals[1] > 0 else float(self.amplitudes[1])
+                lfo3 = pyo.Sine(float(self.tremolo_vals[2]), 0, float(self.amplitudes[2]), 0) if self.tremolo_vals[2] > 0 else float(self.amplitudes[2])
+                lfo4 = pyo.Sine(float(self.tremolo_vals[3]), 0, float(self.amplitudes[3]), 0) if self.tremolo_vals[3] > 0 else float(self.amplitudes[3])
+                lfo5 = pyo.Sine(float(self.tremolo_vals[4]), 0, float(self.amplitudes[4]), 0) if self.tremolo_vals[4] > 0 else float(self.amplitudes[4])
+
+                self.stream1 = pyo.SfPlayer(folder + samples[0], speed=[1,1], mul=lfo1).out(delay=self.delays[0], dur=2.0)
+                self.stream2 = pyo.SfPlayer(folder + samples[1], speed=[1,1], mul=lfo2).out(delay=self.delays[1], dur=2.0)
+                self.stream3 = pyo.SfPlayer(folder + samples[2], speed=[1,1], mul=lfo3).out(delay=self.delays[2], dur=2.0)
+                self.stream4 = pyo.SfPlayer(folder + samples[3], speed=[1,1], mul=lfo4).out(delay=self.delays[3], dur=2.0)
+                self.stream5 = pyo.SfPlayer(folder + samples[4], speed=[1,1], mul=lfo5).out(delay=self.delays[4], dur=2.0)
