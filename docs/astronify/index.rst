@@ -99,8 +99,8 @@ taking into account any requested clipping, and the requested stretch is applied
 if the invert argument is set, the array is inverted by subtracting all values from 1.
 
 The scaled zero point is then removed from the array which is scaled to the pitch range
-such that the scaled zero point become the center pitch value and the entire pitch range
-fell within the input pitch range. In practice this means one of two things:
+such that the scaled zero point becomes the center pitch value and the entire pitch range
+falls within the input pitch range. In practice this means one of two things:
 The array is scaled such that the 0 corresponds to the minimum of the input pitch range and the
 scaled zero point corresponds to the center pitch value. Or, the scaled zero point corresponds to
 the center pitch value and 1 corresponds to the maximum of the input pitch range. Whichever
