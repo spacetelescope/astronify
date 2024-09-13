@@ -100,7 +100,7 @@ def simulated_lc(lc_type, lc_ofile=SimLcConfig.sim_lc_ofile,
         corresponds to "t_1/2" in the Davenport et al. flare template.
 
     Returns
-    --------
+    -------
     response : `~astropy.table.Table`
         The time and flux columns.
     """
