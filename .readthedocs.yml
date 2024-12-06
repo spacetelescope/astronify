@@ -1,10 +1,10 @@
 version: 2
 
 build:
-  image: latest
+  os: "ubuntu-24.04"
+  tools:
+    python: "3.12"
 
-python:
-  version: 3.7
   install:
     - method: pip
       path: .
@@ -12,4 +12,5 @@ python:
         - docs
         - all
 
-formats: []
+sphinx:
+  configuration: docs/conf.py
