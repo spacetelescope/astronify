@@ -7,7 +7,7 @@ build:
   apt_packages:
     - portaudio19-dev
     - libsndfile1-dev
-    - portmidi
+    - libportmidi-dev
 
 python:
   install:
