@@ -5,7 +5,7 @@ build:
   tools:
     python: "3.12"
   apt_packages:
-    - python3-pyaudio
+    - portaudio19-dev
 
 python:
   install:
