@@ -17,6 +17,7 @@ python:
       extra_requirements:
         - docs
         - all
+    - requirements: docs/requirements.txt
 
 sphinx:
   configuration: docs/conf.py
