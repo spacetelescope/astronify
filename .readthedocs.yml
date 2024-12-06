@@ -8,6 +8,7 @@ build:
     - portaudio19-dev
     - libsndfile1-dev
     - libportmidi-dev
+    - liblo
 
 python:
   install:
