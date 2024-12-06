@@ -6,6 +6,7 @@ build:
     python: "3.12"
   apt_packages:
     - portaudio19-dev
+    - libsndfile1-dev
 
 python:
   install:
