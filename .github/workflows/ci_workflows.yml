@@ -16,37 +16,92 @@ jobs:
       matrix:
         include:
 
-          - name: Python 3.7 with minimal dependencies
-            os: ubuntu-latest
-            python: 3.7
-            toxenv: py37-test
+	# Python 3.9 suite
 
-          - name: Python 3.8 with all optional dependencies
-            os: ubuntu-latest
-            python: 3.8
-            toxenv: py38-test-alldeps
-            toxargs: -v --develop
-            toxposargs: --open-files
+          - name: Python 3.9 with minimal dependencies 
+            os: ubuntu-latest 
+            python: 3.9 
+            toxenv: py39-test 
 
-          - name: Python 3.7 with oldest supported version of all dependencies
+          - name: Python 3.9 with all optional dependencies 
+            os: ubuntu-latest 
+            python: 3.9 
+            toxenv: py39-test-alldeps 
+            toxargs: -v --develop 
+            toxposargs: --open-files 
+
+          - name: Python 3.9 with numpy 1.24 and full coverage 
+            os: ubuntu-latest 
+            python: 3.9 
+            toxenv: py39-test-alldeps-numpy124-cov 
+
+          - name: Python 3.9 with numpy 2.10 and full coverage 
+            os: ubuntu-latest 
+            python: 3.9 
+            toxenv: py39-test-alldeps-numpy210-cov 
+
+          - name: Python 3.9 with oldest supported version of all dependencies 
+            os: ubuntu-16.04 
+            python: 3.9 
+            toxenv: py39-test-oldestdeps
+
+	# Python 3.10 suite 
+
+          - name: Python 3.10 with minimal dependencies 
+            os: ubuntu-latest 
+            python: 3.10 
+            toxenv: py310-test 
+
+          - name: Python 3.10 with all optional dependencies 
+            os: ubuntu-latest 
+            python: 3.10 
+            toxenv: py310-test-alldeps 
+            toxargs: -v --develop 
+            toxposargs: --open-files 
+
+          - name: Python 3.10 with numpy 1.24 and full coverage 
+            os: ubuntu-latest 
+            python: 3.10 
+            toxenv: py310-test-alldeps-numpy124-cov 
+
+          - name: Python 3.10 with numpy 2.10 and full coverage 
+            os: ubuntu-latest 
+            python: 3.10 
+            toxenv: py310-test-alldeps-numpy210-cov 
+
+          - name: Python 3.10 with oldest supported version of all dependencies 
+            os: ubuntu-16.04 
+            python: 3.10 
+            toxenv: py310-test-oldestdeps 
+
+	# Python 3.11 suite
+
+          - name: Python 3.11 with minimal dependencies 
+            os: ubuntu-latest
+            python: 3.11
+            toxenv: py311-test 
+
+          - name: Python 3.11 with all optional dependencies 
+            os: ubuntu-latest
+            python: 3.11
+            toxenv: py311-test-alldeps 
+            toxargs: -v --develop 
+            toxposargs: --open-files 
+
+          - name: Python 3.11 with numpy 1.24 and full coverage 
+            os: ubuntu-latest 
+            python: 3.11
+            toxenv: py311-test-alldeps-numpy124-cov 
+
+          - name: Python 3.11 with numpy 2.10 and full coverage 
+            os: ubuntu-latest 
+            python: 3.11
+            toxenv: py311-test-alldeps-numpy210-cov 
+
+          - name: Python 3.11 with oldest supported version of all dependencies 
             os: ubuntu-16.04
-            python: 3.7
-            toxenv: py37-test-oldestdeps   
-            
-          - name: Python 3.7 with numpy 1.17 and full coverage
-            os: ubuntu-latest
-            python: 3.7
-            toxenv: py37-test-alldeps-numpy117-cov
-
-          - name: Python 3.8 with all optional dependencies (Windows)
-            os: windows-latest
-            python: 3.8
-            toxenv: py38-test-alldeps
-            
-          - name: Python 3.7 with all optional dependencies (MacOS X)
-            os: macos-latest
-            python: 3.7
-            toxenv: py37-test-alldeps
+            python: 3.11
+            toxenv: py311-test-oldestdeps 
 
     steps:
     - name: Checkout code
@@ -83,10 +138,10 @@ jobs:
             python: 3.x
             toxenv: codestyle
  
-          - name: (Allowed Failure) Python 3.7 with dev version of key dependencies
+          - name: (Allowed Failure) Python 3.11 with dev version of key dependencies
             os: ubuntu-latest
-            python: 3.7
-            toxenv: py37-test-devdeps
+            python: 3.11
+            toxenv: py311-test-devdeps
 
     steps:
     - name: Checkout code
