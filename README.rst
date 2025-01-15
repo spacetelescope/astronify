@@ -16,6 +16,10 @@ Sonification of astronomical data.
 .. image:: https://readthedocs.org/projects/astronify/badge/?version=latest
     :target: https://astronify.readthedocs.io/en/latest/?badge=latest
     :alt: Documentation Status
+
+.. image:: https://img.shields.io/badge/ascl-2408.005-blue.svg?colorB=262255
+    :target: https://ascl.net/2408.005
+    :alt: ascl:2408.005
     
 Tools for sonifying astronomical data.
 
