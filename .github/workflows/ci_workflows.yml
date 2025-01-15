@@ -34,11 +34,6 @@ jobs:
             python: 3.9.21
             toxenv: py39-test-alldeps-numpy124-cov 
 
-          - name: Python 3.9.xx with numpy 2.10 and full coverage 
-            os: ubuntu-latest 
-            python: 3.9.21
-            toxenv: py39-test-alldeps-numpy210-cov 
-
           - name: Python 3.9.xx with oldest supported version of all dependencies 
             os: ubuntu-16.04 
             python: 3.9.21
