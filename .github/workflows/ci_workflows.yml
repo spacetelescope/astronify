@@ -17,85 +17,85 @@ jobs:
       matrix:
         include:
 
-          - name: Python 3.9 with minimal dependencies 
+          - name: Python 3.9.xx with minimal dependencies 
             os: ubuntu-latest 
-            python: 3.9 
+            python: 3.9.21
             toxenv: py39-test 
 
-          - name: Python 3.9 with all optional dependencies 
+          - name: Python 3.9.xx with all optional dependencies 
             os: ubuntu-latest 
-            python: 3.9 
+            python: 3.9.21
             toxenv: py39-test-alldeps 
             toxargs: -v --develop 
             toxposargs: --open-files 
 
-          - name: Python 3.9 with numpy 1.24 and full coverage 
+          - name: Python 3.9.xx with numpy 1.24 and full coverage 
             os: ubuntu-latest 
-            python: 3.9 
+            python: 3.9.21
             toxenv: py39-test-alldeps-numpy124-cov 
 
-          - name: Python 3.9 with numpy 2.10 and full coverage 
+          - name: Python 3.9.xx with numpy 2.10 and full coverage 
             os: ubuntu-latest 
-            python: 3.9 
+            python: 3.9.21
             toxenv: py39-test-alldeps-numpy210-cov 
 
-          - name: Python 3.9 with oldest supported version of all dependencies 
+          - name: Python 3.9.xx with oldest supported version of all dependencies 
             os: ubuntu-16.04 
-            python: 3.9 
+            python: 3.9.21
             toxenv: py39-test-oldestdeps
 
-          - name: Python 3.10 with minimal dependencies 
-            os: ubuntu-latest 
-            python: 3.10 
-            toxenv: py310-test 
+          - name: Python 3.10.xx with minimal dependencies 
+            os: ubuntu-latest
+            python: 3.10.16
+            toxenv: py310-test
 
-          - name: Python 3.10 with all optional dependencies 
+          - name: Python 3.10.xx with all optional dependencies 
             os: ubuntu-latest 
-            python: 3.10 
+            python: 3.10.16
             toxenv: py310-test-alldeps 
             toxargs: -v --develop 
             toxposargs: --open-files 
 
-          - name: Python 3.10 with numpy 1.24 and full coverage 
+          - name: Python 3.10.xx with numpy 1.24 and full coverage 
             os: ubuntu-latest 
-            python: 3.10 
+            python: 3.10.16
             toxenv: py310-test-alldeps-numpy124-cov 
 
-          - name: Python 3.10 with numpy 2.10 and full coverage 
+          - name: Python 3.10.xx with numpy 2.10 and full coverage 
             os: ubuntu-latest 
-            python: 3.10 
+            python: 3.10.16
             toxenv: py310-test-alldeps-numpy210-cov 
 
-          - name: Python 3.10 with oldest supported version of all dependencies 
+          - name: Python 3.10.xx with oldest supported version of all dependencies 
             os: ubuntu-16.04 
-            python: 3.10 
+            python: 3.10.16
             toxenv: py310-test-oldestdeps 
 
-          - name: Python 3.11 with minimal dependencies 
+          - name: Python 3.11.xx with minimal dependencies 
             os: ubuntu-latest
-            python: 3.11
+            python: 3.11.11
             toxenv: py311-test 
 
-          - name: Python 3.11 with all optional dependencies 
+          - name: Python 3.11.xx with all optional dependencies 
             os: ubuntu-latest
-            python: 3.11
+            python: 3.11.11
             toxenv: py311-test-alldeps 
             toxargs: -v --develop 
             toxposargs: --open-files 
 
-          - name: Python 3.11 with numpy 1.24 and full coverage 
+          - name: Python 3.11.xx with numpy 1.24 and full coverage 
             os: ubuntu-latest 
-            python: 3.11
+            python: 3.11.11
             toxenv: py311-test-alldeps-numpy124-cov 
 
-          - name: Python 3.11 with numpy 2.10 and full coverage 
+          - name: Python 3.11.xx with numpy 2.10 and full coverage 
             os: ubuntu-latest 
-            python: 3.11
+            python: 3.11.11
             toxenv: py311-test-alldeps-numpy210-cov 
 
-          - name: Python 3.11 with oldest supported version of all dependencies 
+          - name: Python 3.11.xx with oldest supported version of all dependencies 
             os: ubuntu-16.04
-            python: 3.11
+            python: 3.11.11
             toxenv: py311-test-oldestdeps 
 
     steps:
