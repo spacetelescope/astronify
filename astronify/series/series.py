@@ -320,7 +320,8 @@ class SoniSeries():
 
 
 class SeriesPreviews():
-        """ Previews (or snapshots) of 1d spectra by binning the data into
+        """
+        Previews (or snapshots) of 1d spectra by binning the data into
         five equal pieces by assigning a sound to each piece.
         """
 
@@ -359,7 +360,9 @@ class SeriesPreviews():
 
         def plot_preview(self, xdata_bin_ranges):
 
-            plt.plot(self._soniseries.data[self._soniseries.time_col], self._soniseries.data[self._soniseries.val_col], color='k')
+            plt.plot(self._soniseries.data[self._soniseries.time_col],
+                         self._soniseries.data[self._soniseries.val_col],
+                         color='k')
 
             plt.axvspan(xdata_bin_ranges[0][0], xdata_bin_ranges[0][1], color='royalblue', alpha=0.5, lw=0)
             plt.axvspan(xdata_bin_ranges[1][0], xdata_bin_ranges[1][1], color='green', alpha=0.5, lw=0)
@@ -403,7 +406,6 @@ class SeriesPreviews():
                 # Calculate standard deviation error and add to the list.
                 _, _, _, _, std_err = stats.linregress(xdata_bin, ydata_bin)
                 std_vals.append(std_err)
-                #std_vals.append(np.std(ydata_bin))
 
             # Plot the spectra and ranges if in troubleshooting mode
             if plotting:
@@ -434,14 +436,14 @@ class SeriesPreviews():
 
             # Constraint added to keep tremolo values at or below 15, otherwise oscillations are
             # more difficult to hear
-            #self.tremolo_vals[self.tremolo_vals > 15] = 15
+            # self.tremolo_vals[self.tremolo_vals > 15] = 15
 
             if verbose:
                 print('Total Expected area = {0:0f}'.format(total_area))
                 print(' ')
                 print('Area Values = ', np.asarray(area_vals))
                 print(' ')
-                #print('Total Calculated area = {0:0f}'.format(np.sum(str(area_vals).split(' '))))
+                # print('Total Calculated area = {0:0f}'.format(np.sum(str(area_vals).split(' '))))
                 print(' ')
                 print('Amplitudes = ', self.amplitudes)
                 print(' ')
@@ -499,6 +501,6 @@ class SeriesPreviews():
             if self._soniseries.preview_type == "ensemble":
                 self.stream6 = pyo.Sine(freq=[self.pitch_values[0], self.pitch_values[0]], mul=lfo1).out(delay=10, dur=4)
                 self.stream7 = pyo.Sine(freq=[self.pitch_values[1], self.pitch_values[1]], mul=lfo2).out(delay=10, dur=4)
-                self.stream8 = pyo.Sine(freq=[self.pitch_values[2], self.pitch_values[2]],mul=lfo3).out(delay=10, dur=4)
-                self.stream9 = pyo.Sine(freq=[self.pitch_values[3], self.pitch_values[3]],mul=lfo4).out(delay=10, dur=4)
-                self.stream10 = pyo.Sine(freq=[self.pitch_values[4], self.pitch_values[4]],mul=lfo5).out(delay=10, dur=4)
+                self.stream8 = pyo.Sine(freq=[self.pitch_values[2], self.pitch_values[2]], mul=lfo3).out(delay=10, dur=4)
+                self.stream9 = pyo.Sine(freq=[self.pitch_values[3], self.pitch_values[3]], mul=lfo4).out(delay=10, dur=4)
+                self.stream10 = pyo.Sine(freq=[self.pitch_values[4], self.pitch_values[4]], mul=lfo5).out(delay=10, dur=4)
