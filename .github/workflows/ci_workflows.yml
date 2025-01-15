@@ -16,7 +16,7 @@ jobs:
       matrix:
         include:
 
-	# Python 3.9 suite
+	  # Python 3.9 suite
 
           - name: Python 3.9 with minimal dependencies 
             os: ubuntu-latest 
