@@ -105,6 +105,9 @@ jobs:
     - name: Install language-pack-de and tzdata
       if: startsWith(matrix.os, 'ubuntu')
       run: sudo apt-get install language-pack-de tzdata
+    - name: Install pyo dependencies
+      if: startsWith(matrix.os, 'ubuntu')
+      run: sudo apt-get install portaudio19-dev libsndfile1-dev libportmidi-dev liblo-dev
     - name: Install Python dependencies
       run: python -m pip install --upgrade tox codecov
     - name: Run tests
