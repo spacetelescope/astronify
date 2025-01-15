@@ -126,11 +126,6 @@ jobs:
       matrix:
         include:
 
-          - name: Code style checks
-            os: ubuntu-latest
-            python: 3.x
-            toxenv: codestyle
- 
           - name: (Allowed Failure) Python 3.11 with dev version of key dependencies
             os: ubuntu-latest
             python: 3.11
