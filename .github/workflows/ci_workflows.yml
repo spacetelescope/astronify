@@ -27,7 +27,7 @@ jobs:
             python: 3.9.21
             toxenv: py39-test-alldeps 
             toxargs: -v --develop 
-            toxposargs: --open-files 
+            toxposargs: -W error::ResourceWarning 
 
           - name: Python 3.9.xx with numpy 1.24 and full coverage 
             os: ubuntu-latest 
@@ -49,7 +49,7 @@ jobs:
             python: 3.10.16
             toxenv: py310-test-alldeps 
             toxargs: -v --develop 
-            toxposargs: --open-files 
+            toxposargs: -W error::ResourceWarning 
 
           - name: Python 3.10.xx with numpy 1.24 and full coverage 
             os: ubuntu-latest 
@@ -76,7 +76,7 @@ jobs:
             python: 3.11.11
             toxenv: py311-test-alldeps 
             toxargs: -v --develop 
-            toxposargs: --open-files 
+            toxposargs: -W error::ResourceWarning 
 
           - name: Python 3.11.xx with numpy 1.24 and full coverage 
             os: ubuntu-latest 
