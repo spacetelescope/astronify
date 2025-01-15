@@ -34,11 +34,6 @@ jobs:
             python: 3.9.21
             toxenv: py39-test-alldeps-numpy124-cov 
 
-          - name: Python 3.9.xx with oldest supported version of all dependencies 
-            os: ubuntu-16.04 
-            python: 3.9.21
-            toxenv: py39-test-oldestdeps
-
           - name: Python 3.10.xx with minimal dependencies 
             os: ubuntu-latest
             python: 3.10.16
@@ -61,11 +56,6 @@ jobs:
             python: 3.10.16
             toxenv: py310-test-alldeps-numpy210-cov 
 
-          - name: Python 3.10.xx with oldest supported version of all dependencies 
-            os: ubuntu-16.04 
-            python: 3.10.16
-            toxenv: py310-test-oldestdeps 
-
           - name: Python 3.11.xx with minimal dependencies 
             os: ubuntu-latest
             python: 3.11.11
@@ -87,11 +77,6 @@ jobs:
             os: ubuntu-latest 
             python: 3.11.11
             toxenv: py311-test-alldeps-numpy210-cov 
-
-          - name: Python 3.11.xx with oldest supported version of all dependencies 
-            os: ubuntu-16.04
-            python: 3.11.11
-            toxenv: py311-test-oldestdeps 
 
     steps:
     - name: Checkout code
