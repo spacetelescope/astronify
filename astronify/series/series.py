@@ -110,8 +110,7 @@ class PitchMap():
 
 class SoniSeries():
 
-    def __init__(self, data, time_col="time", val_col="flux",
-                     preview_type="scan"):
+    def __init__(self, data, time_col="time", val_col="flux", preview_type="scan"):
         """
         Class that encapsulates a sonified data series.
 
@@ -321,8 +320,7 @@ class SoniSeries():
 
 class SeriesPreviews():
         """
-        Previews (or snapshots) of 1d spectra by binning the data into
-        five equal pieces by assigning a sound to each piece.
+        Previews (or snapshots) of 1d spectra by binning the data into five equal pieces by assigning a sound to each piece.
         """
 
         def __init__(self, soniseries):
@@ -359,10 +357,8 @@ class SeriesPreviews():
             return area_vals
 
         def plot_preview(self, xdata_bin_ranges):
-
             plt.plot(self._soniseries.data[self._soniseries.time_col],
-                         self._soniseries.data[self._soniseries.val_col],
-                         color='k')
+                         self._soniseries.data[self._soniseries.val_col], color='k')
 
             plt.axvspan(xdata_bin_ranges[0][0], xdata_bin_ranges[0][1], color='royalblue', alpha=0.5, lw=0)
             plt.axvspan(xdata_bin_ranges[1][0], xdata_bin_ranges[1][1], color='green', alpha=0.5, lw=0)

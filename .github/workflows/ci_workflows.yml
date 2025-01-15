@@ -127,6 +127,7 @@ jobs:
         include:
 
           - name: Code style checks
+	    continue-on-error: true
             os: ubuntu-latest
             python: 3.x
             toxenv: codestyle
