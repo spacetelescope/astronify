@@ -34,7 +34,6 @@ Tests can also be run directly with pytest:
 
     $ pip install -e .[test]
     $ pytest
-
  
 
 Documentation
@@ -52,11 +51,10 @@ You can also build the documentation with Sphinx directly using:
 
 .. code-block:: bash
                 
-    $ pip install -e .[docs]
     $ cd docs
-    $ make html
+    $ sphinx-build -M html . _build/
     
-The built docs will be in ``docs/_build/html/``, to view them go to ``file:///path/to/astronify/repo/docs/_build/html/index.html`` in the browser of your choice.
+The built docs will be in ``docs/_build/html/``, to view them go to ``file://</path/to/astronify/repo/>docs/_build/html/index.html`` in the browser of your choice.
 
 
 Release Protocol
