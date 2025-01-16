@@ -255,7 +255,8 @@ class SoniSeries:
 
         data["asf_pitch"] = self.pitch_mapper(data[self.val_col])
         data["asf_onsets"] = [
-            x for x in (data[self.time_col] - data[self.time_col][0])
+            x
+            for x in (data[self.time_col] - data[self.time_col][0])
             / exptime
             * self.note_spacing
         ]
@@ -288,7 +289,7 @@ class SoniSeries:
                 (duration - 0.005, 0),
             ],
             mul=[self.gain for i in range(len(pitches))],
-            ).play(delay=list(delays), dur=duration)
+        ).play(delay=list(delays), dur=duration)
 
         self.streams = pyo.Sine(list(pitches), 0, env).out(
             delay=list(delays), dur=duration
@@ -336,7 +337,7 @@ class SoniSeries:
         ).play(delay=list(delays), dur=duration)
         sine = pyo.Sine(list(pitches), 0, env).out(
             delay=list(delays), dur=duration
-        ) # noqa: F841
+        )  # noqa: F841
         self.server.start()
 
         # Clean up
@@ -386,7 +387,7 @@ class SeriesPreviews:
         plt.plot(
             self._soniseries.data[self._soniseries.time_col],
             self._soniseries.data[self._soniseries.val_col],
-            color="k"
+            color="k",
         )
 
         plt.axvspan(
@@ -394,7 +395,7 @@ class SeriesPreviews:
             xdata_bin_ranges[0][1],
             color="royalblue",
             alpha=0.5,
-            lw=0
+            lw=0,
         )
 
         plt.axvspan(
@@ -402,7 +403,7 @@ class SeriesPreviews:
             xdata_bin_ranges[1][1],
             color="green",
             alpha=0.5,
-            lw=0
+            lw=0,
         )
 
         plt.axvspan(
@@ -410,7 +411,7 @@ class SeriesPreviews:
             xdata_bin_ranges[2][1],
             color="yellow",
             alpha=0.5,
-            lw=0
+            lw=0,
         )
 
         plt.axvspan(
@@ -418,14 +419,16 @@ class SeriesPreviews:
             xdata_bin_ranges[3][1],
             color="orange",
             alpha=0.5,
-            lw=0)
+            lw=0,
+        )
 
         plt.axvspan(
             xdata_bin_ranges[4][0],
             xdata_bin_ranges[4][1],
             color="red",
             alpha=0.5,
-            lw=0)
+            lw=0,
+        )
 
         plt.show()
 
@@ -447,7 +450,9 @@ class SeriesPreviews:
         # Split the data into `n_pitch_values` equal-sized pieces.
         bin_size = int(np.round(len(xdata) // self.n_pitch_values, 1))
         # Split the y-values into pieces.
-        ydata_bins = [ydata_norm[i : i+bin_size] for i in range(0, len(ydata_norm), bin_size)]
+        ydata_bins = [
+            ydata_norm[i : i + bin_size] for i in range(0, len(ydata_norm), bin_size)
+        ]
         # Split the x-values into pieces.
         xdata_bins = [xdata[i : i + bin_size] for i in range(0, len(xdata), bin_size)]
 
@@ -478,7 +483,8 @@ class SeriesPreviews:
         # area.
         self.amplitudes = np.asarray(area_vals) / total_area
 
-        if std_dev_norm == 0.0: std_dev_norm = 1.0
+        if std_dev_norm == 0.0:
+                std_dev_norm = 1.0
 
         # Set the tremolo values based on the standard deviation of the piece normalized by the
         # `std_dev_norm` factor.
@@ -511,7 +517,7 @@ class SeriesPreviews:
             print("Tremolo Vals (x10) = ", self.tremolo_vals)
 
     def play_preview(self):
-        """ Play the sound of a "preview-style" sonification.
+        """Play the sound of a "preview-style" sonification.
 
         The assigned pitch for each section of the spectra will begin
         to play, with the calculated amplitude and frequency, one
@@ -539,7 +545,6 @@ class SeriesPreviews:
         c = pyo.Phasor(self.pitch_values[2], mul=np.pi * 2)
         d = pyo.Phasor(self.pitch_values[3], mul=np.pi * 2)
         e = pyo.Phasor(self.pitch_values[4], mul=np.pi * 2)
-
 
         # TODO: Make everything below iterable to it's cleaner and takes up less lines
         lfo1 = (
@@ -570,34 +575,34 @@ class SeriesPreviews:
 
         self.stream1 = pyo.Sine(
             freq=[self.pitch_values[0], self.pitch_values[0]], mul=lfo1
-            ).out(delay=self.delays[0], dur=2.0)
+        ).out(delay=self.delays[0], dur=2.0)
         self.stream2 = pyo.Sine(
             freq=[self.pitch_values[1], self.pitch_values[1]], mul=lfo2
-            ).out(delay=self.delays[1], dur=2.0)
+        ).out(delay=self.delays[1], dur=2.0)
         self.stream3 = pyo.Sine(
             freq=[self.pitch_values[2], self.pitch_values[2]], mul=lfo3
-            ).out(delay=self.delays[2], dur=2.0)
+        ).out(delay=self.delays[2], dur=2.0)
         self.stream4 = pyo.Sine(
             freq=[self.pitch_values[3], self.pitch_values[3]], mul=lfo4
-            ).out(delay=self.delays[3], dur=2.0)
+        ).out(delay=self.delays[3], dur=2.0)
         self.stream5 = pyo.Sine(
             freq=[self.pitch_values[4], self.pitch_values[4]], mul=lfo5
-            ).out(delay=self.delays[4], dur=2.0)
+        ).out(delay=self.delays[4], dur=2.0)
 
         # All together, if in ensemble mode.
         if self._soniseries.preview_type == "ensemble":
             self.stream6 = pyo.Sine(
                 freq=[self.pitch_values[0], self.pitch_values[0]], mul=lfo1
-                ).out(delay=10, dur=4)
+            ).out(delay=10, dur=4)
             self.stream7 = pyo.Sine(
                 freq=[self.pitch_values[1], self.pitch_values[1]], mul=lfo2
-                ).out(delay=10, dur=4)
+            ).out(delay=10, dur=4)
             self.stream8 = pyo.Sine(
                 freq=[self.pitch_values[2], self.pitch_values[2]], mul=lfo3
-                ).out(delay=10, dur=4)
+            ).out(delay=10, dur=4)
             self.stream9 = pyo.Sine(
                 freq=[self.pitch_values[3], self.pitch_values[3]], mul=lfo4
-                ).out(delay=10, dur=4)
+            ).out(delay=10, dur=4)
             self.stream10 = pyo.Sine(
                 freq=[self.pitch_values[4], self.pitch_values[4]], mul=lfo5
-                ).out(delay=10, dur=4)
+            ).out(delay=10, dur=4)
