@@ -144,7 +144,7 @@ def sim_lc_setup_args():
         type=float,
         default=sim_lc_config.sim_lc_sine_amp,
         dest="sine_amp",
-        help="Amplitude of the sinusoidal signal to add. Default = %(default)s."
+        help="Amplitude of the sinusoidal signal to add. Default = %(default)s.",
     )
 
     sine_group.add_argument(

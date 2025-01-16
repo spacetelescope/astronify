@@ -27,15 +27,15 @@ __all__ = ["data_to_pitch"]
 
 
 def data_to_pitch(
-        data_array,
-        pitch_range=[100, 10000],
-        center_pitch=440,
-        zero_point="median",
-        stretch='linear',
-        minmax_percent=None,
-        minmax_value=None,
-        invert=False,
-    ):
+    data_array,
+    pitch_range=[100, 10000],
+    center_pitch=440,
+    zero_point="median",
+    stretch='linear',
+    minmax_percent=None,
+    minmax_value=None,
+    invert=False,
+):
     """
     Map data array to audible pitches in the given range, and apply stretch and scaling
     as required.
@@ -145,13 +145,13 @@ def data_to_pitch(
 
     if (
         (1 / zero_point) * (center_pitch - pitch_range[0]) + pitch_range[0]
-            ) <= pitch_range[1]:
+    ) <= pitch_range[1]:
         pitch_array = (pitch_array / zero_point) * (
             center_pitch - pitch_range[0]
         ) + pitch_range[0]
     else:
         pitch_array = ((pitch_array - zero_point) / (1 - zero_point)) * (
             pitch_range[1] - center_pitch
-            ) + center_pitch
+        ) + center_pitch
 
     return pitch_array

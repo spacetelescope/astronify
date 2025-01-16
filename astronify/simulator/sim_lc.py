@@ -26,22 +26,22 @@ __all__ = ["simulated_lc", "SimLcConfig"]
 
 
 def simulated_lc(
-        lc_type,
-        lc_ofile=SimLcConfig.sim_lc_ofile,
-        lc_length=SimLcConfig.sim_lc_length,
-        lc_noise=SimLcConfig.sim_lc_noise,
-        visualize=SimLcConfig.sim_lc_visualize,
-        lc_yoffset=SimLcConfig.sim_lc_yoffset,
-        transit_depth=SimLcConfig.sim_lc_transit_depth,
-        transit_period=SimLcConfig.sim_lc_transit_period,
-        transit_start=SimLcConfig.sim_lc_transit_start,
-        transit_width=SimLcConfig.sim_lc_transit_width,
-        sine_amp=SimLcConfig.sim_lc_sine_amp,
-        sine_period=SimLcConfig.sim_lc_sine_period,
-        flare_time=SimLcConfig.sim_lc_flare_time,
-        flare_amp=SimLcConfig.sim_lc_flare_amp,
-        flare_halfwidth=SimLcConfig.sim_lc_flare_halfwidth
-    ):
+    lc_type,
+    lc_ofile=SimLcConfig.sim_lc_ofile,
+    lc_length=SimLcConfig.sim_lc_length,
+    lc_noise=SimLcConfig.sim_lc_noise,
+    visualize=SimLcConfig.sim_lc_visualize,
+    lc_yoffset=SimLcConfig.sim_lc_yoffset,
+    transit_depth=SimLcConfig.sim_lc_transit_depth,
+    transit_period=SimLcConfig.sim_lc_transit_period,
+    transit_start=SimLcConfig.sim_lc_transit_start,
+    transit_width=SimLcConfig.sim_lc_transit_width,
+    sine_amp=SimLcConfig.sim_lc_sine_amp,
+    sine_period=SimLcConfig.sim_lc_sine_period,
+    flare_time=SimLcConfig.sim_lc_flare_time,
+    flare_amp=SimLcConfig.sim_lc_flare_amp,
+    flare_halfwidth=SimLcConfig.sim_lc_flare_halfwidth
+):
     """
     Create light curve with specified parameters as a `~astropy.table.Table`,
     and optionally writes a FITS file with the same information.
@@ -143,21 +143,16 @@ def simulated_lc(
         hdr.append(("LCLENGTH", lc_length, "Number of fluxes."))
         hdr.append(("LCYOFF", lc_yoffset, "Baseline flux value (unitless)."))
         hdr.append(
-            ("LCNOISE", lc_noise, "Std. dev. of normal dist. used to"
-                 " apply noise.")
+            "LCNOISE", lc_noise, "Std. dev. of normal dist. used to apply noise.",
         )
         # Record the flare parameters used if adding a flare.
         if lc_type == "flare":
             hdr.append(
-                ("FLARETIM",
-                flare_time,
-                "Index corresponding to the peak of the flare.")
+                "FLARETIM", flare_time, "Index corresponding to the peak of the flare.",
             )
             hdr.append(("FLAREAMP", flare_amp, "Amplitude of the flare."))
             hdr.append(
-                ("FLAREWID",
-                flare_halfwidth,
-                "Flare half-width (number of indices).")
+                "FLAREWID", flare_halfwidth, "Flare half-width (number of indices).",
             )
         # Record the sinusoidal parameters if adding a sinusoid.
         if lc_type == "sine":
