@@ -31,7 +31,7 @@ def data_to_pitch(
     pitch_range=[100, 10000],
     center_pitch=440,
     zero_point="median",
-    stretch='linear',
+    stretch="linear",
     minmax_percent=None,
     minmax_value=None,
     invert=False,

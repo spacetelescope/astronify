@@ -40,7 +40,7 @@ def simulated_lc(
     sine_period=SimLcConfig.sim_lc_sine_period,
     flare_time=SimLcConfig.sim_lc_flare_time,
     flare_amp=SimLcConfig.sim_lc_flare_amp,
-    flare_halfwidth=SimLcConfig.sim_lc_flare_halfwidth
+    flare_halfwidth=SimLcConfig.sim_lc_flare_halfwidth,
 ):
     """
     Create light curve with specified parameters as a `~astropy.table.Table`,
@@ -143,16 +143,16 @@ def simulated_lc(
         hdr.append(("LCLENGTH", lc_length, "Number of fluxes."))
         hdr.append(("LCYOFF", lc_yoffset, "Baseline flux value (unitless)."))
         hdr.append(
-            "LCNOISE", lc_noise, "Std. dev. of normal dist. used to apply noise.",
+            ("LCNOISE", lc_noise, "Std. dev. of normal dist. used to apply noise.")
         )
         # Record the flare parameters used if adding a flare.
         if lc_type == "flare":
             hdr.append(
-                "FLARETIM", flare_time, "Index corresponding to the peak of the flare.",
+                ("FLARETIM", flare_time, "Index corresponding to the peak of the flare.")
             )
             hdr.append(("FLAREAMP", flare_amp, "Amplitude of the flare."))
             hdr.append(
-                "FLAREWID", flare_halfwidth, "Flare half-width (number of indices).",
+                ("FLAREWID", flare_halfwidth, "Flare half-width (number of indices).")
             )
         # Record the sinusoidal parameters if adding a sinusoid.
         if lc_type == "sine":
@@ -205,5 +205,5 @@ if __name__ == "__main__":
         INPUT_ARGS.sine_period,
         INPUT_ARGS.flare_time,
         INPUT_ARGS.flare_amp,
-        INPUT_ARGS.flare_halfwidth
+        INPUT_ARGS.flare_halfwidth,
     )

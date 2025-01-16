@@ -34,7 +34,7 @@ try:
     from sphinx_astropy.conf.v1 import *  # noqa
 except ImportError:
     print(
-        'ERROR: the documentation requires the sphinx-astropy package to be installed'
+        "ERROR: the documentation requires the sphinx-astropy package to be installed"
     )
     sys.exit(1)
 
@@ -110,14 +110,15 @@ templates_path = ["_templates"]
 # name of a builtin theme or the name of a custom theme in html_theme_path.
 html_theme = "sphinx_rtd_theme"
 
+
 def setup_style(app):
     app.add_stylesheet("astronify.css")
 
-master_doc="contents"
-html_extra_path=["index.html", "CreateWithLight.html"]
+master_doc = "contents"
+html_extra_path = ["index.html", "CreateWithLight.html"]
 
 # Custom sidebar templates, maps document names to template names.
-html_sidebars = { "**": ["globaltoc.html", "localtoc.html", "searchbox.html"] }
+html_sidebars = {"**": ["globaltoc.html", "localtoc.html", "searchbox.html"]}
 
 # The name of an image file (relative to this directory) to place at the top
 # of the sidebar.
@@ -130,7 +131,7 @@ html_favicon = "_static/astronify-favicon.png"
 
 # If not '', a 'Last updated on:' timestamp is inserted at every page bottom,
 # using the given strftime format.
-#html_last_updated_fmt = ''
+# html_last_updated_fmt = ''
 
 # The name for this set of Sphinx documents.  If None, it defaults to
 # "<project> v<release> documentation".
@@ -150,16 +151,18 @@ html_css_files = ["astronify.css"]
 
 # Grouping the document tree into LaTeX files. List of tuples
 # (source start file, target name, title, author, documentclass [howto/manual]).
-latex_documents = [("index", project + ".tex", project + u" Documentation",
-                    author, "manual")]
+latex_documents = [
+    ("index", project + ".tex", project + u" Documentation", author, "manual")
+]
 
 
 # -- Options for manual page output -------------------------------------------
 
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
-man_pages = [("index", project.lower(), project + u" Documentation",
-              [author], 1)]
+man_pages = [
+    ("index", project.lower(), project + u" Documentation", [author], 1)
+]
 
 
 # -- Options for the edit_on_github extension ---------------------------------
