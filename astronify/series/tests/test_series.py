@@ -25,7 +25,7 @@ def test_pitchmap():
         "pitch_range": [100, 10000],
         "center_pitch": 440,
         "zero_point": "mean",
-        "stretch": "linear", 
+        "stretch": "linear",
         "invert": True,
     }
     assert "center_pitch" in my_pitchmapper.pitch_map_args.keys()
@@ -36,21 +36,21 @@ def test_pitchmap():
             "pitch_range": [100, 10000],
             "center_pitch": 440,
             "zero_point": "mean",
-            "stretch": "linear", 
+            "stretch": "linear",
             "penguin": True,
         }
-    
+
     assert "penguin" not in my_pitchmapper.pitch_map_args.keys()
 
     # Running function
     assert isinstance(my_pitchmapper([1, 1, 1, 1]), np.ndarray)
 
     # Changing function
-    def my_map_func(data): # dummy function
+    def my_map_func(data):  # dummy function
         data = np.array(data)
         return data / 2
 
-    with pytest.warns(InputWarning): # because of different args     
+    with pytest.warns(InputWarning):  # because of different args     
         my_pitchmapper.pitch_map_func = my_map_func
 
     assert (my_pitchmapper([1, 1]) == [0.5, 0.5]).all()
@@ -79,7 +79,7 @@ def test_soniseries(tmpdir):
     assert soni_obj.data.meta["asf_exposure_time"] == 1
     assert soni_obj.data.meta["asf_note_duration"] == soni_obj.note_duration
     assert soni_obj.data.meta["asf_spacing"] == soni_obj.note_spacing
-    
+
     onset_spacing = soni_obj.data["asf_onsets"][1:] - soni_obj.data["asf_onsets"][:-1]
     assert (np.isclose(onset_spacing, soni_obj.note_spacing)).all()
 
