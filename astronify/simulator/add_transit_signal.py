@@ -9,7 +9,7 @@ import numpy as np
 
 
 def add_transit_signal(
-        fluxes, transit_depth, transit_period, transit_start, transit_width):
+    fluxes, transit_depth, transit_period, transit_start, transit_width):
     """
     :param fluxes: Array of fluxes to add the transit signal to.
     :type fluxes: numpy.ndarray
@@ -39,16 +39,15 @@ def add_transit_signal(
     transit_indexes = np.zeros(n_fluxes)
 
     # Get the set of start indexes.
-    start_indexes = np.arange(transit_start, n_fluxes + 1, transit_period,
-                              dtype=int)
+    start_indexes = np.arange(transit_start, n_fluxes + 1, transit_period, dtype=int)
     # Set transit indexes to 1.
     for st_ind in start_indexes:
         if st_ind + transit_width < fluxes.size:
-            transit_indexes[st_ind : st_ind+transit_width + 1] = 1
+            transit_indexes[st_ind : st_ind + transit_width + 1] = 1
         else:
             transit_indexes[st_ind:] = 1
 
     # Set the flux values of the transit indexes to the transit depth.
-    fluxes[np.where(transit_indexes == 1)] *= (1.0 - (transit_depth / 100.0))
+    fluxes[np.where(transit_indexes == 1)] *= 1.0 - (transit_depth / 100.0)
 
     return fluxes

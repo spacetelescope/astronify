@@ -9,7 +9,7 @@ from astropy.utils.exceptions import AstropyWarning
 
 class InvalidInputError(Exception):
     """
-    Exception to be issued when user input is incorrect in a 
+    Exception to be issued when user input is incorrect in a
     way that prevents the function from running.
     """
 

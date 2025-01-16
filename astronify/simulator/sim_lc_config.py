@@ -1,4 +1,3 @@
-
 class SimLcConfig:
     """
     Class that holds the default configuration parameters

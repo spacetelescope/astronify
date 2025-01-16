@@ -7,7 +7,6 @@
 
 import numpy as np
 
-
 def add_flare_signal(fluxes, flare_time, flare_amp, flare_halfwidth):
     """
     Model is based on Davenport et al.
@@ -102,7 +101,7 @@ def add_flare_signal(fluxes, flare_time, flare_amp, flare_halfwidth):
     decay_fluxes = 0.6890 * np.exp(-1.600 * t12_decay_indices) + 0.3030 * np.exp(
         -0.2783 * t12_decay_indices
     )
-    
+
     # Insert these fluxes into the correct location in our light curve.
     # Note: the above index range is correct, but in Python you need to go one
     # extra when slicing, hence 6*flare_halfwidth-1+1 = 6*flare_halfwidth...

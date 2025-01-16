@@ -31,7 +31,7 @@ def test_pitchmap():
     assert "center_pitch" in my_pitchmapper.pitch_map_args.keys()
     assert my_pitchmapper.pitch_map_args["zero_point"] == "mean"
 
-    with pytest.warns(InputWarning): # setting with bad arg
+    with pytest.warns(InputWarning):  # setting with bad arg
         my_pitchmapper.pitch_map_args = {
             "pitch_range": [100, 10000],
             "center_pitch": 440,
@@ -50,7 +50,7 @@ def test_pitchmap():
         data = np.array(data)
         return data / 2
 
-    with pytest.warns(InputWarning):  # because of different args     
+    with pytest.warns(InputWarning):  # because of different args
         my_pitchmapper.pitch_map_func = my_map_func
 
     assert (my_pitchmapper([1, 1]) == [0.5, 0.5]).all()
