@@ -484,7 +484,7 @@ class SeriesPreviews:
         self.amplitudes = np.asarray(area_vals) / total_area
 
         if std_dev_norm == 0.0:
-                std_dev_norm = 1.0
+            std_dev_norm = 1.0
 
         # Set the tremolo values based on the standard deviation of the piece normalized by the
         # `std_dev_norm` factor.
