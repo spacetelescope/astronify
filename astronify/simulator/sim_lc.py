@@ -149,9 +149,9 @@ def simulated_lc(
         if lc_type == "flare":
             hdr.append(
                 (
-                "FLARETIM",
-                flare_time,
-                "Index corresponding to the peak of the flare.",
+                    "FLARETIM",
+                    flare_time,
+                    "Index corresponding to the peak of the flare.",
                 )
             )
             hdr.append(("FLAREAMP", flare_amp, "Amplitude of the flare."))
