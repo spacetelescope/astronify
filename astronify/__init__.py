@@ -12,3 +12,4 @@ from . import simulator  # noqa
 from . import utils  # noqa
 
 __all__ = ["series", "simulator", "utils"]  # noqa
+__version__ = "0.11"

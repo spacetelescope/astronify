@@ -60,4 +60,14 @@ The built docs will be in ``docs/_build/html/``, to view them go to ``file://</p
 Release Protocol
 ^^^^^^^^^^^^^^^^
 
-Coming soon.
+TO-BE-FINALIZED
+
+- Update the __init__.py file under the "astronify/" folder to update
+  the __version__ variable to match the upcoming release version. This
+  should be specified as a string.
+  
+- Update the version information and release date in the CITATION.cff
+  file, located in the top-level directory to match the upcoming release version.
+
+- Update the "CHANGES.rst" file to add the new version, release date,
+  and summary of what's changing in this version.
