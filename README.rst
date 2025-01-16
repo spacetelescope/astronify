@@ -39,14 +39,15 @@ Project Status
 
 Getting Started
 ---------------
-`Install Instructions <docs/astronify/install.rst>`
+Install instructions: https://astronify.readthedocs.io/en/latest/astronify/install.html
 
-`Tutorials <docs/notebooks/Intro_Astronify_Series.ipynb>`
+Tutorials: https://astronify.readthedocs.io/en/latest/astronify/tutorials.html
 
 Contributing
 ------------
 
-If you are a maintainer of the code, refer to the `developer documentation <DEVELOPER_DOC.rst>` for guidelines on how to release a
+If you are a maintainer of the code, refer to the developer
+documentation (DEVELOPER_DOC.rst file) for guidelines on how to release a
 new version.
 
 We love contributions! Astronify is open source,
