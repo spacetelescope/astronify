@@ -18,7 +18,7 @@ from astropy.visualization import (
     LinearStretch,
     MinMaxInterval,
     ManualInterval,
-    AsymmetricPercentileInterval
+    AsymmetricPercentileInterval,
 )
 
 from .exceptions import InputWarning, InvalidInputError
@@ -34,7 +34,7 @@ def data_to_pitch(
         stretch='linear',
         minmax_percent=None,
         minmax_value=None,
-        invert=False
+        invert=False,
     ):
     """
     Map data array to audible pitches in the given range, and apply stretch and scaling
@@ -85,7 +85,7 @@ def data_to_pitch(
     if center_pitch <= pitch_range[0] or center_pitch >= pitch_range[1]:
         warnings.warn(
             "Given center pitch is outside the pitch range, defaulting to the mean.",
-            InputWarning
+            InputWarning,
         )
         center_pitch = np.mean(pitch_range)
 
@@ -117,7 +117,7 @@ def data_to_pitch(
         if minmax_value is not None:
             warnings.warn(
                 "Both minmax_percent and minmax_value are set, minmax_value will be ignored.",
-                InputWarning
+                InputWarning,
             )
     elif minmax_value is not None:
         transform += ManualInterval(*minmax_value)
@@ -144,9 +144,14 @@ def data_to_pitch(
         zero_point = 1e-6
 
     if (
-            (1 / zero_point) * (center_pitch - pitch_range[0]) + pitch_range[0]) <= pitch_range[1]:
-        pitch_array = (pitch_array / zero_point) * (center_pitch - pitch_range[0]) + pitch_range[0]
+        (1 / zero_point) * (center_pitch - pitch_range[0]) + pitch_range[0]
+            ) <= pitch_range[1]:
+        pitch_array = (pitch_array / zero_point) * (
+            center_pitch - pitch_range[0]
+        ) + pitch_range[0]
     else:
-        pitch_array = (((pitch_array - zero_point) / (1 - zero_point)) * (pitch_range[1] - center_pitch) + center_pitch)
+        pitch_array = ((pitch_array - zero_point) / (1 - zero_point)) * (
+            pitch_range[1] - center_pitch
+            ) + center_pitch
 
     return pitch_array

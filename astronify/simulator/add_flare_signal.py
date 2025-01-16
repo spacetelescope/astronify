@@ -7,6 +7,7 @@
 
 import numpy as np
 
+
 def add_flare_signal(fluxes, flare_time, flare_amp, flare_halfwidth):
     """
     Model is based on Davenport et al.

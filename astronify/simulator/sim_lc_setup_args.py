@@ -27,7 +27,8 @@ def sim_lc_setup_args():
         action="store",
         type=str,
         help="Type of light curve to create.",
-        choices=["flat", "transit", "sine", "flare"])
+        choices=["flat", "transit", "sine", "flare"],
+    )
 
     parser.add_argument(
         "-o",
@@ -35,7 +36,7 @@ def sim_lc_setup_args():
         action="store",
         type=str,
         help="Name of output FITS file to create.",
-        default=sim_lc_config.sim_lc_ofile
+        default=sim_lc_config.sim_lc_ofile,
     )
 
     parser.add_argument(
@@ -46,7 +47,7 @@ def sim_lc_setup_args():
         dest="lc_length",
         help="Total number of flux"
         " measurements in the light curve. Default ="
-        " %(default)s."
+        " %(default)s.",
     )
 
     parser.add_argument(
@@ -59,7 +60,7 @@ def sim_lc_setup_args():
         " measurements in the light curve, specified by the"
         " standard deviation of the normal distribution to draw"
         " from. Set to zero for no noise. Default ="
-        " %(default)s."
+        " %(default)s.",
     )
 
     parser.add_argument(
@@ -69,7 +70,7 @@ def sim_lc_setup_args():
         default=sim_lc_config.sim_lc_vizualize,
         help="If True, a plot of the light curve"
         " that is generated will be plot on the screen. Default"
-        " = %(default)s."
+        " = %(default)s.",
     )
 
     parser.add_argument(
@@ -81,12 +82,13 @@ def sim_lc_setup_args():
         help="Baseline (unitless) flux height"
         " of the light curve. Used to test sonification of"
         " sources with different total brightness. Default ="
-        " %(default)s."
+        " %(default)s.",
     )
 
     # Transit-related parameters here.
     transit_group = parser.add_argument_group(
-        "transit", "Parameters for transit signals.")
+        "transit", "Parameters for transit signals."
+    )
 
     transit_group.add_argument(
         "--transit_depth",
@@ -96,7 +98,7 @@ def sim_lc_setup_args():
         help="Depth of the transit"
         " signal specified as a percent, e.g., set to"
         " 10.0 for a 10%% depth transit. Default ="
-        " %(default)s."
+        " %(default)s.",
     )
 
     transit_group.add_argument(
@@ -107,7 +109,7 @@ def sim_lc_setup_args():
         help="Period of the"
         " transit signal, specified as the number of"
         " fluxes (bins) between the start of each event."
-        " Default = %(default)s."
+        " Default = %(default)s.",
     )
 
     transit_group.add_argument(
@@ -118,7 +120,7 @@ def sim_lc_setup_args():
         help="Start of the first"
         " transit, specified as the index of the"
         " flux (bin) to use as the start of the first"
-        " transit event. Default = %(default)s."
+        " transit event. Default = %(default)s.",
     )
 
     transit_group.add_argument(
@@ -129,7 +131,7 @@ def sim_lc_setup_args():
         help="Width of the"
         " transit signal, specified as the number of"
         " fluxes (bins) between the start and end of each"
-        " event. Default = %(default)s."
+        " event. Default = %(default)s.",
     )
 
     # Sinusoidal-related parameters here.
@@ -142,8 +144,7 @@ def sim_lc_setup_args():
         type=float,
         default=sim_lc_config.sim_lc_sine_amp,
         dest="sine_amp",
-        help="Amplitude of the sinusoidal signal to add. Default ="
-        " %(default)s."
+        help="Amplitude of the sinusoidal signal to add. Default = %(default)s."
     )
 
     sine_group.add_argument(
@@ -152,12 +153,11 @@ def sim_lc_setup_args():
         default=sim_lc_config.sim_lc_sine_period,
         dest="sine_period",
         help="Period of the sinusoidal signal, specified in the (unitless)"
-        " time axis (flux bins). Default = %(default)s."
+        " time axis (flux bins). Default = %(default)s.",
     )
 
     # Flare-related parameters here.
-    flare_group = parser.add_argument_group(
-        "flare", "Parameters for adding flares.")
+    flare_group = parser.add_argument_group("flare", "Parameters for adding flares.")
 
     flare_group.add_argument(
         "--flare_time",
@@ -167,7 +167,7 @@ def sim_lc_setup_args():
         help="Time corresponding to"
         " the maximum flux of the flare, specified"
         " as the index of the flux (bin) to use as"
-        " the peak time. Default = %(default)s."
+        " the peak time. Default = %(default)s.",
     )
 
     flare_group.add_argument(
@@ -175,7 +175,7 @@ def sim_lc_setup_args():
         type=float,
         default=sim_lc_config.sim_lc_flare_amp,
         dest="flare_amp",
-        help="Amplitude (maximum flux) of the flare to add. Default = %(default)s."
+        help="Amplitude (maximum flux) of the flare to add. Default = %(default)s.",
     )
 
     flare_group.add_argument(
@@ -185,7 +185,7 @@ def sim_lc_setup_args():
         help="The flare"
         " half-width (measured in indices) that"
         " corresponds to 't_1/2' in the Davenport et al."
-        " flare template."
+        " flare template.",
     )
 
     return parser

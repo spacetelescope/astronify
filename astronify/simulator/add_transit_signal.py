@@ -9,7 +9,8 @@ import numpy as np
 
 
 def add_transit_signal(
-    fluxes, transit_depth, transit_period, transit_start, transit_width):
+    fluxes, transit_depth, transit_period, transit_start, transit_width
+    ):
     """
     :param fluxes: Array of fluxes to add the transit signal to.
     :type fluxes: numpy.ndarray
