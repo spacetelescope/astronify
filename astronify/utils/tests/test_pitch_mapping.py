@@ -20,7 +20,7 @@ def test_data_to_pitch():
 
     assert (
         pitch_arr
-        == data_to_pitch(data_arr, pitch_range, center_pitch, stretch='linear')
+        == data_to_pitch(data_arr, pitch_range, center_pitch, stretch="linear")
     ).all()
 
     # invert
@@ -28,7 +28,7 @@ def test_data_to_pitch():
     assert (
         pitch_arr
         == data_to_pitch(
-            data_arr, pitch_range, center_pitch, stretch='linear', invert=True
+            data_arr, pitch_range, center_pitch, stretch="linear", invert=True
         )
     ).all()
 
@@ -41,7 +41,7 @@ def test_data_to_pitch():
     ) + pitch_range[0]
     assert (
         pitch_arr
-        == data_to_pitch(data_arr, pitch_range, center_pitch, stretch='linear')
+        == data_to_pitch(data_arr, pitch_range, center_pitch, stretch="linear")
     ).all()
 
     # linear stretch with non-equal lower/upper pitch ranges
@@ -57,7 +57,7 @@ def test_data_to_pitch():
         pitch_arr == data_to_pitch(data_arr, [400, 600], center_pitch, stretch="linear")
     ).all()
     pitch_range = [400, 500]
-    
+
     # min_max val
     minval, maxval = 0, 1
     data_arr = np.array([1, 0, -1, 2])
@@ -66,7 +66,7 @@ def test_data_to_pitch():
         pitch_range,
         center_pitch,
         stretch="linear",
-        minmax_value=[minval, maxval]
+        minmax_value=[minval, maxval],
     )
     data_arr[data_arr < minval] = minval
     data_arr[data_arr > maxval] = maxval
@@ -80,7 +80,7 @@ def test_data_to_pitch():
         pitch_range,
         center_pitch,
         stretch="linear",
-        minmax_value=[minval, maxval]
+        minmax_value=[minval, maxval],
     )
     data_arr[data_arr < minval] = minval
     data_arr[data_arr > maxval] = maxval
@@ -94,7 +94,8 @@ def test_data_to_pitch():
     )
     assert (
         np.isclose(
-            pitch_arr, np.array([500, 400, 500, 400, 422.22222222, 477.77777778]))
+            pitch_arr, np.array([500, 400, 500, 400, 422.22222222, 477.77777778])
+        )
     ).all()
 
     # asinh
@@ -139,7 +140,8 @@ def test_data_to_pitch():
         data_arr, pitch_range, center_pitch, zero_point, stretch="log"
     )
     manual_pitch_arr = (
-        np.log(1000 * data_arr + 1) / np.log(1001) * (pitch_range[1] - pitch_range[0]) + pitch_range[0]
+        np.log(1000 * data_arr + 1) / np.log(1001) * (pitch_range[1] - pitch_range[0])
+        + pitch_range[0]
     )
     assert (manual_pitch_arr == pitch_arr).all()
 
@@ -160,6 +162,6 @@ def test_data_to_pitch():
             center_pitch,
             stretch="linear",
             minmax_value=[0, 1],
-            minmax_percent=[20, 80]
+            minmax_percent=[20, 80],
         )
     assert (pitch_arr == test_arr).all()
