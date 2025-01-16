@@ -30,25 +30,31 @@ def check_transit_params(n_fluxes, transit_period, transit_start, transit_width)
 
     # Start index must be less than total numbr of fluxes.
     if transit_start > n_fluxes:
-        raise argparse.ArgumentTypeError("The transit start must be less than"
-                                         " the total number of fluxes in the"
-                                         " simulated light curve."
-                                         " Number of fluxes = " + str(n_fluxes) +
-                                         ", start index requested is " +
-                                         str(transit_start) + ".")
+        raise argparse.ArgumentTypeError(
+            "The transit start must be less than"
+            " the total number of fluxes in the"
+            " simulated light curve."
+            " Number of fluxes = "
+            + str(n_fluxes)
+            + ", start index requested is "
+            + str(transit_start)
+            + "."
+        )
 
     # The start index must be greater than or equal to zero.
     if transit_start < 0:
-        raise argparse.ArgumentTypeError("The transit start must be greater than"
-                                         " or equal to zero, start"
-                                         " index requested is " +
-                                         str(transit_start) + ".")
+        raise argparse.ArgumentTypeError(
+            "The transit start must be greater than"
+            " or equal to zero, start"
+            " index requested is " +
+            str(transit_start) + "."
+        )
 
     # The transit period must be greater than the transit duration (width).
     if transit_width >= transit_period:
-        raise argparse.ArgumentTypeError("Transit duration must be less than"
-                                         " the transit period. Requested"
-                                         " transit duration = " +
-                                         str(transit_width) + ", requested"
-                                         " transit period = " +
-                                         str(transit_period) + ".")
+        raise argparse.ArgumentTypeError(
+            "Transit duration must be less than"
+            " the transit period. Requested"
+            " transit duration = " + str(transit_width) + ", requested"
+            " transit period = " + str(transit_period) + "."
+        )

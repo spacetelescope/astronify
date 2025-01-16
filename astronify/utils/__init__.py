@@ -4,6 +4,6 @@
 # functions.
 
 
-from .pitch_mapping import *  # noqa: F403
+from .pitch_mapping import * # noqa: F403
 
-__all__ = ['data_to_pitch']  # noqa: F405
+__all__ = ["data_to_pitch"] # noqa: F405

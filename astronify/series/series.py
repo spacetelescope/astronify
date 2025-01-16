@@ -22,10 +22,10 @@ import pyo
 from ..utils.pitch_mapping import data_to_pitch
 from ..utils.exceptions import InputWarning
 
-__all__ = ['PitchMap', 'SoniSeries']
+__all__ = ["PitchMap", "SoniSeries"]
 
 
-class PitchMap():
+class PitchMap:
 
     def __init__(self, pitch_func=data_to_pitch, **pitch_args):
         """
@@ -45,14 +45,15 @@ class PitchMap():
 
         # Setting up the default arguments
         if (not pitch_args) and (pitch_func == data_to_pitch):
-            pitch_args = {"pitch_range": [100, 10000],
-                          "center_pitch": 440,
-                          "zero_point": "median",
-                          "stretch": "linear"}
+            pitch_args = {
+                "pitch_range": [100, 10000],
+                "center_pitch": 440,
+                "zero_point": "median",
+                "stretch": "linear"
+            }
 
         self.pitch_map_func = pitch_func
         self.pitch_map_args = pitch_args
-
 
     def _check_func_args(self):
         """
@@ -64,11 +65,15 @@ class PitchMap():
         if hasattr(self, "pitch_map_func") and hasattr(self, "pitch_map_args"):
 
             # Only check parameters if there is no kwargs argument
-            param_types = [x.kind for x in signature(self.pitch_map_func).parameters.values()]
+            param_types = [
+                x.kind for x in signature(self.pitch_map_func).parameters.values()
+            ]
             if Parameter.VAR_KEYWORD not in param_types:
                 for arg_name in list(self.pitch_map_args):
                     if arg_name not in signature(self.pitch_map_func).parameters:
-                        wstr = "{} is not accepted by the pitch mapping function and will be ignored".format(arg_name)
+                        wstr = "{} is not accepted by the pitch mapping function and will be ignored".format(
+                            arg_name
+                        )
                         warnings.warn(wstr, InputWarning)
                         del self.pitch_map_args[arg_name]
 
@@ -102,13 +107,13 @@ class PitchMap():
 
     @pitch_map_args.setter
     def pitch_map_args(self, new_args):
-        assert isinstance(new_args, dict), "Pitch mapping function args must be in a dictionary."
+        assert isinstance(
+            new_args, dict
+        ), "Pitch mapping function args must be in a dictionary."
         self._pitch_map_args = new_args
         self._check_func_args()
 
-
-
-class SoniSeries():
+class SoniSeries:
 
     def __init__(self, data, time_col="time", val_col="flux", preview_type="scan"):
         """
@@ -138,7 +143,8 @@ class SoniSeries():
         # Default specs
         self.note_duration = 0.5  # note duration in seconds
         self.note_spacing = 0.01  # spacing between notes in seconds
-        self.gain = 0.05  # default gain in the generated sine wave. pyo multiplier, -1 to 1.
+        # default gain in the generated sine wave. pyo multiplier, -1 to 1.
+        self.gain = 0.05
         self.pitch_mapper = PitchMap(data_to_pitch)
         self.preview_object = SeriesPreviews(self)
         self._init_pyo()
@@ -149,12 +155,12 @@ class SoniSeries():
 
     @property
     def data(self):
-        """ The data table (~astropy.table.Table). """
+        """The data table (~astropy.table.Table)."""
         return self._data
 
     @data.setter
     def data(self, data_table):
-        assert isinstance(data_table, Table), 'Data must be a Table.'
+        assert isinstance(data_table, Table), "Data must be a Table."
 
         # Removing any masked values as they interfere with the sonification
         if isinstance(data_table[self.val_col], MaskedColumn):
@@ -175,7 +181,7 @@ class SoniSeries():
 
     @property
     def time_col(self):
-        """ The data column mappend to time when sonifying. """
+        """The data column mappend to time when sonifying."""
         return self._time_col
 
     @time_col.setter
@@ -185,17 +191,17 @@ class SoniSeries():
 
     @property
     def val_col(self):
-        """ The data column mappend to putch when sonifying. """
+        """The data column mappend to putch when sonifying."""
         return self._val_col
 
     @val_col.setter
     def val_col(self, value):
-        assert isinstance(value, str), 'Value column name must be a string.'
+        assert isinstance(value, str), "Value column name must be a string."
         self._val_col = value
 
     @property
     def pitch_mapper(self):
-        """ The pitch mapping object that takes data values to pitch values (Hz). """
+        """The pitch mapping object that takes data values to pitch values (Hz)."""
         return self._pitch_mapper
 
     @pitch_mapper.setter
@@ -204,7 +210,7 @@ class SoniSeries():
 
     @property
     def gain(self):
-        """ Adjustable gain for output. """
+        """Adjustable gain for output."""
         return self._gain
 
     @gain.setter
@@ -213,7 +219,7 @@ class SoniSeries():
 
     @property
     def note_duration(self):
-        """ How long each individual note will be in seconds."""
+        """How long each individual note will be in seconds."""
         return self._note_duration
 
     @note_duration.setter
@@ -223,7 +229,7 @@ class SoniSeries():
 
     @property
     def note_spacing(self):
-        """ The spacing of the notes on average (will adjust based on time) in seconds. """
+        """The spacing of the notes on average (will adjust based on time) in seconds."""
         return self._note_spacing
 
     @note_spacing.setter
@@ -247,7 +253,9 @@ class SoniSeries():
         data.meta["asf_spacing"] = self.note_spacing
 
         data["asf_pitch"] = self.pitch_mapper(data[self.val_col])
-        data["asf_onsets"] = [x for x in (data[self.time_col] - data[self.time_col][0])/exptime*self.note_spacing]
+        data["asf_onsets"] = [
+            x for x in (data[self.time_col] - data[self.time_col][0]) / exptime*self.note_spacing
+        ]
 
     def play(self):
         """
@@ -268,13 +276,19 @@ class SoniSeries():
 
         # TODO: This doesn't seem like the best way to do this, but I don't know
         # how to make it better
-        env = pyo.Linseg(list=[(0, 0), (0.01, 1), (duration - 0.1, 1),
-                               (duration - 0.05, 0.5), (duration - 0.005, 0)],
-                         mul=[self.gain for i in range(len(pitches))]).play(
-                             delay=list(delays), dur=duration)
+        env = pyo.Linseg(
+            list=[
+                (0, 0),
+                (0.01, 1),
+                (duration - 0.1, 1),
+                (duration - 0.05, 0.5),
+                (duration - 0.005, 0)
+            ],
+            mul=[self.gain for i in range(len(pitches))]).play(
+                delay=list(delays), dur=duration)
 
-        self.streams = pyo.Sine(list(pitches), 0, env).out(delay=list(delays),
-                                                           dur=duration)
+        self.streams = pyo.Sine(list(pitches), 0, env).out(
+            delay=list(delays), dur=duration)
 
     def stop(self):
         """
@@ -304,21 +318,25 @@ class SoniSeries():
 
         self.server.reinit(audio="offline")
         self.server.boot()
-        self.server.recordOptions(dur=delays[-1]+duration, filename=filepath)
+        self.server.recordOptions(dur=delays[-1] + duration, filename=filepath)
 
-        env = pyo.Linseg(list=[(0, 0), (0.1, 1), (duration - 0.1, 1),
-                               (duration - 0.05, 0.5), (duration - 0.005, 0)],
-                         mul=[self.gain for i in range(len(pitches))]).play(
-                             delay=list(delays), dur=duration)
-        sine = pyo.Sine(list(pitches), 0, env).out(delay=list(delays), dur=duration)  # noqa: F841
+        env = pyo.Linseg(
+            list=[
+                (0, 0),
+                (0.1, 1),
+                (duration - 0.1, 1),
+                (duration - 0.05, 0.5),
+                (duration - 0.005, 0)],
+            mul=[self.gain for i in range(len(pitches))]).play(
+                delay=list(delays), dur=duration)
+        sine = pyo.Sine(list(pitches), 0, env).out(delay=list(delays), dur=duration) # noqa: F841
         self.server.start()
 
         # Clean up
         self.server.shutdown()
         self.server.reinit(audio="portaudio")
 
-
-class SeriesPreviews():
+class SeriesPreviews:
         """
         Previews (or snapshots) of 1d spectra by binning the data into five equal pieces by assigning a sound to each piece.
         """
@@ -327,7 +345,7 @@ class SeriesPreviews():
             # Allows access to SoniSeries class methods and variables
             self._soniseries = soniseries
             # Define the frequencies to use for each section.
-            self.pitch_values = [500]*5
+            self.pitch_values = [500] * 5
             if self._soniseries.preview_type == "ensemble":
                 self.pitch_values = [300, 400, 500, 600, 700]
             # TODO: Make robust
@@ -345,11 +363,11 @@ class SeriesPreviews():
             """
             area_vals = []
             for idx, (ydata_bin, xdata_bin) in enumerate(zip(ydata_bins, xdata_bins)):
-                if idx < len(ydata_bins)-1:
+                if idx < len(ydata_bins) - 1:
                     # Then you need to include the first (x,y) point from the NEXT bin as well
                     # when calculating the trapezoidal area so the pieces all add up to the total.
-                    list(ydata_bin).append(ydata_bins[idx+1][0])
-                    list(xdata_bin).append(xdata_bins[idx+1][0])
+                    list(ydata_bin).append(ydata_bins[idx + 1][0])
+                    list(xdata_bin).append(xdata_bins[idx + 1][0])
 
                 # Taking the absolute value so that emission lines and absorption lines
                 # have the same amplitude
@@ -357,14 +375,45 @@ class SeriesPreviews():
             return area_vals
 
         def plot_preview(self, xdata_bin_ranges):
-            plt.plot(self._soniseries.data[self._soniseries.time_col],
-                         self._soniseries.data[self._soniseries.val_col], color='k')
+            plt.plot(
+                self._soniseries.data[self._soniseries.time_col],
+                self._soniseries.data[self._soniseries.val_col],
+                color="k"
+            )
 
-            plt.axvspan(xdata_bin_ranges[0][0], xdata_bin_ranges[0][1], color='royalblue', alpha=0.5, lw=0)
-            plt.axvspan(xdata_bin_ranges[1][0], xdata_bin_ranges[1][1], color='green', alpha=0.5, lw=0)
-            plt.axvspan(xdata_bin_ranges[2][0], xdata_bin_ranges[2][1], color='yellow', alpha=0.5, lw=0)
-            plt.axvspan(xdata_bin_ranges[3][0], xdata_bin_ranges[3][1], color='orange', alpha=0.5, lw=0)
-            plt.axvspan(xdata_bin_ranges[4][0], xdata_bin_ranges[4][1], color='red', alpha=0.5, lw=0)
+            plt.axvspan(
+                xdata_bin_ranges[0][0],
+                xdata_bin_ranges[0][1],
+                color="royalblue",
+                alpha=0.5,
+                lw=0
+            )
+            plt.axvspan(
+                xdata_bin_ranges[1][0],
+                xdata_bin_ranges[1][1],
+                color="green",
+                alpha=0.5,
+                lw=0
+            )
+            plt.axvspan(
+                xdata_bin_ranges[2][0],
+                xdata_bin_ranges[2][1],
+                color="yellow",
+                alpha=0.5,
+                lw=0
+            )
+            plt.axvspan(
+                xdata_bin_ranges[3][0],
+                xdata_bin_ranges[3][1],
+                color="orange",
+                alpha=0.5,
+                lw=0)
+            plt.axvspan(
+                xdata_bin_ranges[4][0],
+                xdata_bin_ranges[4][1],
+                color="red",
+                alpha=0.5,
+                lw=0)
 
             plt.show()
 
@@ -381,14 +430,14 @@ class SeriesPreviews():
             xdata = np.asarray(self._soniseries.data[self._soniseries.time_col])
 
             # Normalize the y-data by the maximum to constrain values from 0-1.
-            ydata_norm = ydata/max(ydata)
+            ydata_norm = ydata / max(ydata)
 
             # Split the data into `n_pitch_values` equal-sized pieces.
             bin_size = int(np.round(len(xdata) // self.n_pitch_values, 1))
             # Split the y-values into pieces.
-            ydata_bins = [ydata_norm[i:i+bin_size] for i in range(0, len(ydata_norm), bin_size)]
+            ydata_bins = [ydata_norm[i : i+bin_size] for i in range(0, len(ydata_norm), bin_size)]
             # Split the x-values into pieces.
-            xdata_bins = [xdata[i:i+bin_size] for i in range(0, len(xdata), bin_size)]
+            xdata_bins = [xdata[i : i + bin_size] for i in range(0, len(xdata), bin_size)]
 
             # Calculate the total area under the curve, used to normalize the areas in each piece.
             total_area = np.trapz(ydata_norm, xdata)
@@ -428,26 +477,26 @@ class SeriesPreviews():
 
             # The final calculated tremolo values are multiplied by a factor of 10 for auditory
             # purposes
-            self.tremolo_vals = (np.asarray(std_vals) / std_dev_norm)*10
+            self.tremolo_vals = (np.asarray(std_vals) / std_dev_norm) * 10
 
             # Constraint added to keep tremolo values at or below 15, otherwise oscillations are
             # more difficult to hear
             # self.tremolo_vals[self.tremolo_vals > 15] = 15
 
             if verbose:
-                print('Total Expected area = {0:0f}'.format(total_area))
-                print(' ')
-                print('Area Values = ', np.asarray(area_vals))
-                print(' ')
-                # print('Total Calculated area = {0:0f}'.format(np.sum(str(area_vals).split(' '))))
-                print(' ')
-                print('Amplitudes = ', self.amplitudes)
-                print(' ')
-                print('Standard Dev. Error Vals = ', np.asarray(std_vals))
-                print(' ')
-                print('Standard Dev. Error MAX = ', std_dev_norm)
-                print(' ')
-                print('Tremolo Vals (x10) = ', self.tremolo_vals)
+                print("Total Expected area = {0:0f}".format(total_area))
+                print(" ")
+                print("Area Values = ", np.asarray(area_vals))
+                print(" ")
+                # print("Total Calculated area = {0:0f}".format(np.sum(str(area_vals).split(" "))))
+                print(" ")
+                print("Amplitudes = ", self.amplitudes)
+                print(" ")
+                print("Standard Dev. Error Vals = ", np.asarray(std_vals))
+                print(" ")
+                print("Standard Dev. Error MAX = ", std_dev_norm)
+                print(" ")
+                print("Tremolo Vals (x10) = ", self.tremolo_vals)
 
         def play_preview(self):
             """ Play the sound of a "preview-style" sonification.
@@ -466,37 +515,77 @@ class SeriesPreviews():
 
             # TODO: Generalize the self.delays list
             # `step` must go into `stop` 5 times, since we have 5 pitches
-            self.delays = [0., 2., 4., 6., 8.]
+            self.delays = [0.0, 2.0, 4.0, 6.0, 8.0]
 
             # `total_duration` is in seconds
             self.total_duration = 8.0
 
-            self.amplitudes = [amp/max(self.amplitudes) for amp in self.amplitudes]
+            self.amplitudes = [amp / max(self.amplitudes) for amp in self.amplitudes]
 
-            a = pyo.Phasor(self.pitch_values[0], mul=np.pi*2)
-            b = pyo.Phasor(self.pitch_values[1], mul=np.pi*2)
-            c = pyo.Phasor(self.pitch_values[2], mul=np.pi*2)
-            d = pyo.Phasor(self.pitch_values[3], mul=np.pi*2)
-            e = pyo.Phasor(self.pitch_values[4], mul=np.pi*2)
+            a = pyo.Phasor(self.pitch_values[0], mul=np.pi * 2)
+            b = pyo.Phasor(self.pitch_values[1], mul=np.pi * 2)
+            c = pyo.Phasor(self.pitch_values[2], mul=np.pi * 2)
+            d = pyo.Phasor(self.pitch_values[3], mul=np.pi * 2)
+            e = pyo.Phasor(self.pitch_values[4], mul=np.pi * 2)
 
 
             # TODO: Make everything below iterable to it's cleaner and takes up less lines
-            lfo1 = pyo.Sine(float(self.tremolo_vals[0]), 0, float(self.amplitudes[0]), 0) if self.tremolo_vals[0] > 0 else pyo.Cos(a, mul=float(self.amplitudes[0]))
-            lfo2 = pyo.Sine(float(self.tremolo_vals[1]), 0, float(self.amplitudes[1]), 0) if self.tremolo_vals[1] > 0 else pyo.Cos(b, mul=float(self.amplitudes[1]))
-            lfo3 = pyo.Sine(float(self.tremolo_vals[2]), 0, float(self.amplitudes[2]), 0) if self.tremolo_vals[2] > 0 else pyo.Cos(c, mul=float(self.amplitudes[2]))
-            lfo4 = pyo.Sine(float(self.tremolo_vals[3]), 0, float(self.amplitudes[3]), 0) if self.tremolo_vals[3] > 0 else pyo.Cos(d, mul=float(self.amplitudes[3]))
-            lfo5 = pyo.Sine(float(self.tremolo_vals[4]), 0, float(self.amplitudes[4]), 0) if self.tremolo_vals[4] > 0 else pyo.Cos(e, mul=float(self.amplitudes[4]))
+            lfo1 = (
+                pyo.Sine(float(self.tremolo_vals[0]), 0, float(self.amplitudes[0]), 0)
+                if self.tremolo_vals[0] > 0
+                else pyo.Cos(a, mul=float(self.amplitudes[0]))
+            )
+            lfo2 = (
+                pyo.Sine(float(self.tremolo_vals[1]), 0, float(self.amplitudes[1]), 0)
+                if self.tremolo_vals[1] > 0
+                else pyo.Cos(b, mul=float(self.amplitudes[1]))
+            )
+            lfo3 = (
+                pyo.Sine(float(self.tremolo_vals[2]), 0, float(self.amplitudes[2]), 0)
+                if self.tremolo_vals[2] > 0
+                else pyo.Cos(c, mul=float(self.amplitudes[2]))
+            )
+            lfo4 = (
+                pyo.Sine(float(self.tremolo_vals[3]), 0, float(self.amplitudes[3]), 0)
+                if self.tremolo_vals[3] > 0
+                else pyo.Cos(d, mul=float(self.amplitudes[3]))
+            )
+            lfo5 = (
+                pyo.Sine(float(self.tremolo_vals[4]), 0, float(self.amplitudes[4]), 0)
+                if self.tremolo_vals[4] > 0
+                else pyo.Cos(e, mul=float(self.amplitudes[4]))
+            )
 
-            self.stream1 = pyo.Sine(freq=[self.pitch_values[0], self.pitch_values[0]], mul=lfo1).out(delay=self.delays[0], dur=2.0)
-            self.stream2 = pyo.Sine(freq=[self.pitch_values[1], self.pitch_values[1]], mul=lfo2).out(delay=self.delays[1], dur=2.0)
-            self.stream3 = pyo.Sine(freq=[self.pitch_values[2], self.pitch_values[2]], mul=lfo3).out(delay=self.delays[2], dur=2.0)
-            self.stream4 = pyo.Sine(freq=[self.pitch_values[3], self.pitch_values[3]], mul=lfo4).out(delay=self.delays[3], dur=2.0)
-            self.stream5 = pyo.Sine(freq=[self.pitch_values[4], self.pitch_values[4]], mul=lfo5).out(delay=self.delays[4], dur=2.0)
+            self.stream1 = pyo.Sine(
+                freq=[self.pitch_values[0], self.pitch_values[0]], mul=lfo1
+                ).out(delay=self.delays[0], dur=2.0)
+            self.stream2 = pyo.Sine(
+                freq=[self.pitch_values[1], self.pitch_values[1]], mul=lfo2
+                ).out(delay=self.delays[1], dur=2.0)
+            self.stream3 = pyo.Sine(
+                freq=[self.pitch_values[2], self.pitch_values[2]], mul=lfo3
+                ).out(delay=self.delays[2], dur=2.0)
+            self.stream4 = pyo.Sine(
+                freq=[self.pitch_values[3], self.pitch_values[3]], mul=lfo4
+                ).out(delay=self.delays[3], dur=2.0)
+            self.stream5 = pyo.Sine(
+                freq=[self.pitch_values[4], self.pitch_values[4]], mul=lfo5
+                ).out(delay=self.delays[4], dur=2.0)
 
             # All together, if in ensemble mode.
             if self._soniseries.preview_type == "ensemble":
-                self.stream6 = pyo.Sine(freq=[self.pitch_values[0], self.pitch_values[0]], mul=lfo1).out(delay=10, dur=4)
-                self.stream7 = pyo.Sine(freq=[self.pitch_values[1], self.pitch_values[1]], mul=lfo2).out(delay=10, dur=4)
-                self.stream8 = pyo.Sine(freq=[self.pitch_values[2], self.pitch_values[2]], mul=lfo3).out(delay=10, dur=4)
-                self.stream9 = pyo.Sine(freq=[self.pitch_values[3], self.pitch_values[3]], mul=lfo4).out(delay=10, dur=4)
-                self.stream10 = pyo.Sine(freq=[self.pitch_values[4], self.pitch_values[4]], mul=lfo5).out(delay=10, dur=4)
+                self.stream6 = pyo.Sine(
+                    freq=[self.pitch_values[0], self.pitch_values[0]], mul=lfo1
+                    ).out(delay=10, dur=4)
+                self.stream7 = pyo.Sine(
+                    freq=[self.pitch_values[1], self.pitch_values[1]], mul=lfo2
+                    ).out(delay=10, dur=4)
+                self.stream8 = pyo.Sine(
+                    freq=[self.pitch_values[2], self.pitch_values[2]], mul=lfo3
+                    ).out(delay=10, dur=4)
+                self.stream9 = pyo.Sine(
+                    freq=[self.pitch_values[3], self.pitch_values[3]], mul=lfo4
+                    ).out(delay=10, dur=4)
+                self.stream10 = pyo.Sine(
+                    freq=[self.pitch_values[4], self.pitch_values[4]], mul=lfo5
+                    ).out(delay=10, dur=4)

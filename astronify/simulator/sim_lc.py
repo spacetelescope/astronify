@@ -22,23 +22,26 @@ from .check_flare_params import check_flare_params
 from .sim_lc_setup_args import sim_lc_setup_args
 
 
-__all__ = ["simulated_lc", 'SimLcConfig']
+__all__ = ["simulated_lc", "SimLcConfig"]
 
 
-def simulated_lc(lc_type, lc_ofile=SimLcConfig.sim_lc_ofile,
-                 lc_length=SimLcConfig.sim_lc_length,
-                 lc_noise=SimLcConfig.sim_lc_noise,
-                 visualize=SimLcConfig.sim_lc_visualize,
-                 lc_yoffset=SimLcConfig.sim_lc_yoffset,
-                 transit_depth=SimLcConfig.sim_lc_transit_depth,
-                 transit_period=SimLcConfig.sim_lc_transit_period,
-                 transit_start=SimLcConfig.sim_lc_transit_start,
-                 transit_width=SimLcConfig.sim_lc_transit_width,
-                 sine_amp=SimLcConfig.sim_lc_sine_amp,
-                 sine_period=SimLcConfig.sim_lc_sine_period,
-                 flare_time=SimLcConfig.sim_lc_flare_time,
-                 flare_amp=SimLcConfig.sim_lc_flare_amp,
-                 flare_halfwidth=SimLcConfig.sim_lc_flare_halfwidth):
+def simulated_lc(
+        lc_type,
+        lc_ofile=SimLcConfig.sim_lc_ofile,
+        lc_length=SimLcConfig.sim_lc_length,
+        lc_noise=SimLcConfig.sim_lc_noise,
+        visualize=SimLcConfig.sim_lc_visualize,
+        lc_yoffset=SimLcConfig.sim_lc_yoffset,
+        transit_depth=SimLcConfig.sim_lc_transit_depth,
+        transit_period=SimLcConfig.sim_lc_transit_period,
+        transit_start=SimLcConfig.sim_lc_transit_start,
+        transit_width=SimLcConfig.sim_lc_transit_width,
+        sine_amp=SimLcConfig.sim_lc_sine_amp,
+        sine_period=SimLcConfig.sim_lc_sine_period,
+        flare_time=SimLcConfig.sim_lc_flare_time,
+        flare_amp=SimLcConfig.sim_lc_flare_amp,
+        flare_halfwidth=SimLcConfig.sim_lc_flare_halfwidth
+    ):
     """
     Create light curve with specified parameters as a `~astropy.table.Table`,
     and optionally writes a FITS file with the same information.
@@ -117,11 +120,11 @@ def simulated_lc(lc_type, lc_ofile=SimLcConfig.sim_lc_ofile,
         fluxes = add_flare_signal(fluxes, flare_time, flare_amp, flare_halfwidth)
     elif lc_type == "sine":
         fluxes = add_sine_signal(times, fluxes, sine_amp, sine_period)
-    elif lc_type == 'transit':
-        check_transit_params(fluxes.size, transit_period, transit_start,
-                             transit_width)
-        fluxes = add_transit_signal(fluxes, transit_depth, transit_period,
-                                    transit_start, transit_width)
+    elif lc_type == "transit":
+        check_transit_params(fluxes.size, transit_period, transit_start, transit_width)
+        fluxes = add_transit_signal(
+            fluxes, transit_depth, transit_period, transit_start, transit_width
+        )
 
     # Add noise based on standard deviation.
     fluxes_with_noise = add_lc_noise(fluxes, lc_noise)
@@ -129,7 +132,7 @@ def simulated_lc(lc_type, lc_ofile=SimLcConfig.sim_lc_ofile,
     # Visualize the light curve, if desired.
     if visualize:
         _, ax1 = plt.subplots(1)
-        ax1.plot(times, fluxes_with_noise, 'bo')
+        ax1.plot(times, fluxes_with_noise, "bo")
         plt.show()
 
     if lc_ofile:
@@ -139,15 +142,23 @@ def simulated_lc(lc_type, lc_ofile=SimLcConfig.sim_lc_ofile,
         hdr.append(("LCTYPE", lc_type, "Type of signal."))
         hdr.append(("LCLENGTH", lc_length, "Number of fluxes."))
         hdr.append(("LCYOFF", lc_yoffset, "Baseline flux value (unitless)."))
-        hdr.append(("LCNOISE", lc_noise, "Std. dev. of normal dist. used to"
-                    " apply noise."))
+        hdr.append(
+            ("LCNOISE", lc_noise, "Std. dev. of normal dist. used to"
+                 " apply noise.")
+        )
         # Record the flare parameters used if adding a flare.
         if lc_type == "flare":
-            hdr.append(("FLARETIM", flare_time, "Index corresponding to the peak"
-                        " of the flare."))
+            hdr.append(
+                ("FLARETIM",
+                flare_time,
+                "Index corresponding to the peak of the flare.")
+            )
             hdr.append(("FLAREAMP", flare_amp, "Amplitude of the flare."))
-            hdr.append(("FLAREWID", flare_halfwidth, "Flare half-width"
-                        " (number of indices)."))
+            hdr.append(
+                ("FLAREWID",
+                flare_halfwidth,
+                "Flare half-width (number of indices).")
+            )
         # Record the sinusoidal parameters if adding a sinusoid.
         if lc_type == "sine":
             hdr.append(("SINEAMP", sine_amp, "Amplitude of sine."))
@@ -161,9 +172,9 @@ def simulated_lc(lc_type, lc_ofile=SimLcConfig.sim_lc_ofile,
         # This builds the primary header, no data, just keywords.
         primary_hdu = fits.PrimaryHDU(header=hdr)
         # This sets up the binary table and creates the first extension header.
-        col1 = fits.Column(name="time", array=times, format='D')
-        col2 = fits.Column(name="flux", array=fluxes_with_noise, format='D')
-        col3 = fits.Column(name="flux_pure", array=fluxes, format='D')
+        col1 = fits.Column(name="time", array=times, format="D")
+        col2 = fits.Column(name="flux", array=fluxes_with_noise, format="D")
+        col3 = fits.Column(name="flux_pure", array=fluxes, format="D")
         hdu1 = fits.BinTableHDU.from_columns([col1, col2, col3])
         # If the output directory doesn't exist, create it.
         if not os.path.isdir(os.path.abspath(os.path.dirname(lc_ofile))):
@@ -175,17 +186,29 @@ def simulated_lc(lc_type, lc_ofile=SimLcConfig.sim_lc_ofile,
 
     # Return the times and fluxes as an astropy Table so it can be directly
     # used later in a script.
-    return Table([times, fluxes_with_noise, fluxes],
-                 names=("time", "flux", "flux_pure"))
+    return Table(
+        [times, fluxes_with_noise, fluxes], names=("time", "flux", "flux_pure")
+    )
 
 
 if __name__ == "__main__":
     # Get command-line arguments.
     INPUT_ARGS = sim_lc_setup_args().parse_args()
 
-    simulated_lc(INPUT_ARGS.lc_type, INPUT_ARGS.lc_ofile, INPUT_ARGS.lc_length,
-                 INPUT_ARGS.lc_noise, INPUT_ARGS.visualize, INPUT_ARGS.lc_yoffset,
-                 INPUT_ARGS.transit_depth, INPUT_ARGS.transit_period,
-                 INPUT_ARGS.transit_start, INPUT_ARGS.transit_width,
-                 INPUT_ARGS.sine_amp, INPUT_ARGS.sine_period, INPUT_ARGS.flare_time,
-                 INPUT_ARGS.flare_amp, INPUT_ARGS.flare_halfwidth)
+    simulated_lc(
+        INPUT_ARGS.lc_type,
+        INPUT_ARGS.lc_ofile,
+        INPUT_ARGS.lc_length,
+        INPUT_ARGS.lc_noise,
+        INPUT_ARGS.visualize,
+        INPUT_ARGS.lc_yoffset,
+        INPUT_ARGS.transit_depth,
+        INPUT_ARGS.transit_period,
+        INPUT_ARGS.transit_start,
+        INPUT_ARGS.transit_width,
+        INPUT_ARGS.sine_amp,
+        INPUT_ARGS.sine_period,
+        INPUT_ARGS.flare_time,
+        INPUT_ARGS.flare_amp,
+        INPUT_ARGS.flare_halfwidth
+    )

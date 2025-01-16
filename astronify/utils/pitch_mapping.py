@@ -10,17 +10,32 @@ import warnings
 
 import numpy as np
 
-from astropy.visualization import (SqrtStretch, LogStretch, AsinhStretch, SinhStretch,
-                                   LinearStretch, MinMaxInterval, ManualInterval,
-                                   AsymmetricPercentileInterval)
+from astropy.visualization import (
+    SqrtStretch,
+    LogStretch,
+    AsinhStretch,
+    SinhStretch,
+    LinearStretch,
+    MinMaxInterval,
+    ManualInterval,
+    AsymmetricPercentileInterval
+)
 
 from .exceptions import InputWarning, InvalidInputError
 
-__all__ = ['data_to_pitch']
+__all__ = ["data_to_pitch"]
 
 
-def data_to_pitch(data_array, pitch_range=[100, 10000], center_pitch=440, zero_point="median",
-                  stretch='linear', minmax_percent=None, minmax_value=None, invert=False):
+def data_to_pitch(
+        data_array,
+        pitch_range=[100, 10000],
+        center_pitch=440,
+        zero_point="median",
+        stretch='linear',
+        minmax_percent=None,
+        minmax_value=None,
+        invert=False
+    ):
     """
     Map data array to audible pitches in the given range, and apply stretch and scaling
     as required.
@@ -68,26 +83,29 @@ def data_to_pitch(data_array, pitch_range=[100, 10000], center_pitch=440, zero_p
     # The center pitch cannot be >= max() pitch range, or <= min() of pitch range.
     # If it is, fall back to using the mean of the pitch range provided.
     if center_pitch <= pitch_range[0] or center_pitch >= pitch_range[1]:
-        warnings.warn("Given center pitch is outside the pitch range, defaulting to the mean.",
-                      InputWarning)
+        warnings.warn(
+            "Given center pitch is outside the pitch range, defaulting to the mean.",
+            InputWarning
+        )
         center_pitch = np.mean(pitch_range)
 
-    if (data_array == zero_point).all():  # All values are the same, no more calculation needed
+    if (data_array == zero_point).all():
+        # All values are the same, no more calculation needed
         return np.full(len(data_array), center_pitch)
 
     # Normalizing the data_array and adding the zero point (so it can go through the same transform)
     data_array = np.append(np.array(data_array), zero_point)
 
     # Setting up the transform with the stretch
-    if stretch == 'asinh':
+    if stretch == "asinh":
         transform = AsinhStretch()
-    elif stretch == 'sinh':
+    elif stretch == "sinh":
         transform = SinhStretch()
-    elif stretch == 'sqrt':
+    elif stretch == "sqrt":
         transform = SqrtStretch()
-    elif stretch == 'log':
+    elif stretch == "log":
         transform = LogStretch()
-    elif stretch == 'linear':
+    elif stretch == "linear":
         transform = LinearStretch()
     else:
         raise InvalidInputError("Stretch {} is not supported!".format(stretch))
@@ -97,8 +115,10 @@ def data_to_pitch(data_array, pitch_range=[100, 10000], center_pitch=440, zero_p
         transform += AsymmetricPercentileInterval(*minmax_percent)
 
         if minmax_value is not None:
-            warnings.warn("Both minmax_percent and minmax_value are set, minmax_value will be ignored.",
-                          InputWarning)
+            warnings.warn(
+                "Both minmax_percent and minmax_value are set, minmax_value will be ignored.",
+                InputWarning
+            )
     elif minmax_value is not None:
         transform += ManualInterval(*minmax_value)
     else:  # Default, scale the entire image range to [0,1]
@@ -121,12 +141,12 @@ def data_to_pitch(data_array, pitch_range=[100, 10000], center_pitch=440, zero_p
     # change user's choice here.  May want to consider providing info back to the user about the
     # distribution of pitches actually used based on their sonification options in some way.
     if zero_point == 0.0:
-        zero_point = 1E-6
+        zero_point = 1e-6
 
-    if ((1/zero_point)*(center_pitch - pitch_range[0]) + pitch_range[0]) <= pitch_range[1]:
-        pitch_array = (pitch_array/zero_point)*(center_pitch - pitch_range[0]) + pitch_range[0]
+    if (
+            (1 / zero_point) * (center_pitch - pitch_range[0]) + pitch_range[0]) <= pitch_range[1]:
+        pitch_array = (pitch_array / zero_point) * (center_pitch - pitch_range[0]) + pitch_range[0]
     else:
-        pitch_array = (((pitch_array-zero_point)/(1-zero_point))*(pitch_range[1] - center_pitch) +
-                       center_pitch)
+        pitch_array = (((pitch_array - zero_point) / (1 - zero_point)) * (pitch_range[1] - center_pitch) + center_pitch)
 
     return pitch_array
