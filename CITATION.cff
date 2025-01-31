@@ -11,7 +11,7 @@ authors:
   given-names: K.
 title: "Astronify: Astronomical data sonification"
 version: 0.11
-date-released: 2025-01-24
+date-released: 2025-01-31
 identifiers:
  - type: "ascl-id"
    value: "2408.005"

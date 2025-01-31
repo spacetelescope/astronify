@@ -71,3 +71,29 @@ TO-BE-FINALIZED
 
 - Update the "CHANGES.rst" file to add the new version, release date,
   and summary of what's changing in this version.
+
+- Make a final commit to the branch, doing things like double checking 
+  Python versions, release dates, spell check documentation files, 
+  etc. Commit the final release with: 
+
+.. code-block:: bash
+
+    $ git commit -m "Preparing release <version>"
+
+- Tag the commit with the version
+
+.. code-block:: bash
+
+    $ git tag -a <version> -m "Release version <version>"
+
+- Make sure the `build` package is up-to-date:
+
+.. code-block:: bash
+
+    $ python -m build --sdist --outdir dist .
+
+- Twine upload.
+
+.. code-block:: bash
+
+    twine upload dist/<my_package*.tar.gz>
