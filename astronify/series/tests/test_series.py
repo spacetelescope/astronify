@@ -119,5 +119,3 @@ class TestSoniSeries(object):
     # TODO: change args and test
 
     # TODO: test write
-
-
