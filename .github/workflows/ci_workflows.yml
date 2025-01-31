@@ -113,7 +113,7 @@ jobs:
       if: startsWith(matrix.os, 'ubuntu')
       run: sudo apt-get install portaudio19-dev libsndfile1-dev libportmidi-dev liblo-dev
     - name: Install Python dependencies
-      run: python -m pip install --upgrade tox codecov
+      run: python -m pip install --upgrade tox codecov sphinx_rtd_theme
     - name: Run tests
       run: tox ${{ matrix.toxargs }} -e ${{ matrix.toxenv }} -- ${{ matrix.toxposargs }}
     - name: Upload coverage to codecov
@@ -151,7 +151,6 @@ jobs:
       if: startsWith(matrix.os, 'ubuntu')
       run: sudo apt-get install portaudio19-dev libsndfile1-dev libportmidi-dev liblo-dev
     - name: Install Python dependencies
-      run: python -m pip install --upgrade tox codecov
+      run: python -m pip install --upgrade tox codecov sphinx_rtd_theme
     - name: Run tests
       run: tox ${{ matrix.toxargs }} -e ${{ matrix.toxenv }} -- ${{ matrix.toxposargs }}
-  
