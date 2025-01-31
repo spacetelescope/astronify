@@ -57,15 +57,6 @@ def test_pitchmap():
 
 
 class TestSoniSeries(object):
-
-#    @classmethod
-#    def setup_class(cls):
-
-#        cls.data = Table({"time": [0, 1, 2, 3, 4, 5, 6],
-#                          "Flux": [1, 2, 1, 2, 5, 3, np.nan]})
-
-#        cls.soni_obj = SoniSeries(cls.data)
-
     data = Table({"time": [0, 1, 2, 3, 4, 5, 6], "flux": [1, 2, 1, 2, 5, 3, np.nan]})
 
     # defaults
@@ -92,7 +83,9 @@ class TestSoniSeries(object):
         assert isinstance(self.soni_obj.server, Server)
 
     def test_nans_removed(self):
-        assert len(self.soni_obj.data) == len(self.data) - 1  # nan row should be removed
+        assert (
+            len(self.soni_obj.data) == len(self.data) - 1
+        )  # nan row should be removed
         assert ~np.isnan(self.soni_obj.data["flux"]).any()
 
     def test_flux_type_correct(self):
@@ -106,12 +99,16 @@ class TestSoniSeries(object):
         assert "asf_onsets" in self.soni_obj.data.colnames
 
     def test_sonify_metadata(self):
-        assert self.soni_obj.data.meta['asf_exposure_time'] == 1
-        assert self.soni_obj.data.meta['asf_note_duration'] == self.soni_obj.note_duration
-        assert self.soni_obj.data.meta['asf_spacing'] == self.soni_obj.note_spacing
+        assert self.soni_obj.data.meta["asf_exposure_time"] == 1
+        assert (
+            self.soni_obj.data.meta["asf_note_duration"] == self.soni_obj.note_duration
+        )
+        assert self.soni_obj.data.meta["asf_spacing"] == self.soni_obj.note_spacing
 
     def test_onset_spacing(self):
-        onset_spacing = self.soni_obj.data['asf_onsets'][1:]-self.soni_obj.data['asf_onsets'][:-1]
+        onset_spacing = (
+            self.soni_obj.data["asf_onsets"][1:] - self.soni_obj.data["asf_onsets"][:-1]
+        )
         assert (np.isclose(onset_spacing, self.soni_obj.note_spacing)).all()
 
     def test_pitch_min_max(self):
