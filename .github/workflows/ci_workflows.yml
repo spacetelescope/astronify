@@ -92,11 +92,6 @@ jobs:
             toxargs: -v --develop 
             toxposargs: -W error::ResourceWarning 
 
-          - name: Python 3.12.xx with numpy 1.24 and full coverage 
-            os: ubuntu-latest 
-            python: 3.12.8
-            toxenv: py312-test-alldeps-numpy124-cov 
-
           - name: Python 3.12.xx with numpy 2.10 and full coverage 
             os: ubuntu-latest 
             python: 3.12.8
