@@ -84,11 +84,12 @@ TO-BE-FINALIZED
 
     $ git commit -m "Preparing release <version>"
 
-- Tag the commit with the version
+- Tag the commit with the version, using the "v' in front of the tag,
+  even if the version in the __init__.py file does not.
 
 .. code-block:: bash
 
-    $ git tag -a <version> -m "Release version <version>"
+    $ git tag -a v<version> -m "Release version <version>"
 
 - Make sure the `build` package is up-to-date:
 

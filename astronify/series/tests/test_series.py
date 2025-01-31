@@ -58,13 +58,13 @@ def test_pitchmap():
 
 class TestSoniSeries(object):
 
-    @classmethod
-    def setup_class(cls):
+#    @classmethod
+#    def setup_class(cls):
 
-        cls.data = Table({"time": [0, 1, 2, 3, 4, 5, 6],
-                          "Flux": [1, 2, 1, 2, 5, 3, np.nan]})
+#        cls.data = Table({"time": [0, 1, 2, 3, 4, 5, 6],
+#                          "Flux": [1, 2, 1, 2, 5, 3, np.nan]})
 
-        cls.soni_obj = SoniSeries(cls.data)
+#        cls.soni_obj = SoniSeries(cls.data)
 
     data = Table({"time": [0, 1, 2, 3, 4, 5, 6], "flux": [1, 2, 1, 2, 5, 3, np.nan]})
 
