@@ -7,6 +7,8 @@ on:
     - py311
     tags:
   pull_request:
+    branches:
+    - main
 
 jobs:
   tests:
@@ -19,12 +21,12 @@ jobs:
 
           - name: Python 3.9.xx with minimal dependencies 
             os: ubuntu-latest 
-            python: 3.9.21
+            python: 3.9.21 
             toxenv: py39-test 
 
           - name: Python 3.9.xx with all optional dependencies 
             os: ubuntu-latest 
-            python: 3.9.21
+            python: 3.9.21 
             toxenv: py39-test-alldeps 
             toxargs: -v --develop 
             toxposargs: -W error::ResourceWarning 
@@ -57,26 +59,48 @@ jobs:
             toxenv: py310-test-alldeps-numpy210-cov 
 
           - name: Python 3.11.xx with minimal dependencies 
-            os: ubuntu-latest
-            python: 3.11.11
+            os: ubuntu-latest 
+            python: 3.11.11 
             toxenv: py311-test 
 
           - name: Python 3.11.xx with all optional dependencies 
-            os: ubuntu-latest
-            python: 3.11.11
+            os: ubuntu-latest 
+            python: 3.11.11 
             toxenv: py311-test-alldeps 
             toxargs: -v --develop 
             toxposargs: -W error::ResourceWarning 
 
           - name: Python 3.11.xx with numpy 1.24 and full coverage 
             os: ubuntu-latest 
-            python: 3.11.11
+            python: 3.11.11 
             toxenv: py311-test-alldeps-numpy124-cov 
 
           - name: Python 3.11.xx with numpy 2.10 and full coverage 
             os: ubuntu-latest 
-            python: 3.11.11
+            python: 3.11.11 
             toxenv: py311-test-alldeps-numpy210-cov 
+
+          - name: Python 3.12.xx with minimal dependencies 
+            os: ubuntu-latest 
+            python: 3.12.8
+            toxenv: py312-test 
+
+          - name: Python 3.12.xx with all optional dependencies 
+            os: ubuntu-latest 
+            python: 3.12.8
+            toxenv: py312-test-alldeps 
+            toxargs: -v --develop 
+            toxposargs: -W error::ResourceWarning 
+
+          - name: Python 3.12.xx with numpy 1.24 and full coverage 
+            os: ubuntu-latest 
+            python: 3.12.8
+            toxenv: py312-test-alldeps-numpy124-cov 
+
+          - name: Python 3.12.xx with numpy 2.10 and full coverage 
+            os: ubuntu-latest 
+            python: 3.12.8
+            toxenv: py312-test-alldeps-numpy210-cov 
 
     steps:
     - name: Checkout code

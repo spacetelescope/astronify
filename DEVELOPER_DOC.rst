@@ -62,6 +62,10 @@ Release Protocol
 
 TO-BE-FINALIZED
 
+- Update the ``ci_workflows.yml`` under ``.github/workflows/`` to
+  remove any inactive branches and add your new development branch,
+  under the ``push`` section towards the top of the file.
+
 - Update the __init__.py file under the "astronify/" folder to update
   the __version__ variable to match the upcoming release version. This
   should be specified as a string.
