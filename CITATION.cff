@@ -1,0 +1,20 @@
+cff-version: 1.1.0
+message: "Please cite the following works when using this software: https://ui.adsabs.harvard.edu/abs/2024ascl.soft08005B"
+authors:
+- family-names: Brasseur
+  given-names: C. E.
+- family-names: Fleming
+  given-names: S.
+- family-names: Kotler
+  given-names: J.
+- family-names: Meredith
+  given-names: K.
+title: "Astronify: Astronomical data sonification"
+version: 0.11
+date-released: 2025-01-31
+identifiers:
+ - type: "ascl-id"
+   value: "2408.005"
+ - type: "bibcode"
+   value: "2024ascl.soft08005B"
+abstract: "Astronify contains tools for sonifying astronomical data, specifically data series. Data series sonification takes a data table and maps one column to time, and one column to pitch. This technique is commonly used to sonify light curves, where observation time is scaled to listening time and flux is mapped to pitch. While Astronify’s sonification uses the columns “time” and “flux” by default, any two columns can be supplied and a sonification created."

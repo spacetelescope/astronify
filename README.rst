@@ -16,6 +16,10 @@ Sonification of astronomical data.
 .. image:: https://readthedocs.org/projects/astronify/badge/?version=latest
     :target: https://astronify.readthedocs.io/en/latest/?badge=latest
     :alt: Documentation Status
+
+.. image:: https://img.shields.io/badge/ascl-2408.005-blue.svg?colorB=262255
+    :target: https://ascl.net/2408.005
+    :alt: ascl:2408.005
     
 Tools for sonifying astronomical data.
 
@@ -33,73 +37,18 @@ Project Status
   :target: https://codecov.io/gh/spacetelescope/astronify
   :alt: Astronify's Codecov coverage status
 
-Developer Documentation
------------------------
+Getting Started
+---------------
+Install instructions: https://astronify.readthedocs.io/en/latest/astronify/install.html
 
-Installation
-^^^^^^^^^^^^
-
-.. code-block:: bash
-
-    $ git clone https://github.com/spacetelescope/astronify.git
-    $ cd astronify
-    $ pip install .
-
-For active development, install in develop mode
-
-.. code-block:: bash
-
-    $ pip install -e .
-
-
-Testing
-^^^^^^^
-Testing is run with `tox <https://tox.readthedocs.io>`_ (``pip install tox``).
-Tests can be found in ``tests/`` sub-directories.
-
-.. code-block:: bash
-
-    $ tox -e test
-
-Tests can also be run directly with pytest:
-
-.. code-block:: bash
-
-    $ pip install -e .[test]
-    $ pytest
-
- 
-
-Documentation
-^^^^^^^^^^^^^
-
-Documentation files are found in ``docs/``.
-
-We build the documentation with `tox <https://tox.readthedocs.io>`_ (``pip install tox``):
-
-.. code-block:: bash
-
-    $ tox -e build_docs
-
-You can also build the documentation with Sphinx directly using:
-
-.. code-block:: bash
-                
-    $ pip install -e .[docs]
-    $ cd docs
-    $ make html
-    
-The built docs will be in ``docs/_build/html/``, to view them go to ``file:///path/to/astronify/repo/docs/_build/html/index.html`` in the browser of your choice.
-
-
-Release Protocol
-^^^^^^^^^^^^^^^^
-
-Follow the `Astropy template release instructions <https://docs.astropy.org/en/stable/development/astropy-package-template.html>`_.          
-
+Tutorials: https://astronify.readthedocs.io/en/latest/astronify/tutorials.html
 
 Contributing
 ------------
+
+If you are a maintainer of the code, refer to the developer
+documentation (DEVELOPER_DOC.rst file) for guidelines on how to release a
+new version.
 
 We love contributions! Astronify is open source,
 built on open source, and we'd love to have you hang out in our community.

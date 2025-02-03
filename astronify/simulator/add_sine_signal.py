@@ -27,7 +27,7 @@ def add_sine_signal(times, fluxes, sine_amp, sine_period):
     """
 
     # Generate sinusoidal signal.
-    sine_signal = Sine1D(amplitude=sine_amp, frequency=1./sine_period)
+    sine_signal = Sine1D(amplitude=sine_amp, frequency=1.0 / sine_period)
 
     fluxes += sine_signal(times)
 

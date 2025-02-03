@@ -4,8 +4,11 @@ on:
   push:
     branches:
     - main
+    - py311
     tags:
   pull_request:
+    branches:
+    - main
 
 jobs:
   tests:
@@ -16,47 +19,106 @@ jobs:
       matrix:
         include:
 
-          - name: Python 3.8.13 with minimal dependencies
-            os: ubuntu-latest
-            python: 3.8.13
-            toxenv: py38-test
+          - name: Python 3.9.xx with minimal dependencies 
+            os: ubuntu-latest 
+            python: 3.9.21 
+            toxenv: py39-test 
 
-          - name: Python 3.8.13 with all optional dependencies
+          - name: Python 3.9.xx with all optional dependencies 
+            os: ubuntu-latest 
+            python: 3.9.21 
+            toxenv: py39-test-alldeps 
+            toxargs: -v --develop 
+            toxposargs: -W error::ResourceWarning 
+
+          - name: Python 3.9.xx with numpy 1.24 and full coverage 
+            os: ubuntu-latest 
+            python: 3.9.21
+            toxenv: py39-test-alldeps-numpy124-cov 
+
+          - name: Python 3.10.xx with minimal dependencies 
             os: ubuntu-latest
-            python: 3.8.13
-            toxenv: py38-test-alldeps
-            toxargs: -v --develop
-            toxposargs: --open-files
-            
-#          - name: Python 3.9.0 with all optional dependencies (Windows)
-#            os: windows-latest
-#            python: 3.9.0
-#            toxenv: py38-test-alldeps
-            
-#          - name: Python 3.8.13 with all optional dependencies (MacOS X)
-#            os: macos-latest
-#            python: 3.8.13
-#            toxenv: py38-test-alldeps
+            python: 3.10.16
+            toxenv: py310-test
+
+          - name: Python 3.10.xx with all optional dependencies 
+            os: ubuntu-latest 
+            python: 3.10.16
+            toxenv: py310-test-alldeps 
+            toxargs: -v --develop 
+            toxposargs: -W error::ResourceWarning 
+
+          - name: Python 3.10.xx with numpy 1.24 and full coverage 
+            os: ubuntu-latest 
+            python: 3.10.16
+            toxenv: py310-test-alldeps-numpy124-cov 
+
+          - name: Python 3.10.xx with numpy 2.10 and full coverage 
+            os: ubuntu-latest 
+            python: 3.10.16
+            toxenv: py310-test-alldeps-numpy210-cov 
+
+          - name: Python 3.11.xx with minimal dependencies 
+            os: ubuntu-latest 
+            python: 3.11.11 
+            toxenv: py311-test 
+
+          - name: Python 3.11.xx with all optional dependencies 
+            os: ubuntu-latest 
+            python: 3.11.11 
+            toxenv: py311-test-alldeps 
+            toxargs: -v --develop 
+            toxposargs: -W error::ResourceWarning 
+
+          - name: Python 3.11.xx with numpy 1.24 and full coverage 
+            os: ubuntu-latest 
+            python: 3.11.11 
+            toxenv: py311-test-alldeps-numpy124-cov 
+
+          - name: Python 3.11.xx with numpy 2.10 and full coverage 
+            os: ubuntu-latest 
+            python: 3.11.11 
+            toxenv: py311-test-alldeps-numpy210-cov 
+
+          - name: Python 3.12.xx with minimal dependencies 
+            os: ubuntu-latest 
+            python: 3.12.8
+            toxenv: py312-test 
+
+          - name: Python 3.12.xx with all optional dependencies 
+            os: ubuntu-latest 
+            python: 3.12.8
+            toxenv: py312-test-alldeps 
+            toxargs: -v --develop 
+            toxposargs: -W error::ResourceWarning 
+
+          - name: Python 3.12.xx with numpy 2.10 and full coverage 
+            os: ubuntu-latest 
+            python: 3.12.8
+            toxenv: py312-test-alldeps-numpy210-cov 
 
     steps:
     - name: Checkout code
-      uses: actions/checkout@v2
+      uses: actions/checkout@d632683dd7b4114ad314bca15554477dd762a938  # v4.2.0
       with:
         fetch-depth: 0
     - name: Set up Python
-      uses: actions/setup-python@v2
+      uses: actions/setup-python@f677139bbe7f9c59b41e40162b753c062f5d49a3  # v5.2.0
       with:
         python-version: ${{ matrix.python }}
     - name: Install language-pack-de and tzdata
       if: startsWith(matrix.os, 'ubuntu')
       run: sudo apt-get install language-pack-de tzdata
+    - name: Install pyo dependencies
+      if: startsWith(matrix.os, 'ubuntu')
+      run: sudo apt-get install portaudio19-dev libsndfile1-dev libportmidi-dev liblo-dev
     - name: Install Python dependencies
       run: python -m pip install --upgrade tox codecov sphinx_rtd_theme
     - name: Run tests
       run: tox ${{ matrix.toxargs }} -e ${{ matrix.toxenv }} -- ${{ matrix.toxposargs }}
     - name: Upload coverage to codecov
       if: ${{ contains(matrix.toxenv,'-cov') }}
-      uses: codecov/codecov-action@v2
+      uses: codecov/codecov-action@e28ff129e5465c2c0dcc6f003fc735cb6ae0c673  # v4.5.0
       with:
         file: ./coverage.xml
 
@@ -68,23 +130,26 @@ jobs:
       matrix:
         include:
 
-          - name: Code style checks
+          - name: (Allowed Failure) Python 3.11 with dev version of key dependencies
             os: ubuntu-latest
-            python: 3.x
-            toxenv: codestyle
+            python: 3.11
+            toxenv: py311-test-devdeps
 
     steps:
     - name: Checkout code
-      uses: actions/checkout@v2
+      uses: actions/checkout@d632683dd7b4114ad314bca15554477dd762a938  # v4.2.0
       with:
         fetch-depth: 0
     - name: Set up Python
-      uses: actions/setup-python@v2
+      uses: actions/setup-python@f677139bbe7f9c59b41e40162b753c062f5d49a3  # v5.2.0
       with:
         python-version: ${{ matrix.python }}
     - name: Install language-pack-de and tzdata
       if: startsWith(matrix.os, 'ubuntu')
       run: sudo apt-get install language-pack-de tzdata
+    - name: Install pyo dependencies
+      if: startsWith(matrix.os, 'ubuntu')
+      run: sudo apt-get install portaudio19-dev libsndfile1-dev libportmidi-dev liblo-dev
     - name: Install Python dependencies
       run: python -m pip install --upgrade tox codecov sphinx_rtd_theme
     - name: Run tests

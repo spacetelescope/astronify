@@ -52,7 +52,7 @@ def add_flare_signal(fluxes, flare_time, flare_amp, flare_halfwidth):
     # Where "n" = 6 in Davenport et al., where the decay phase is defined from
     # t_1/2 = [0,6], but we will choose to extend to the end of the light curve
     # so that the decay gets as close to zero as possible.
-    n_t12 = int((fluxes_to_add.shape[0] + 1 - flare_time)/flare_halfwidth)
+    n_t12 = int((fluxes_to_add.shape[0] + 1 - flare_time) / flare_halfwidth)
 
     # Create the normalized part of the rise time.
     # In the Davenport et al. flare template, the rise part of the flare
@@ -71,12 +71,17 @@ def add_flare_signal(fluxes, flare_time, flare_amp, flare_halfwidth):
     #  [flare_time-flare_halfwidth+1 : flare_time]
 
     # Generate indices in "t_1/2" units.
-    t12_rise_indices = np.linspace(-1., 0., flare_halfwidth)
+    t12_rise_indices = np.linspace(-1.0, 0.0, flare_halfwidth)
     # Compute fluxes for the rise part.
-    rise_fluxes = (1. + 1.941*t12_rise_indices - 0.175*t12_rise_indices**2. -
-                   2.246*t12_rise_indices**3. - 1.125*t12_rise_indices**4.)
+    rise_fluxes = (
+        1.0
+        + 1.941 * t12_rise_indices
+        - 0.175 * t12_rise_indices**2.0
+        - 2.246 * t12_rise_indices**3.0
+        - 1.125 * t12_rise_indices**4.0
+    )
     # Insert these fluxes into the correct location in our light curve.
-    fluxes_to_add[flare_time-flare_halfwidth+1:flare_time+1] = rise_fluxes
+    fluxes_to_add[flare_time - flare_halfwidth + 1 : flare_time + 1] = rise_fluxes
 
     # Create the normalized part of the decay time.
     # In Davenport et al., they define their Eqn. 4 from t_1/2 = [0, 6].
@@ -91,16 +96,17 @@ def add_flare_signal(fluxes, flare_time, flare_amp, flare_halfwidth):
     #  [flare_time : flare_time + n*flare_halfwidth-1
 
     # Generate indices in "t_1/2" units.
-    t12_decay_indices = np.linspace(0., n_t12, n_t12*flare_halfwidth)
-    
+    t12_decay_indices = np.linspace(0.0, n_t12, n_t12 * flare_halfwidth)
+
     # Compute fluxes for the decay part.
-    decay_fluxes = (0.6890*np.exp(-1.600*t12_decay_indices) +
-                    0.3030*np.exp(-0.2783*t12_decay_indices))
-    
+    decay_fluxes = 0.6890 * np.exp(-1.600 * t12_decay_indices) + 0.3030 * np.exp(
+        -0.2783 * t12_decay_indices
+    )
+
     # Insert these fluxes into the correct location in our light curve.
     # Note: the above index range is correct, but in Python you need to go one
     # extra when slicing, hence 6*flare_halfwidth-1+1 = 6*flare_halfwidth...
-    fluxes_to_add[flare_time: flare_time+n_t12*flare_halfwidth] = decay_fluxes
+    fluxes_to_add[flare_time : flare_time + n_t12 * flare_halfwidth] = decay_fluxes
 
     # Scale the fluxes to add (which are normalized at this point) by 'flare_amp'
     fluxes_to_add *= flare_amp
