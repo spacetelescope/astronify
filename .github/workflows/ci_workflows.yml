@@ -4,7 +4,7 @@ on:
   push:
     branches:
     - main
-    - py311
+    - 0.11.1
     tags:
   pull_request:
     branches:

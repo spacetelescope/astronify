@@ -1,3 +1,11 @@
+0.11.1 (2025-02-14)
+-------------------
+
+- Adds full suite of unit tests to the simulator package. Replaces
+  some checks for presence of expected columns in the data table
+  within series.py. Fixes unintentional drop of author Jennifer Medina
+  from setup.cfg.
+
 0.11 (2025-01-31)
 ----------------
 
