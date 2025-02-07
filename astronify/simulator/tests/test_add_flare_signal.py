@@ -81,10 +81,10 @@ Test cases that result in return arrays:
 5. [TODO pending Issue #83] a float for flare_halfwidth that can be converted to an int is handled
 
 Test cases that result in exceptions being thrown:
-1. a negative value for flare_amp is submitted
-2. a negative value for flare_halfwidth is submitted
-3. a float for flare_halfwidth that can not be converted throws an exception
-4. a flare_halfwidth of 0 is submitted
+1. [TODO pending Issue #85] a negative value for flare_amp is submitted
+2. [TODO pending Issue #85] a negative value for flare_halfwidth is submitted
+3. [TODO pending Issue #83] a float for flare_halfwidth that can not be converted throws an exception
+4. [TODO pending Issue #85] a flare_halfwidth of 0 is submitted
 """
 
 
