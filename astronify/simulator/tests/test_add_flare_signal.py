@@ -87,6 +87,7 @@ Test cases that result in exceptions being thrown:
 4. a flare_halfwidth of 0 is submitted
 """
 
+
 @pytest.mark.parametrize(
     "flare_time, flare_amp, flare_halfwidth, expected_result",
     [
@@ -96,12 +97,11 @@ Test cases that result in exceptions being thrown:
         (5, 0.0, 5, all_ones),
     ],
 )
-
 def test_add_flare_signal(flare_time, flare_amp, flare_halfwidth, expected_result):
     assert np.allclose(
         add_flare_signal(fluxes, flare_time, flare_amp, flare_halfwidth),
         expected_result,
         atol=0,
-        rtol=1E-8,
-        equal_nan=True
+        rtol=1e-8,
+        equal_nan=True,
     )
