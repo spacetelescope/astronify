@@ -32,7 +32,7 @@ def add_flare_signal(fluxes, flare_time, flare_amp, flare_halfwidth):
 
     :param flare_halfwidth: The flare half-width (measured in indices) that
     corresponds to "t_1/2" in the Davenport et al. flare template.
-    :type flare_halfwidth: index
+    :type flare_halfwidth: int
 
     :returns: numpy.ndarray -- The fluxes with the flare signal added.
     """
