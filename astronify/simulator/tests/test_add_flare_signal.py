@@ -12,6 +12,7 @@ from astronify.simulator.add_flare_signal import add_flare_signal
 fluxes = np.asarray([1.] * 100)
 all_ones = np.asarray([1.] * len(fluxes))
 # params used for below: flare_time = 5, flare_amp = 100., flare_halfwidth = 5
+#fmt: off
 flare_within_window = np.asarray(
     [
         1.,   1.5,   4.73867187,  20.61875,
@@ -41,7 +42,10 @@ flare_within_window = np.asarray(
         1.18126488,   1.17134983,   1.16197712,   1.1531171
     ]
 )
+#fmt: on
+
 # params used for below: flare_time = -10, flare_amp = 100., flare_halfwidth = 5
+#fmt: off
 flare_partialwithin_window = np.asarray(
     [
         21.00538825, 19.30895006, 17.87178393, 16.63374721, 15.55067206,
@@ -66,6 +70,7 @@ flare_partialwithin_window = np.asarray(
         1.08317822,  1.07863484,  1.07433964,  1.07027904,  1.06644025
     ]
 )
+#fmt: on
 
 """
 Test cases that result in return arrays:
