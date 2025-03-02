@@ -5,6 +5,9 @@
 .. moduleauthor:: Scott W. Fleming <fleming@stsci.edu>
 """
 
+import numpy as np
+import warnings
+from astronify.utils.exceptions import InputWarning
 from astropy.modeling.models import Sine1D
 
 
@@ -27,8 +30,14 @@ def add_sine_signal(times, fluxes, sine_amp, sine_period):
     """
 
     # Generate sinusoidal signal.
-    sine_signal = Sine1D(amplitude=sine_amp, frequency=1.0 / sine_period)
+    if sine_amp > 0.:
+        sine_signal = Sine1D(amplitude=sine_amp, frequency=1.0 / sine_period)
+        fluxes_to_add = sine_signal(times)
+    elif sine_amp == 0:
+        warnings.warn(
+            "Warning: requested to add a single signal of zero amplitude.",
+            InputWarning
+        )
+        fluxes_to_add = np.asarray([0.0] * len(fluxes))
 
-    fluxes += sine_signal(times)
-
-    return fluxes
+    return fluxes + fluxes_to_add
