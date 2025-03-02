@@ -1,5 +1,5 @@
 """
-.. module:: test_add_flare_signal
+.. module:: test_add_sine_signal
    :synopsis: Regression tests for add_sine_signal
 
 .. moduleauthor:: Scott W. Fleming

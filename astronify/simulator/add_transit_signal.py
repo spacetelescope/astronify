@@ -33,6 +33,9 @@ def add_transit_signal(
     :returns: numpy.ndarray -- The fluxes with the transit signal added.
     """
 
+    # Array holding the flux fractions to multiply the input flux by due to the transit.
+    mod_flux_factors = np.asarray([1.0] * fluxes.size)
+
     # Get length of the flux array.
     n_fluxes = fluxes.size
 
@@ -43,12 +46,16 @@ def add_transit_signal(
     start_indexes = np.arange(transit_start, n_fluxes + 1, transit_period, dtype=int)
     # Set transit indexes to 1.
     for st_ind in start_indexes:
-        if st_ind + transit_width < fluxes.size:
-            transit_indexes[st_ind : st_ind + transit_width + 1] = 1
-        else:
-            transit_indexes[st_ind:] = 1
+        if st_ind >= 0:
+            if st_ind + transit_width < fluxes.size:
+                transit_indexes[st_ind : st_ind + transit_width] = 1
+            else:
+                transit_indexes[st_ind:] = 1
+        elif st_ind > -1 * transit_width:
+            # This is a negative start index that will result in a partial transit at the start.
+            transit_indexes[0 : transit_width + st_ind] = 1
 
-    # Set the flux values of the transit indexes to the transit depth.
-    fluxes[np.where(transit_indexes == 1)] *= 1.0 - (transit_depth / 100.0)
+    # Calculate the flux fractions to multiply by to modify the fluxes due to the transit.
+    mod_flux_factors[np.where(transit_indexes == 1)] = 1.0 - (transit_depth / 100.0)
 
-    return fluxes
+    return fluxes * mod_flux_factors
