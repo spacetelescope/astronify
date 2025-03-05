@@ -35,14 +35,6 @@ def check_flare_params(n_fluxes, flare_time, flare_amp):
             + "."
         )
 
-    # Flare time index must be greater than or equal to zero.
-    if flare_time < 0:
-        raise argparse.ArgumentTypeError(
-            "The flare time at peak flux must be"
-            " greater than or equal to zero, flare"
-            " time requested is " + str(flare_time) + "."
-        )
-
     # The flare amplitude must be greater than zero.
     if flare_amp <= 0.0:
         raise argparse.ArgumentTypeError(
