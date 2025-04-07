@@ -7,11 +7,15 @@ authors:
   given-names: S.
 - family-names: Kotler
   given-names: J.
-- family-names: Meredith
-  given-names: K.
+- family-names: Meredith  
+  given-names: K.  
+- family-names: Medina
+  given-names: J.
+- family-names: Lim 
+  given-names: P.-L.
 title: "Astronify: Astronomical data sonification"
-version: 0.11
-date-released: 2025-01-31
+version: 0.11.1
+date-released: 2025-02-14
 identifiers:
  - type: "ascl-id"
    value: "2408.005"

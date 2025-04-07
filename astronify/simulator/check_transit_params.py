@@ -41,14 +41,6 @@ def check_transit_params(n_fluxes, transit_period, transit_start, transit_width)
             + "."
         )
 
-    # The start index must be greater than or equal to zero.
-    if transit_start < 0:
-        raise argparse.ArgumentTypeError(
-            "The transit start must be greater than"
-            " or equal to zero, start"
-            " index requested is " + str(transit_start) + "."
-        )
-
     # The transit period must be greater than the transit duration (width).
     if transit_width >= transit_period:
         raise argparse.ArgumentTypeError(
