@@ -456,7 +456,7 @@ class SoniSeries:
                 except:
                     pass
 
-    def play_notebook(self):
+    def play_in_notebook(self):
         """
         Alternative play method for notebooks that uses IPython.display.Audio
         instead of Pyo. This should be much more stable in notebook environments.
