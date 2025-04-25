@@ -295,7 +295,7 @@ class SoniSeries:
             delay=list(delays), dur=duration
         )
 
-    def play_notebook(self):
+    def play_in_notebook(self):
         """
         Play the sonification in a Jupyter notebook using IPython.display.Audio
         This matches the original Pyo implementation but uses standard Python libraries.
