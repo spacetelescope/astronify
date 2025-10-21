@@ -313,25 +313,25 @@ class SoniSeries:
         try:
             from IPython.display import Audio, display
             import numpy as np
-            
+
             # Sample rate
             sr = 44100
-            
+
             # Get data from the same source as the original play method
             duration = self.data.meta["asf_note_duration"]
-            
+
             # Repeat pitches and onsets exactly as in the original method
             pitches = np.repeat(self.data["asf_pitch"], 2)
             onsets = np.repeat(self.data["asf_onsets"], 2)
-            
+
             # Calculate total audio length needed
             max_onset = max(onsets)
             total_duration = max_onset + duration + 0.5  # Add padding
             total_samples = int(sr * total_duration)
-            
+
             # Create the audio buffer
             audio_buffer = np.zeros(total_samples)
-            
+
             # Create an envelope function that matches the original Pyo Linseg envelope
             def create_envelope(duration_samples):
                 # Convert time points to sample indices
@@ -339,65 +339,67 @@ class SoniSeries:
                 sustain_end = int((duration - 0.1) * sr)
                 fade_mid = int((duration - 0.05) * sr)
                 fade_end = int((duration - 0.005) * sr)
-                
+
                 # Initialize envelope array
                 env = np.zeros(duration_samples)
-                
+
                 # Attack phase: 0 to 0.01s (0 to 1)
                 if attack_end > 0:
                     env[:attack_end] = np.linspace(0, 1, attack_end)
-                
+
                 # Sustain phase: 0.01s to (duration-0.1)s (value 1)
                 if sustain_end > attack_end:
                     env[attack_end:sustain_end] = 1.0
-                
+
                 # First fade phase: (duration-0.1)s to (duration-0.05)s (1 to 0.5)
                 if fade_mid > sustain_end:
-                    env[sustain_end:fade_mid] = np.linspace(1, 0.5, fade_mid - sustain_end)
-                
+                    env[sustain_end:fade_mid] = np.linspace(
+                        1, 0.5, fade_mid - sustain_end
+                    )
+
                 # Final fade phase: (duration-0.05)s to (duration-0.005)s (0.5 to 0)
                 if fade_end > fade_mid:
                     env[fade_mid:fade_end] = np.linspace(0.5, 0, fade_end - fade_mid)
-                
+
                 # Ensure zeros at the end
                 if duration_samples > fade_end:
                     env[fade_end:] = 0
-                    
+
                 return env
-            
+
             # For each note
             for pitch, onset in zip(pitches, onsets):
                 # Convert onset time to sample index
                 onset_sample = int(onset * sr)
-                
+
                 # Duration in samples
                 duration_samples = int(duration * sr)
-                
+
                 # Generate sine wave
                 t = np.linspace(0, duration, duration_samples)
                 sine_wave = np.sin(2 * np.pi * pitch * t)
-                
+
                 # Apply envelope and gain
                 envelope = create_envelope(duration_samples)
                 sine_wave = sine_wave * envelope * self.gain
-                
+
                 # Add to buffer (with bounds checking)
                 end_sample = min(onset_sample + duration_samples, total_samples)
                 if end_sample > onset_sample:
                     audio_length = end_sample - onset_sample
                     audio_buffer[onset_sample:end_sample] += sine_wave[:audio_length]
-            
+
             # Normalize to prevent clipping
             max_val = np.max(np.abs(audio_buffer))
             if max_val > 0:
                 audio_buffer = audio_buffer / max_val * 0.9
-            
+
             # Display the audio widget
             display(Audio(audio_buffer, rate=sr))
-            
+
         except Exception as e:
             print(f"Error generating audio: {e}")
-            
+
     def stop(self):
         """
         Stop playing the data sonification.
