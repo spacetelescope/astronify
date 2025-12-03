@@ -99,11 +99,11 @@ jobs:
 
     steps:
     - name: Checkout code
-      uses: actions/checkout@ff7abcd0c3c05ccf6adc123a8cd1fd4fb30fb493  # v4.2.0
+      uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd  # v4.2.0
       with:
         fetch-depth: 0
     - name: Set up Python
-      uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065  # v5.6.0
+      uses: actions/setup-python@83679a892e2d95755f2dac6acb0bfd1e9ac5d548  # v6.1.0
       with:
         python-version: ${{ matrix.python }}
     - name: Install pyo dependencies
@@ -115,7 +115,7 @@ jobs:
       run: tox ${{ matrix.toxargs }} -e ${{ matrix.toxenv }} -- ${{ matrix.toxposargs }}
     - name: Upload coverage to codecov
       if: ${{ contains(matrix.toxenv,'-cov') }}
-      uses: codecov/codecov-action@fdcc8476540edceab3de004e990f80d881c6cc00  # v5.5.0
+      uses: codecov/codecov-action@5a1091511ad55cbe89839c7260b706298ca349f7  # v5.5.1
       with:
         token: ${{ secrets.CODECOV_TOKEN }}
 
@@ -134,11 +134,11 @@ jobs:
 
     steps:
     - name: Checkout code
-      uses: actions/checkout@ff7abcd0c3c05ccf6adc123a8cd1fd4fb30fb493  # v4.2.0
+      uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd  # v4.2.0
       with:
         fetch-depth: 0
     - name: Set up Python
-      uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065  # v5.6.0
+      uses: actions/setup-python@83679a892e2d95755f2dac6acb0bfd1e9ac5d548  # v6.1.0
       with:
         python-version: ${{ matrix.python }}
     - name: Install pyo dependencies
