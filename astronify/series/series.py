@@ -79,7 +79,7 @@ class PitchMap:
 
     def __call__(self, data):
         """
-        Where does this show up?
+        Apply the pitch mapping function to the data.
         """
         self._check_func_args()
         return self.pitch_map_func(data, **self.pitch_map_args)
@@ -115,6 +115,25 @@ class PitchMap:
 
 
 class SoniSeries:
+    # Default audio configuration parameters
+    AUDIO_CONFIG = {
+        # Envelope parameters for playback
+        "play_envelope": [
+            (0, 0),  # Start at silence
+            (0.01, 1),  # Quick attack to full volume
+            ("dur-0.1", 1),  # Hold at full volume until near end
+            ("dur-0.05", 0.5),  # Start release
+            ("dur-0.005", 0),  # End with silence
+        ],
+        # Envelope parameters for writing to file
+        "write_envelope": [
+            (0, 0),  # Start at silence
+            (0.1, 1),  # Slower attack for files
+            ("dur-0.1", 1),  # Hold at full volume until near end
+            ("dur-0.05", 0.5),  # Start release
+            ("dur-0.005", 0),  # End with silence
+        ],
+    }
 
     def __init__(self, data, time_col="time", val_col="flux", preview_type="scan"):
         """
@@ -150,9 +169,80 @@ class SoniSeries:
         self.preview_object = SeriesPreviews(self)
         self._init_pyo()
 
+    def __enter__(self):
+        """
+        Context manager entry point - ensures server is ready.
+        """
+        return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        """
+        Context manager exit - clean up resources.
+        """
+        self.stop()
+        if hasattr(self, 'server') and self.server is not None:
+            if self.server.getIsBooted():
+                self.server.shutdown()
+        return False  # Don't suppress exceptions
+
     def _init_pyo(self):
-        self.server = pyo.Server()
+        """Initialize the pyo audio server with safer defaults."""
+        self.server = pyo.Server(
+            sr=44100,  # Standard sample rate
+            nchnls=1,  # Mono output (safer than stereo)
+            buffersize=512,  # Smaller buffer size
+            duplex=0,  # Don't try to use audio input
+            audio='portaudio',  # Use the most compatible audio backend
+            midi='none',  # Don't try to use MIDI
+        )
         self.streams = None
+
+    def _prepare_audio_data(self):
+        """
+        Common helper method to prepare audio data for playback or writing.
+        Returns duration, pitches, and onsets data.
+        """
+        # Get values from metadata
+        duration = self.data.meta["asf_note_duration"]
+
+        # Prepare data for audio generation
+        pitches = np.repeat(self.data["asf_pitch"], 2)
+        onsets = np.repeat(self.data["asf_onsets"], 2)
+
+        return duration, pitches, onsets
+
+    def _create_envelope(self, duration, n_pitches, envelope_type="play_envelope"):
+        """
+        Create an envelope for audio based on the specified type.
+
+        Parameters
+        ----------
+        duration : float
+            The duration of each note in seconds
+        n_pitches : int
+            The number of pitches to create envelopes for
+        envelope_type : str
+            The type of envelope to use from AUDIO_CONFIG
+
+        Returns
+        -------
+        pyo.Linseg
+            The envelope object
+        """
+        # Get envelope points from config
+        env_points = []
+        for point in self.AUDIO_CONFIG[envelope_type]:
+            # Process time points that are relative to duration
+            if isinstance(point[0], str) and point[0].startswith("dur"):
+                # Parse relative time points (e.g., "dur-0.1" becomes duration-0.1)
+                time_expr = point[0].replace("dur", str(duration))
+                time_val = eval(time_expr)
+                env_points.append((time_val, point[1]))
+            else:
+                env_points.append(point)
+
+        # Create the envelope
+        return pyo.Linseg(list=env_points, mul=[self.gain for _ in range(n_pitches)])
 
     @property
     def data(self):
@@ -192,7 +282,7 @@ class SoniSeries:
 
     @property
     def time_col(self):
-        """The data column mappend to time when sonifying."""
+        """The data column mapped to time when sonifying."""
         return self._time_col
 
     @time_col.setter
@@ -202,7 +292,7 @@ class SoniSeries:
 
     @property
     def val_col(self):
-        """The data column mappend to putch when sonifying."""
+        """The data column mapped to pitch when sonifying."""
         return self._val_col
 
     @val_col.setter
@@ -274,36 +364,41 @@ class SoniSeries:
     def play(self):
         """
         Play the data sonification.
+
+        The sonification will play asynchronously. Use stop() to stop playback
+        before completion.
         """
+        try:
+            # Safely handle server startup
+            if self.server.getIsBooted():
+                try:
+                    self.stop()
+                except:
+                    self.server.shutdown()
+                    self._init_pyo()
 
-        # Making sure we have a clean server
-        if self.server.getIsBooted():
-            self.server.shutdown()
+            # Boot and start server
+            self.server.boot()
+            self.server.start()
 
-        self.server.boot()
-        self.server.start()
+            # Prepare the audio data
+            duration, pitches, onsets = self._prepare_audio_data()
 
-        # Getting data ready
-        duration = self.data.meta["asf_note_duration"]
-        pitches = np.repeat(self.data["asf_pitch"], 2)
-        delays = np.repeat(self.data["asf_onsets"], 2)
+            # Create envelope
+            env = self._create_envelope(
+                duration=duration, n_pitches=len(pitches), envelope_type="play_envelope"
+            ).play(delay=list(onsets), dur=duration)
 
-        # TODO: This doesn't seem like the best way to do this, but I don't know
-        # how to make it better
-        env = pyo.Linseg(
-            list=[
-                (0, 0),
-                (0.01, 1),
-                (duration - 0.1, 1),
-                (duration - 0.05, 0.5),
-                (duration - 0.005, 0),
-            ],
-            mul=[self.gain for i in range(len(pitches))],
-        ).play(delay=list(delays), dur=duration)
+            # Create audio stream
+            self.streams = pyo.Sine(list(pitches), 0, env).out(
+                delay=list(onsets), dur=duration
+            )
 
-        self.streams = pyo.Sine(list(pitches), 0, env).out(
-            delay=list(delays), dur=duration
-        )
+            return self
+
+        except Exception as e:
+            print(f"Audio playback error: {e}")
+            return self
 
     def play_in_notebook(self):
         """
@@ -404,7 +499,13 @@ class SoniSeries:
         """
         Stop playing the data sonification.
         """
-        self.streams.stop()
+        if self.streams is not None:
+            if isinstance(self.streams, list):
+                for stream in self.streams:
+                    if hasattr(stream, 'stop'):
+                        stream.stop()
+            elif hasattr(self.streams, 'stop'):
+                self.streams.stop()
 
     def write(self, filepath):
         """
@@ -416,38 +517,119 @@ class SoniSeries:
         filepath : str
             The path to the output file.
         """
+        try:
+            # Prepare the audio data
+            duration, pitches, onsets = self._prepare_audio_data()
 
-        # Getting data ready
-        duration = self.data.meta["asf_note_duration"]
-        pitches = np.repeat(self.data["asf_pitch"], 2)
-        delays = np.repeat(self.data["asf_onsets"], 2)
+            # Making sure we have a clean server
+            if self.server.getIsBooted():
+                self.server.shutdown()
 
-        # Making sure we have a clean server
-        if self.server.getIsBooted():
+            # Initialize offline server for rendering
+            self.server.reinit(audio="offline")
+            self.server.boot()
+
+            # Configure recording options
+            max_onset = max(onsets) if len(onsets) > 0 else 0
+            self.server.recordOptions(dur=max_onset + duration, filename=filepath)
+
+            # Create envelope with slightly different parameters for file output
+            env = self._create_envelope(
+                duration=duration,
+                n_pitches=len(pitches),
+                envelope_type="write_envelope",
+            ).play(delay=list(onsets), dur=duration)
+
+            # Create and play the sound
+            sine = pyo.Sine(list(pitches), 0, env).out(delay=list(onsets), dur=duration)
+
+            # Start rendering
+            self.server.start()
+
+            # Clean up
             self.server.shutdown()
+            self.server.reinit(audio="portaudio")
 
-        self.server.reinit(audio="offline")
-        self.server.boot()
-        self.server.recordOptions(dur=delays[-1] + duration, filename=filepath)
+        except Exception as e:
+            print(f"Error writing audio file: {e}")
 
-        env = pyo.Linseg(
-            list=[
-                (0, 0),
-                (0.1, 1),
-                (duration - 0.1, 1),
-                (duration - 0.05, 0.5),
-                (duration - 0.005, 0),
-            ],
-            mul=[self.gain for i in range(len(pitches))],
-        ).play(delay=list(delays), dur=duration)
-        sine = pyo.Sine(list(pitches), 0, env).out(
-            delay=list(delays), dur=duration
-        )  # noqa: F841
-        self.server.start()
+            # Try to clean up in case of error
+            if hasattr(self, 'server') and self.server is not None:
+                try:
+                    self.server.shutdown()
+                    self.server.reinit(audio="portaudio")
+                except:
+                    pass
 
-        # Clean up
-        self.server.shutdown()
-        self.server.reinit(audio="portaudio")
+    def play_in_notebook(self):
+        """
+        Alternative play method for notebooks that uses IPython.display.Audio
+        instead of Pyo. This should be much more stable in notebook environments.
+        """
+        try:
+            from IPython.display import Audio, display
+            import numpy as np
+
+            # Sample rate
+            sr = 44100
+
+            # Prepare the audio data
+            duration, _, _ = self._prepare_audio_data()
+            pitches = self.data["asf_pitch"].tolist()
+            onsets = self.data["asf_onsets"].tolist()
+
+            # Calculate the total duration
+            max_onset = max(onsets) if onsets else 0
+            total_duration = max_onset + duration + 0.5  # Add padding
+
+            # Create the audio buffer
+            audio_buffer = np.zeros(int(sr * total_duration))
+
+            # Generate a simple envelope function
+            def generate_envelope(duration_samples):
+                attack = int(0.01 * sr)  # 10ms attack
+                release = int(0.05 * sr)  # 50ms release
+                sustain = duration_samples - attack - release
+
+                env = np.zeros(duration_samples)
+                # Attack
+                env[:attack] = np.linspace(0, 1, attack)
+                # Sustain
+                env[attack : attack + sustain] = 1
+                # Release
+                env[attack + sustain :] = np.linspace(1, 0, release)
+                return env
+
+            # For each note in the data
+            for pitch, onset in zip(pitches, onsets):
+                # Convert onset to samples
+                onset_sample = int(onset * sr)
+                # Calculate note duration in samples
+                duration_samples = int(duration * sr)
+
+                # Generate sine wave
+                t = np.linspace(0, duration, duration_samples)
+                sine = np.sin(2 * np.pi * pitch * t)
+
+                # Apply envelope
+                sine = sine * generate_envelope(duration_samples) * self.gain
+
+                # Add to buffer
+                end_sample = min(onset_sample + duration_samples, len(audio_buffer))
+                buffer_segment = audio_buffer[onset_sample:end_sample]
+                sine_segment = sine[: len(buffer_segment)]
+                audio_buffer[onset_sample:end_sample] += sine_segment
+
+            # Normalize to prevent clipping
+            max_val = np.max(np.abs(audio_buffer))
+            if max_val > 0:
+                audio_buffer = audio_buffer / max_val * 0.9
+
+            # Display the audio widget
+            display(Audio(audio_buffer, rate=sr))
+
+        except Exception as e:
+            print(f"Error generating audio: {e}")
 
 
 class SeriesPreviews:
@@ -678,36 +860,23 @@ class SeriesPreviews:
             else pyo.Cos(e, mul=float(self.amplitudes[4]))
         )
 
-        self.stream1 = pyo.Sine(
-            freq=[self.pitch_values[0], self.pitch_values[0]], mul=lfo1
-        ).out(delay=self.delays[0], dur=2.0)
-        self.stream2 = pyo.Sine(
-            freq=[self.pitch_values[1], self.pitch_values[1]], mul=lfo2
-        ).out(delay=self.delays[1], dur=2.0)
-        self.stream3 = pyo.Sine(
-            freq=[self.pitch_values[2], self.pitch_values[2]], mul=lfo3
-        ).out(delay=self.delays[2], dur=2.0)
-        self.stream4 = pyo.Sine(
-            freq=[self.pitch_values[3], self.pitch_values[3]], mul=lfo4
-        ).out(delay=self.delays[3], dur=2.0)
-        self.stream5 = pyo.Sine(
-            freq=[self.pitch_values[4], self.pitch_values[4]], mul=lfo5
-        ).out(delay=self.delays[4], dur=2.0)
+        # Create streams using list comprehension
+        stream_info = [
+            (self.pitch_values[i], self.delays[i], 2.0, lfo)
+            for i, lfo in enumerate([lfo1, lfo2, lfo3, lfo4, lfo5])
+        ]
+
+        self.streams = []
+        for pitch, delay, dur, lfo in stream_info:
+            stream = pyo.Sine(freq=[pitch, pitch], mul=lfo).out(delay=delay, dur=dur)
+            self.streams.append(stream)
 
         # All together, if in ensemble mode.
         if self._soniseries.preview_type == "ensemble":
-            self.stream6 = pyo.Sine(
-                freq=[self.pitch_values[0], self.pitch_values[0]], mul=lfo1
-            ).out(delay=10, dur=4)
-            self.stream7 = pyo.Sine(
-                freq=[self.pitch_values[1], self.pitch_values[1]], mul=lfo2
-            ).out(delay=10, dur=4)
-            self.stream8 = pyo.Sine(
-                freq=[self.pitch_values[2], self.pitch_values[2]], mul=lfo3
-            ).out(delay=10, dur=4)
-            self.stream9 = pyo.Sine(
-                freq=[self.pitch_values[3], self.pitch_values[3]], mul=lfo4
-            ).out(delay=10, dur=4)
-            self.stream10 = pyo.Sine(
-                freq=[self.pitch_values[4], self.pitch_values[4]], mul=lfo5
-            ).out(delay=10, dur=4)
+            ensemble_streams = []
+            for pitch, _, _, lfo in stream_info:
+                stream = pyo.Sine(freq=[pitch, pitch], mul=lfo).out(delay=10, dur=4)
+                ensemble_streams.append(stream)
+
+            # Add ensemble streams to the main streams list
+            self.streams.extend(ensemble_streams)
