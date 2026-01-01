@@ -99,7 +99,7 @@ jobs:
 
     steps:
     - name: Checkout code
-      uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd  # v4.2.0
+      uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8  # v4.2.0
       with:
         fetch-depth: 0
     - name: Set up Python
@@ -115,7 +115,7 @@ jobs:
       run: tox ${{ matrix.toxargs }} -e ${{ matrix.toxenv }} -- ${{ matrix.toxposargs }}
     - name: Upload coverage to codecov
       if: ${{ contains(matrix.toxenv,'-cov') }}
-      uses: codecov/codecov-action@5a1091511ad55cbe89839c7260b706298ca349f7  # v5.5.1
+      uses: codecov/codecov-action@671740ac38dd9b0130fbe1cec585b89eea48d3de  # v5.5.2
       with:
         token: ${{ secrets.CODECOV_TOKEN }}
 
@@ -134,7 +134,7 @@ jobs:
 
     steps:
     - name: Checkout code
-      uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd  # v4.2.0
+      uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8  # v4.2.0
       with:
         fetch-depth: 0
     - name: Set up Python
