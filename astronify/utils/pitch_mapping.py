@@ -108,7 +108,7 @@ def data_to_pitch(
     elif stretch == "linear":
         transform = LinearStretch()
     else:
-        raise InvalidInputError("Stretch {} is not supported!".format(stretch))
+        raise InvalidInputError(f"Stretch {stretch} is not supported!")
 
     # Adding the scaling to the transform
     if minmax_percent is not None:

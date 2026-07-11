@@ -56,7 +56,7 @@ def test_pitchmap():
     assert (my_pitchmapper([1, 1]) == [0.5, 0.5]).all()
 
 
-class TestSoniSeries(object):
+class TestSoniSeries:
     data = Table({"time": [0, 1, 2, 3, 4, 5, 6], "flux": [1, 2, 1, 2, 5, 3, np.nan]})
 
     # defaults
